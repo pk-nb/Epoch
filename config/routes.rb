@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
+  get 'home/j'
+
     # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
     match '*path',  :to => 'application#render_404', :via => :all
   end
+
+  root 'pages#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
