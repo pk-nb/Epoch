@@ -1,4 +1,4 @@
 # Epoch
 
-Hello new project
+A rails project for viewing and sharing timelines.
 
