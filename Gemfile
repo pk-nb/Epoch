@@ -80,3 +80,7 @@ end
 group :assets do
   gem "compass-rails"
 end
+
+group :production do
+  gem 'rails_12factor'
+end
