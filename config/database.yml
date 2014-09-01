@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: epoch_production
-  username: postgres
+  username: epoch
   password: <%= ENV['EPOCH_DATABASE_PASSWORD'] %>
