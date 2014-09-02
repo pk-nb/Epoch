@@ -1,6 +1,8 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
-    "threejs": "latest"
+    "jquery": "latest",
+    "threejs": "latest",
+    "lodash": "latest"
   }
 }

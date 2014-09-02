@@ -11,6 +11,6 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
 //= require threejs
+//= require lodash/dist/lodash.min
 //= require_tree .

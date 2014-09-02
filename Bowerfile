@@ -1,1 +1,3 @@
+asset 'jquery'
 asset 'threejs'
+asset 'lodash'
