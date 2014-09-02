@@ -3,6 +3,8 @@
   "dependencies": {
     "jquery": "latest",
     "threejs": "latest",
-    "lodash": "latest"
+    "lodash": "latest",
+    "normalize-css": "latest",
+    "normalize-opentype": "git://github.com/kennethormandy/normalize-opentype.css"
   }
 }

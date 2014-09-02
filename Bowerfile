@@ -1,3 +1,9 @@
+# Javascript
 asset 'jquery'
 asset 'threejs'
 asset 'lodash'
+
+
+# CSS
+asset 'normalize-css'
+asset 'normalize-opentype', github: 'kennethormandy/normalize-opentype.css'
