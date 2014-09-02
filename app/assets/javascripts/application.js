@@ -13,4 +13,6 @@
 //= require jquery
 //= require threejs
 //= require lodash/dist/lodash.min
+//= require hammerjs
+//= require hammer-jquery/jquery.hammer
 //= require_tree .

@@ -4,6 +4,8 @@
     "jquery": "latest",
     "threejs": "latest",
     "lodash": "latest",
+    "hammerjs": "latest",
+    "hammer-jquery": "git://github.com/hammerjs/jquery.hammer.js",
     "normalize-css": "latest",
     "normalize-opentype": "git://github.com/kennethormandy/normalize-opentype.css"
   }

@@ -2,6 +2,8 @@
 asset 'jquery'
 asset 'threejs'
 asset 'lodash'
+asset 'hammerjs'
+asset 'hammer-jquery', github: 'hammerjs/jquery.hammer.js'
 
 
 # CSS
