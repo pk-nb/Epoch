@@ -1,0 +1,13 @@
+{
+  "name": "hammer-jquery",
+  "homepage": "https://github.com/hammerjs/jquery.hammer.js",
+  "_release": "1bf132b2ec",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1bf132b2ecc274dfbbbb0966badc8f5b1de2db9e"
+  },
+  "_source": "git://github.com/hammerjs/jquery.hammer.js.git",
+  "_target": "*",
+  "_originalSource": "git://github.com/hammerjs/jquery.hammer.js"
+}

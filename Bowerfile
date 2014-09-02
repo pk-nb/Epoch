@@ -1,0 +1,11 @@
+# Javascript
+asset 'jquery'
+asset 'threejs'
+asset 'lodash'
+asset 'hammerjs'
+asset 'hammer-jquery', github: 'hammerjs/jquery.hammer.js'
+
+
+# CSS
+asset 'normalize-css'
+asset 'normalize-opentype', github: 'kennethormandy/normalize-opentype.css'

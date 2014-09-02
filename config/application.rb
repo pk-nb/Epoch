@@ -8,13 +8,15 @@ Bundler.require(*Rails.groups)
 
 module Epoch
   class Application < Rails::Application
-    
+
     config.time_zone = 'Eastern Time (US & Canada)'
 
     config.generators do |g|
       g.assets false
       g.helper false
     end
+
+    config.assets.paths << Rails.root.join("vendor","assets","bower_components")
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
