@@ -14,6 +14,9 @@ module Epoch
     config.generators do |g|
       g.assets false
       g.helper false
+
+      g.controller_specs false
+      g.view_specs false
     end
 
     config.assets.paths << Rails.root.join("vendor","assets","bower_components")
