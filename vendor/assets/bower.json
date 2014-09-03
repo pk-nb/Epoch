@@ -2,7 +2,7 @@
   "name": "dsl-generated dependencies",
   "dependencies": {
     "jquery": "latest",
-    "threejs": "latest",
+    "hidpi-canvas": "latest",
     "lodash": "latest",
     "hammerjs": "latest",
     "hammer-jquery": "git://github.com/hammerjs/jquery.hammer.js",

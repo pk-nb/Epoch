@@ -11,9 +11,7 @@
 // about supported directives.
 //
 //= require jquery
-//= require threejs
-//= require lib/CSS3DRenderer
-//= require lib/TrackballControls
+//= require hidpi-canvas
 //= require lodash/dist/lodash.min
 //= require hammerjs
 //= require hammer-jquery/jquery.hammer

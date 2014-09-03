@@ -26,3 +26,6 @@
 /public/system
 
 .idea/
+
+# Don't host licensed fonts
+**/fonts/licensed/*

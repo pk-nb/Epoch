@@ -12,19 +12,8 @@
 *
 *= require normalize-css
 *= require normalize-opentype
-*= require_tree .
 *= require_self
 */
 
-canvas {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-div {
-  width: 200px;
-  height: 400px;
-  background-color: #ee7;
-  color: #aa9;
-}
+@import 'bourbon';
+@import 'screen';

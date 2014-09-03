@@ -14,9 +14,14 @@ module Epoch
     config.generators do |g|
       g.assets false
       g.helper false
+
+      g.controller_specs false
+      g.view_specs false
     end
 
+    # Asset Pipeline paths for bower and webfonts
     config.assets.paths << Rails.root.join("vendor","assets","bower_components")
+    config.assets.paths << Rails.root.join("app", "assets", "fonts")
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
