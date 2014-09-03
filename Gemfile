@@ -52,7 +52,7 @@ gem "simple_form"
 gem "bcrypt", "~> 3.1.7"
 gem "foreigner"
 gem 'bower-rails'
-
+gem 'bourbon'
 
 group :development do
   gem "better_errors"

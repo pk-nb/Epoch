@@ -28,7 +28,7 @@ set :deploy_to, '/home/deploy/epoch'
 set :linked_files, %w{.rbenv-vars} # Copy over important keys
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system app/assets/fonts/licensed}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
