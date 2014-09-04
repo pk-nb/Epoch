@@ -2,11 +2,11 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
+  float: right;
 }
 
 .horizontal-menu-item {
-  display: inline;
-  float: right;
+  display: inline-block;
   .menu-link {
     width: 160px;
     display: block;
