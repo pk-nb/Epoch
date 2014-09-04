@@ -53,6 +53,7 @@ gem "bcrypt", "~> 3.1.7"
 gem "foreigner"
 gem 'bower-rails'
 gem 'bourbon'
+gem "omniauth-google-oauth2", "~> 0.2.1"
 
 group :development do
   gem "better_errors"
