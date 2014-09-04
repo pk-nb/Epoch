@@ -1,0 +1,12 @@
+ul.menu-bar
+  li.horizontal-menu-item
+    = link_to 'Timeline', root_path, id:'timeline', :class=>'menu-link'
+
+  - if current_user
+    li.horizontal-menu-item
+      = link_to 'Sign Out', sign_out_path, id:'sign_out', :class=>'menu-link'
+    li.horizontal-menu-item
+      span= "Hello, #{current_user.name}"
+  - else
+    li.horizontal-menu-item
+      = link_to 'Login', sign_in_path, id:'sign_in', :class=>'menu-link'
