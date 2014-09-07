@@ -1,12 +1,12 @@
-ul.menu-bar
-  - if current_user
-    li.horizontal-menu-item
-      span= "Hello, #{current_user.name}"
-  li.horizontal-menu-item
-    = link_to 'Timeline', root_path, id:'timeline', :class=>'menu-link'
-  - if current_user
-    li.horizontal-menu-item
-      = link_to 'Sign Out', sign_out_path, id:'sign_out', :class=>'menu-link'
-  - else
-    li.horizontal-menu-item
-      = link_to 'Login', sign_in_path, id:'sign_in', :class=>'menu-link'
+header#epoch-menu
+  .left
+    p THINGS
+  = link_to root_path, class: 'logo' do
+    | Epoch
+  .right
+    - if current_user
+      p= current_user.name
+      = link_to logout_path do
+        = image_tag 'logout.svg'
+    - else
+      p= link_to 'Login', login_path

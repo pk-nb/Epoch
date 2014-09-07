@@ -1,0 +1,43 @@
+#epoch-menu {
+  @include display(flex);
+  background-color: #FFFFFF;
+  box-shadow: 0px 2px 2px 0px rgba(140,140,140,0.50);
+  height: 3rem;
+
+  a {
+    color: $theme-black-main;
+
+    &:hover {
+      color: $theme-magenta;
+    }
+  }
+
+  .logo {
+    margin: auto;
+    font-size: 1.125em;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .left, .right {
+    @include flex(1);
+    & > * {
+      display: inline-block;
+    }
+  }
+
+  .left {
+    padding-left: 1em;
+    & > * {
+      margin-right: 0.5em;
+    }
+  }
+
+  .right {
+    text-align: right;
+    padding-right: 1em;
+    & > * {
+      margin-left: 0.5em;
+    }
+  }
+}

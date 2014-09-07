@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-  get 'sessions/create'
-
-  get 'sessions/destroy'
+  root 'pages#index'
 
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
@@ -10,11 +8,11 @@ Rails.application.routes.draw do
 
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
-  get 'signout', to: 'sessions#destroy', as: 'sign_out'
-  get 'signin', to: 'sessions#new', as: 'sign_in'
-  resources :sessions, only: [:create, :destroy]
 
-  root 'pages#index'
+  resources :sessions, only: [:create, :destroy]
+  get 'login', to: 'sessions#new', as: 'login'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
