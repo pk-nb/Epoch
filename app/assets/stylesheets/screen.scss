@@ -2,4 +2,6 @@
 @import 'font-face';
 @import 'colors';
 @import 'typography';
-@import 'ui_component';
+
+@import 'common';
+@import 'components/*';
