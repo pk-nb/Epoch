@@ -1,11 +1,6 @@
 Rails.application.routes.draw do
   root 'pages#index'
 
-  # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
-  unless Rails.env.development?
-    match '*path',  :to => 'application#render_404', :via => :all
-  end
-
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
 
@@ -13,6 +8,10 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
 
+  # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
+  unless Rails.env.development?
+    match '*path',  :to => 'application#render_404', :via => :all
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
