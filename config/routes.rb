@@ -1,8 +1,18 @@
 Rails.application.routes.draw do
+  get 'sessions/create'
+
+  get 'sessions/destroy'
+
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
     match '*path',  :to => 'application#render_404', :via => :all
   end
+
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+  get 'signout', to: 'sessions#destroy', as: 'sign_out'
+  get 'signin', to: 'sessions#new', as: 'sign_in'
+  resources :sessions, only: [:create, :destroy]
 
   root 'pages#index'
 

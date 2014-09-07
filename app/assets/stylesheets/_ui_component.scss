@@ -1,0 +1,25 @@
+.menu-bar{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  float: right;
+}
+
+.horizontal-menu-item {
+  display: inline-block;
+  .menu-link {
+    width: 160px;
+    display: block;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px;
+    background-color: #0099FF;
+    color: black;
+    text-decoration: none;
+  }
+
+  :hover, :active{
+    background-color: #00FFFF
+  }
+}
+
