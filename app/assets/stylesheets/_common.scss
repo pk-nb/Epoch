@@ -7,3 +7,12 @@ a {
   text-decoration: none;
   color: $theme-magenta;
 }
+
+.content {
+  margin-top: $header-height;
+}
+
+// Guess what: IE10 needs this because special-snowflake syndrome
+@-ms-viewport{
+  width: device-width;
+}
