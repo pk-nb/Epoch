@@ -1,0 +1,8 @@
+#timeline-container {
+  padding-top: $header-height;
+
+  & > p {
+    display: inline;
+    padding-right: 1em;
+  }
+}

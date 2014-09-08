@@ -1,8 +1,10 @@
 #epoch-menu {
   @include display(flex);
+  position: fixed;
+  width: 100%;
+  height: $header-height;
   background-color: #FFFFFF;
   box-shadow: 0px 2px 2px 0px rgba(140,140,140,0.50);
-  height: 3rem;
 
   a {
     color: $theme-black-main;
