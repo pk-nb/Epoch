@@ -1,3 +1,11 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
   color: $theme-black-main;
   background-color: $theme-off-white;
@@ -8,8 +16,9 @@ a {
   color: $theme-magenta;
 }
 
-.content {
+.main {
   margin-top: $header-height;
+  padding: 1em;
 }
 
 // Guess what: IE10 needs this because special-snowflake syndrome

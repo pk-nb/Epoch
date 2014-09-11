@@ -1,2 +1,44 @@
+$card-border-radius: 4px;
+$event-point-size: 12px;
+
 .card {
+  @include display(inline-flex);
+  background-color: $theme-white;
+  border-radius: $card-border-radius;
+  @include shadow_center();
+  padding: 0.5rem;
+
+  h1, h2, h3 {
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: normal;
+  }
+}
+
+.event {
+  border-top-left-radius: 0;
+  position: relative;
+
+  // Up Point (CSS Triangle)
+  &:before {
+    @include up_point($event-point-size, $theme-white);
+    z-index: 2;
+  }
+
+  // Up point shadow
+  &:after {
+    @include up_point($event-point-size + 2, $theme-shadow-light);
+    z-index: 1;
+  }
+
+}
+
+
+.expanded {
+  display: block;
+  // @include display(flex);
+  h1, h2, h3 {
+    font-weight: bold;
+  }
 }

@@ -4,8 +4,9 @@
   top: 0;
   width: 100%;
   height: $header-height;
-  background-color: #FFFFFF;
-  box-shadow: 0px 2px 2px 0px rgba(140,140,140,0.50);
+  background-color: $theme-white;
+  @include shadow-down(2px);
+  z-index: 99;
 
   a {
     color: $theme-black-main;
