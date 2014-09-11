@@ -1,3 +1,34 @@
 = render partial: 'components/menu_bar'
 .content
-  = render partial: 'components/timeline_view'
+  / = render partial: 'components/timeline_view'
+
+  h1 Styleguide
+
+  h2 Timeline Cards and Streams
+
+  .card.parent
+    h1 Chicago World Fairs
+
+  .card.event
+    h1 World's Columbian Exposition
+
+  .card.event.expanded
+    h1 World's Columbian Exposition
+    .date
+      p May 1, 1893
+    .content
+      .summary
+        p= Faker::Lorem.paragraph
+      .article
+        h2 Wikipedia Article
+        p= Faker::Lorem.paragraph
+        == Placeholder.new(64)
+
+  .stream
+    h1 World's Columbian Exposition
+
+  h2 Overlays and Form Elements
+
+  .overlay.timeline-select
+      button.selected
+        | World's Columbian Exposition

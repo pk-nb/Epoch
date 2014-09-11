@@ -54,6 +54,8 @@ gem "foreigner"
 gem 'bower-rails'
 gem 'bourbon'
 gem "omniauth-google-oauth2", "~> 0.2.1"
+gem 'faker'
+gem 'placeholder'
 
 group :development do
   gem "better_errors"
