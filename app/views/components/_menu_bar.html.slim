@@ -5,6 +5,7 @@ header#epoch-menu
     | Epoch
   .right
     - if current_user
+      = image_tag current_user.picture
       p= current_user.name
       = link_to logout_path do
         = image_tag 'logout.svg'
