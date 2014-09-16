@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
 
+  resources :events, only: [:new, :create, :update, :edit]
+
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
     match '*path',  :to => 'application#render_404', :via => :all

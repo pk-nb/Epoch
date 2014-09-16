@@ -24,6 +24,17 @@
         p= Faker::Lorem.paragraph
         == Placeholder.new(64)
 
+  - for event in @events do
+    .card.event.expanded
+      h1= event.title
+      =button_to 'Edit', edit_event_path(event), :method => :get
+      =button_to 'Delete', event_path(event), :method => :delete
+      .date
+        p= event.start_date_pretty
+      .content
+        .summary
+          p= event.content
+
   .stream
     h1 World's Columbian Exposition
 
