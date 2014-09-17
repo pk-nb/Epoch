@@ -1,9 +1,45 @@
 = render partial: 'components/menu_bar'
+.main
+  / = render partial: 'components/timeline_view'
 
-h1 Hi
-p some text
-p some ff un fl
-p
-  em well hellooooo there
+  h1 Styleguide
 
-= render partial: 'components/timeline_view'
+  h2 Timeline Cards and Streams
+
+  .card.parent
+    h1 Chicago World Fairs
+
+  .card.event
+    h1 World's Columbian Exposition
+
+  .card.event.expanded
+    h1 World's Columbian Exposition
+    .date
+      p May 1, 1893
+    .content
+      .summary
+        p= Faker::Lorem.paragraph
+      .article
+        h2 Wikipedia Article
+        p= Faker::Lorem.paragraph
+        == Placeholder.new(64)
+
+  - for event in @events do
+    .card.event.expanded
+      h1= event.title
+      =button_to 'Edit', edit_event_path(event), :method => :get
+      =button_to 'Delete', event_path(event), :method => :delete
+      .date
+        p= event.start_date_pretty
+      .content
+        .summary
+          p= event.content
+
+  .stream
+    h1 World's Columbian Exposition
+
+  h2 Overlays and Form Elements
+
+  .overlay.timeline-select
+      button.selected
+        | World's Columbian Exposition

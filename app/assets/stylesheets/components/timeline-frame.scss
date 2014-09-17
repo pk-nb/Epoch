@@ -1,0 +1,7 @@
+#timeline-container {
+  position: relative;
+  & > p {
+    display: inline;
+    padding-right: 1em;
+  }
+}
