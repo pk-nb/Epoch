@@ -12,7 +12,9 @@ class User < ActiveRecord::Base
     user.uid      = auth.uid
     user.name     = auth.info.name
     user.oauth_token = auth.credentials.token
-    user.oauth_expires_at = Time.at(auth.credentials.expires_at)
+    user.oauth_expires_at = auth.credentials.expires_at ?
+        Time.at(auth.credentials.expires_at) :
+        Time.new() + (60*60*24) # 1 day
     user.picture = auth.info.image
     user.save!
   end
