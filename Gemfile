@@ -57,6 +57,7 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2', '~> 0.1.16'
 gem 'omniauth-facebook', '1.4.0'
 gem 'omniauth-twitter'
+gem 'omniauth-github'
 gem 'faker'
 gem 'placeholder'
 

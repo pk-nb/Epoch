@@ -169,6 +169,9 @@ GEM
       rack (~> 1.0)
     omniauth-facebook (1.4.0)
       omniauth-oauth2 (~> 1.0.2)
+    omniauth-github (1.0.1)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.0)
     omniauth-google-oauth2 (0.1.19)
       omniauth (~> 1.0)
       omniauth-oauth2
@@ -325,6 +328,7 @@ DEPENDENCIES
   normalize-rails
   omniauth
   omniauth-facebook (= 1.4.0)
+  omniauth-github
   omniauth-google-oauth2 (~> 0.1.16)
   omniauth-twitter
   pg
