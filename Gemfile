@@ -53,7 +53,11 @@ gem "bcrypt", "~> 3.1.7"
 gem "foreigner"
 gem 'bower-rails'
 gem 'bourbon'
-gem "omniauth-google-oauth2", "~> 0.2.1"
+gem 'omniauth'
+gem 'omniauth-google-oauth2', '~> 0.1.16'
+gem 'omniauth-facebook', '1.4.0'
+gem 'omniauth-twitter'
+gem 'omniauth-github'
 gem 'faker'
 gem 'placeholder'
 
