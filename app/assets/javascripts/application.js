@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require react
 //= require hidpi-canvas
 //= require lodash/dist/lodash.min
 //= require hammerjs
