@@ -54,6 +54,7 @@ gem "foreigner"
 gem 'bower-rails'
 gem 'bourbon'
 gem "omniauth-google-oauth2", "~> 0.2.1"
+gem 'omniauth-facebook', '1.4.0'
 gem 'faker'
 gem 'placeholder'
 
