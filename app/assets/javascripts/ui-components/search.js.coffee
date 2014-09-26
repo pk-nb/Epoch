@@ -1,3 +1,5 @@
+# @cjsx React.DOM
+
 timeline = [
   {name: "Life of Einstein"}
   {name: "Life of Isaac Hermens"}
@@ -9,7 +11,9 @@ timeline = [
 
 TimelineItem = React.createClass
   render: ->
-      React.DOM.li({}, @props.timeline.name)
+    <li>{@props.timeline.name}</li>
+      # React.DOM.li({}, @props.timeline.name)
+
 
 TimelineSearch = React.createClass
   getInitialState: ->
@@ -24,19 +28,26 @@ TimelineSearch = React.createClass
     )
 
   searchInput: ->
-    React.DOM.input({
-      name: 'search'
-      onChange: @setSearch
-      placeholder: 'Search...'
-    })
+    <input
+      name='search'
+      onChange={@setSearch}
+      placeholder='Search...'
+    />
 
   timelineList: ->
-    React.DOM.ul({}, [
-      for timeline in @timelines()
-        TimelineItem({timeline: timeline})
-    ])
+    <ul>
+      {@timelines().map (timeline) -> <TimelineItem key={timeline.id} data={timeline: timeline} />}
+        #  TimelineItem({timeline: timeline})}
+    </ul>
+    # React.DOM.ul(null, [
+    #   for timeline in @timelines()
+    #     TimelineItem({timeline: timeline})
+    # ])
 
   render: ->
+    # {@searchInput}
+    # {@timelineList}
+    # <timelineList />
     React.DOM.div({},
       @searchInput(),
       @timelineList()
