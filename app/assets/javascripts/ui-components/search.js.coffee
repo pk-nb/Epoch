@@ -1,18 +1,9 @@
-R = React.DOM
-
-timeline = [
-  {name: "Life of Einstein"}
-  {name: "Life of Isaac Hermens"}
-  {name: "The Best Timeline Ever"}
-  {name: "Chicago World Fairs"}
-  {name: "Classical Composers"}
-]
-
+{li, input, ul, div} = React.DOM
 
 TimelineItem = React.createClass
   displayName: 'TimelineItem'
   render: ->
-    R.li {}, @props.timeline.name
+    li null, @props.timeline.name
 
 TimelineSearch = React.createClass
   displayName: 'TimelineSearch'
@@ -28,21 +19,23 @@ TimelineSearch = React.createClass
     )
 
   searchInput: ->
-    R.input
+    input
       name: 'search'
       onChange: @setSearch,
       placeholder: 'Search Timelines...'
 
   timelineList: ->
-    R.ul null, [
+    ul null, [
       for timeline in @timelines()
         TimelineItem({timeline: timeline})
     ]
 
   render: ->
-    R.div {},
+    div null,
       @searchInput(),
       @timelineList()
 
-appNode = document.getElementById('main')
-React.renderComponent(TimelineSearch(timelines: timeline), appNode)
+# Export functions to window under global namespace
+@.EpochUI ?= {}
+# @.EpochUI.TimelineItem = TimelineItem
+@.EpochUI.TimelineSearch = TimelineSearch

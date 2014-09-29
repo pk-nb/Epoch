@@ -1,0 +1,1 @@
+ReactCSSTransitionGroup = React.addons.ReactCSSTransitionGroup
