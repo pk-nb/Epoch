@@ -11,7 +11,7 @@
 # about supported directives.
 #
 #= require jquery
-#= require react/react-with-addons.min
+#= require react/react-with-addons
 #= require hidpi-canvas
 #= require lodash/dist/lodash.min
 #= require hammerjs
@@ -28,4 +28,5 @@ timeline = [
 
 
 appNode = document.getElementById('main')
-React.renderComponent(@.EpochUI.TimelineSearch(timelines: timeline), appNode)
+# React.renderComponent(@.EpochUI.TimelineSearch(timelines: timeline), appNode)
+React.renderComponent(@.EpochUI.TodoList(), appNode)
