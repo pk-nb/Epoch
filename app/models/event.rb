@@ -8,6 +8,6 @@ class Event < ActiveRecord::Base
   end
 
   def end_date_pretty
-    start_date.strftime('%B %d, %Y')
+    end_date.strftime('%B %d, %Y')
   end
 end
