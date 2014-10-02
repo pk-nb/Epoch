@@ -1,6 +1,6 @@
 = render partial: 'components/menu_bar'
 .main
-  = simple_form_for @event do |form|
+  = simple_form_for @event, url: timeline_events_path(@timeline) do |form|
     = form.input :title, input_html: {class: 'narrow-input'}
     = form.input :content, as: :text
     = form.input :start_date

@@ -60,6 +60,7 @@ gem 'omniauth-twitter'
 gem 'omniauth-github'
 gem 'faker'
 gem 'placeholder'
+gem 'validates_timeliness'
 
 group :development do
   gem "better_errors"
@@ -74,8 +75,9 @@ end
 
 group :test, :development do
   gem "pry"
-  gem "rspec-rails", "~> 2.14.2"
+  gem "rspec-rails"
   gem "factory_girl_rails"
+  gem "guard-rspec"
 end
 
 group :test do

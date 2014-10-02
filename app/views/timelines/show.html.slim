@@ -1,0 +1,11 @@
+=render partial: 'components/menu_bar'
+
+.card.timeline.expanded
+  h2= @timeline.title
+  =button_to 'Edit', edit_timeline_path(@timeline), :method => :get
+  =button_to 'Delete', timeline_path(@timeline), :method => :delete
+  .date
+    p= @timeline.start_date_pretty
+  .content
+    .summary
+      p= @timeline.content
