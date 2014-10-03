@@ -1,8 +1,3 @@
 = render partial: 'components/menu_bar'
-.main
-  = simple_form_for @event, :method => :put do |form|
-    = form.input :title, input_html: {class: 'narrow-input'}
-    = form.input :content, as: :text
-    = form.input :start_date
-    = form.input :end_date
-    = form.button :submit, 'Save Changes'
+
+= render partial: 'form'
