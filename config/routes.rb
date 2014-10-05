@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   resources :timelines do
     resources :events #, only: [:new, :create, :update, :edit, :destroy]
   end
+
+  # Todo Can/should we change this to be singular?
+  resources :profiles, only: [:index, :edit, :update]
   
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
