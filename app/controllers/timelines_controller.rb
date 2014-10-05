@@ -20,19 +20,25 @@ class TimelinesController < ApplicationController
   end
   
   def children
-    owner.all_children
+    @children = owner.timelines.find(params[:id]).all_children
+    respond_to do |format|
+      format.html
+      format.json { render json: @children }
+    end
   end
   
   def new
-    @timeline = Timeline.new
+    @form_objs = [Timeline.new]
+    @form_objs.insert(0, owner) if nested?
     respond_to do |format|
       format.html
-      format.json { render json: @timeline }
+      format.json { render json: @form_objs }
     end
   end
   
   def create
-    @timeline = owner.timelines.create(timeline_params)
+    @timeline = owner.timelines.create(timeline_params.merge(user_id: current_user.id))
+    binding.pry
     respond_to do |format|
       format.html { redirect_to timelines_path }
       format.json { render json: @timeline }
@@ -40,7 +46,7 @@ class TimelinesController < ApplicationController
   end
   
   def edit
-    @timeline = owner.timelines.find(params[:id])
+    @form_objs = owner.timelines.find(params[:id])
     respond_to do |format|
       format.html
       format.json { render json: @timeline }
