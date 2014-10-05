@@ -1,8 +1,9 @@
 class TimelinesController < ApplicationController
+  include TimelineHelper
   before_action :require_login
   
   def index
-    @timelines = current_user.timelines
+    @timelines = owner.timelines
     
     respond_to do |format|
       format.html
@@ -11,11 +12,15 @@ class TimelinesController < ApplicationController
   end
   
   def show
-    @timeline = current_user.timelines.find(params[:id])
+    @timeline = owner.timelines.find(params[:id])
     respond_to do |format|
       format.html
       format.json { render json: @timeline }
     end
+  end
+  
+  def children
+    owner.all_children
   end
   
   def new
@@ -27,7 +32,7 @@ class TimelinesController < ApplicationController
   end
   
   def create
-    @timeline = current_user.timelines.create(timeline_params)
+    @timeline = owner.timelines.create(timeline_params)
     respond_to do |format|
       format.html { redirect_to timelines_path }
       format.json { render json: @timeline }
@@ -35,7 +40,7 @@ class TimelinesController < ApplicationController
   end
   
   def edit
-    @timeline = current_user.timelines.find(params[:id])
+    @timeline = owner.timelines.find(params[:id])
     respond_to do |format|
       format.html
       format.json { render json: @timeline }
@@ -43,7 +48,7 @@ class TimelinesController < ApplicationController
   end
   
   def update
-    @timeline = current_user.timelines.find(params[:id]).tap do |timeline|
+    @timeline = owner.timelines.find(params[:id]).tap do |timeline|
       timeline.update!(timeline_params)
     end
     respond_to do |format|
@@ -53,7 +58,7 @@ class TimelinesController < ApplicationController
   end
   
   def destroy
-    timeline = current_user.timelines.destroy(params[:id])
+    timeline = owner.timelines.destroy(params[:id])
     respond_to do |format|
       format.html { redirect_to timelines_path }
       format.json

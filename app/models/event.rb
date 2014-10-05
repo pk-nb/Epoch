@@ -7,7 +7,7 @@ class Event < ActiveRecord::Base
   # For now, the rule that an event must belong to at least one timeline will be enforced
   #  by the UI. Enforcing it at the model level is made difficult by the join table
   #validates :timelines, length: { minimum: 1 }
-  validates_presence_of :title, :content, :start_date
+  validates_presence_of :title, :content, :start_date, :user_id
   validates_datetime :end_date, on_or_after: :start_date, allow_nil: true
 
   def start_date_pretty

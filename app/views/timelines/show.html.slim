@@ -9,3 +9,7 @@
   .content
     .summary
       p= @timeline.content
+  .children
+    ol
+      - @timeline.all_children.each do |c|
+        li= "#{c.title}, #{c.class}"

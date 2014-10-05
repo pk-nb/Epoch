@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   resources :timelines do
     resources :events #, only: [:new, :create, :update, :edit, :destroy]
+    resources :timelines
   end
 
   # Todo Can/should we change this to be singular?
