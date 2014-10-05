@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :timelines
   has_many :events
 
   def self.from_omniauth(auth)

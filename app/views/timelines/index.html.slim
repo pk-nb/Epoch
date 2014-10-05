@@ -1,0 +1,6 @@
+= render partial: 'components/menu_bar'
+
+= link_to 'Add Timeline', new_timeline_path
+ul
+  - @timelines.each do |t|
+    li= link_to t.title, edit_timeline_path(t)

@@ -11,12 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916131416) do
+ActiveRecord::Schema.define(version: 20141002004355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "events", force: true do |t|
+    t.string   "title"
+    t.string   "content"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "events_timelines", id: false, force: true do |t|
+    t.integer "event_id"
+    t.integer "timeline_id"
+  end
+
+  create_table "timelines", force: true do |t|
     t.string   "title"
     t.string   "content"
     t.datetime "start_date"
@@ -38,5 +53,7 @@ ActiveRecord::Schema.define(version: 20140916131416) do
   end
 
   add_foreign_key "events", "users", name: "event_user_foreign_key", dependent: :delete
+
+  add_foreign_key "timelines", "users", name: "timeline_user_foreign_key", dependent: :delete
 
 end

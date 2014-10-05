@@ -1,0 +1,10 @@
+= render partial: 'components/menu_bar'
+.card.event.expanded
+  h1= @event.title
+  =button_to 'Edit', edit_timeline_event_path(@event.timelines.first, @event), :method => :get
+  =button_to 'Delete', timeline_event_path(@event.timelines.first, @event), :method => :delete
+  .date
+    p= @event.start_date_pretty
+  .content
+    .summary
+      p= @event.content
