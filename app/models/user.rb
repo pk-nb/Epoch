@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
     user.picture = auth.info.image || auth.extra.raw_info.avatar_url
     # todo test this against Facebook and Github...will need to do in production or
     #  modify our accounts
-    user.profile = Profile.create(email: auth.info.email || '')
+    user.profile ||= Profile.create(email: auth.info.email || '')
     user.save!
   end
 end
