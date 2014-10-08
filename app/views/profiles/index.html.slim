@@ -6,5 +6,7 @@
   p= "Email Address: #{@profile.email}"
   p= "Favorite Cake: #{@profile.favorite_cake}"
 
-  =link_to 'Edit', edit_profile_path(@profile)
+  div=link_to 'Edit', edit_profile_path(@profile)
+  br
+  div=link_to 'View Timelines', timelines_path
 
