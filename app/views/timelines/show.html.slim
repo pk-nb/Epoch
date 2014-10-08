@@ -1,5 +1,4 @@
 =render partial: 'components/menu_bar'
-
 .card.timeline.expanded
   h2= @timeline.title
   =button_to 'Edit', edit_timeline_path(@timeline), :method => :get
@@ -9,3 +8,14 @@
   .content
     .summary
       p= @timeline.content
+  hr
+  h3 Children
+  .children
+    ol
+      - @timeline.all_children.each do |c|
+        li
+          =link_to "#{c.title}, #{c.class}", get_show_child_path(@timeline, c)
+  div
+    = link_to 'Add Timeline', new_timeline_timeline_path(@timeline)
+  div
+    = link_to 'Add Event', new_timeline_event_path(@timeline)

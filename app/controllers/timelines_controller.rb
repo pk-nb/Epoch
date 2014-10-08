@@ -1,37 +1,73 @@
 class TimelinesController < ApplicationController
+  include TimelineHelper
   before_action :require_login
   
   def index
-    @timelines = current_user.timelines
+    @timelines = owner.timelines
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @timelines }
+    end
   end
   
   def show
-    @timeline = current_user.timelines.find(params[:id])
+    @timeline = owner.timelines.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: @timeline }
+    end
+  end
+  
+  def children
+    @children = owner.timelines.find(params[:id]).all_children
+    respond_to do |format|
+      format.html
+      format.json { render json: @children }
+    end
   end
   
   def new
-    @timeline = Timeline.new
+    @form_objs = [Timeline.new]
+    @form_objs.insert(0, owner) if nested?
+    respond_to do |format|
+      format.html
+      format.json { render json: @form_objs }
+    end
   end
   
   def create
-    current_user.timelines.create(timeline_params)
-    redirect_to timelines_path
+    @timeline = owner.timelines.create(timeline_params.merge(user_id: current_user.id))
+    respond_to do |format|
+      format.html { redirect_to timelines_path }
+      format.json { render json: @timeline }
+    end
   end
   
   def edit
-    @timeline = current_user.timelines.find(params[:id])
+    @form_objs = owner.timelines.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: @timeline }
+    end
   end
   
   def update
-    @timeline = current_user.timelines.find(params[:id]).tap do |timeline|
+    @timeline = owner.timelines.find(params[:id]).tap do |timeline|
       timeline.update!(timeline_params)
     end
-    redirect_to timelines_path
+    respond_to do |format|
+      format.html { redirect_to timelines_path }
+      format.json { render json: @timeline }
+    end
   end
   
   def destroy
-    timeline = current_user.timelines.destroy(params[:id])
-    redirect_to timelines_path
+    timeline = owner.timelines.destroy(params[:id])
+    respond_to do |format|
+      format.html { redirect_to timelines_path }
+      format.json
+    end
   end
   
   private
