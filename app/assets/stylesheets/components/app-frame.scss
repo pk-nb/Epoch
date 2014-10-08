@@ -20,6 +20,11 @@
 
 .ui-bar {
   height: 40px;
+  transition: height 0.3s ease-in-out;
+}
+
+.ui-bar.active {
+  height: 70vh;
 }
 
 .top {

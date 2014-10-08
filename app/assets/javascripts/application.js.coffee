@@ -27,6 +27,12 @@ timeline = [
 ]
 
 
-appNode = document.getElementById('main')
+# appNode = document.getElementById('main')
 # React.renderComponent(@.EpochUI.TimelineSearch(timelines: timeline), appNode)
 # React.renderComponent(@.EpochUI.TodoList(), appNode)
+
+
+topBar = document.getElementById('top-bar')
+bottomBar = document.getElementById('bottom-bar')
+React.renderComponent(@.EpochUI.UIBar(), topBar)
+React.renderComponent(@.EpochUI.UIBar(), bottomBar)
