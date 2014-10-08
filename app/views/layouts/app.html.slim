@@ -1,0 +1,11 @@
+doctype html
+html
+  head
+    title
+      | Epoch
+    = stylesheet_link_tag    'application', media: 'all'
+    = csrf_meta_tags
+    meta[name='viewport' content='width=device-width, user-scalable=no']
+  body
+    = yield
+    = javascript_include_tag 'app'
