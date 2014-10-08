@@ -6,6 +6,14 @@ module TimelineHelper
       new_timeline_path
     end
   end
+
+  def get_show_child_path(parent, child)
+    if child.class == Timeline
+      timeline_path(child)
+    else
+      timeline_event_path(parent, child)
+    end
+  end
   
   def nested?
     owner.class == Timeline

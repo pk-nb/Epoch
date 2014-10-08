@@ -38,7 +38,6 @@ class TimelinesController < ApplicationController
   
   def create
     @timeline = owner.timelines.create(timeline_params.merge(user_id: current_user.id))
-    binding.pry
     respond_to do |format|
       format.html { redirect_to timelines_path }
       format.json { render json: @timeline }
