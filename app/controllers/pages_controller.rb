@@ -7,4 +7,8 @@ class PagesController < ApplicationController
                 Array.new
               end
   end
+
+
+  def app
+  end
 end

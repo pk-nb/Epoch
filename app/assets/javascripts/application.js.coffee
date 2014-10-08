@@ -12,7 +12,7 @@
 #
 #= require jquery
 #= require react/react-with-addons
-#= require hidpi-canvas
+#------- require hidpi-canvas
 #= require lodash/dist/lodash.min
 #= require hammerjs
 #= require hammer-jquery/jquery.hammer
@@ -29,4 +29,4 @@ timeline = [
 
 appNode = document.getElementById('main')
 # React.renderComponent(@.EpochUI.TimelineSearch(timelines: timeline), appNode)
-React.renderComponent(@.EpochUI.TodoList(), appNode)
+# React.renderComponent(@.EpochUI.TodoList(), appNode)
