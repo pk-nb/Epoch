@@ -18,7 +18,9 @@ class User < ActiveRecord::Base
         Time.at(auth.credentials.expires_at) :
         Time.new() + (60*60*24) # 1 day
     user.picture = auth.info.image || auth.extra.raw_info.avatar_url
-    user.profile = Profile.new
+    # todo test this against Facebook and Github...will need to do in production or
+    #  modify our accounts
+    user.profile = Profile.create(email: auth.info.email || '')
     user.save!
   end
 end
