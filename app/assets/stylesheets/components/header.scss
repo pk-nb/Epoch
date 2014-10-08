@@ -28,6 +28,12 @@
     & > * {
       display: inline-block;
     }
+
+    // todo remove this when things are more wonderful
+    img{
+      max-height: 35px;
+      margin-top: 5px;
+    }
   }
 
   .left {
