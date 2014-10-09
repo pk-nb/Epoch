@@ -6,9 +6,9 @@ UIBar = React.createClass
 
   handleToggle: ->
     if @props.active
-      @props.changeAppState(false)
+      @props.setAppState(barExpanded: false)
     else
-      @props.changeAppState(@props.id)
+      @props.setAppState(barExpanded: @props.id)
 
   render: ->
     classes = cx('ui-bar': true, 'active': @props.active)
@@ -16,9 +16,6 @@ UIBar = React.createClass
     div className: classes,
       button onClick: @handleToggle,
         'Super Toggle'
-
-
-
 
 
 @.EpochUI ?= {}

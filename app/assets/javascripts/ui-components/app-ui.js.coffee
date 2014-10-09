@@ -7,24 +7,23 @@ App = React.createClass
   getInitialState: ->
     barExpanded: false
 
-  changeAppState: (data) ->
-    @setState barExpanded: data
+  # Change app state by sending this function as a prop on children
+  setAppState: (data) ->
+    @setState data
 
   render: ->
-    # Calculate which bar to expand
+    UI = window.EpochUI
+
     div className: 'app',
-      window.EpochUI.UIBar
+      UI.UIBar
         id: 'top'
         active: @state.barExpanded is 'top'
-        changeAppState: @changeAppState
-      div className: 'timeline-view',
-        'hello'
-      # TimelineView(),
-      window.EpochUI.UIBar
+        setAppState: @setAppState
+      UI.TimelineView(),
+      UI.UIBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom'
-        changeAppState: @changeAppState
-
+        setAppState: @setAppState
 
 
 @.EpochUI ?= {}
