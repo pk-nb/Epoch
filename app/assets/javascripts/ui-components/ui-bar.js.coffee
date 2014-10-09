@@ -11,9 +11,10 @@ UIBar = React.createClass
       @props.setAppState(barExpanded: @props.id)
 
   render: ->
-    classes = cx('ui-bar': true, 'active': @props.active)
+    classes = { 'ui-bar': true, 'active': @props.active }
+    classes[@props.id] = true
 
-    div className: classes,
+    div className: cx(classes),
       button onClick: @handleToggle,
         'Super Toggle'
 

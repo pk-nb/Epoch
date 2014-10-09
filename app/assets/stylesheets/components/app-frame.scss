@@ -1,36 +1,30 @@
 .app {
   position: absolute;
+
+  // Use viewport units if available
   width: 100%;
   height: 100%;
-
   width: 100vw;
   height: 100vh;
 
   overflow-x: hidden;
   overflow-y: scroll;
-  background-color: #ffa;
   @include display(flex);
   @include flex-direction(column);
 }
 
 .timeline-view {
-  background-color: #dd9;
+  background-color: #f9f9fb;
   @include flex(1);
 }
 
 .ui-bar {
-  height: 40px;
+  height: $header-height;
+  -webkit-transform-style: preserve-3d;
   transition: height 0.3s ease-in-out;
+  z-index: 99;
 }
 
 .ui-bar.active {
   height: 70vh;
-}
-
-.top {
-  background-color: #bdb;
-}
-
-.bottom {
-  background-color: #99e;
 }

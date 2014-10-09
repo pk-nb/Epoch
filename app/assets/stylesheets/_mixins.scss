@@ -1,9 +1,9 @@
 @mixin shadow_up($height) {
-  box-shadow: 0px -$height 0px 0px $theme-shadow;
+  box-shadow: 0px (-$height) $height $theme-shadow;
 }
 
 @mixin shadow_down($height) {
-  box-shadow: 0px $height $height 0px $theme-shadow;
+  box-shadow: 0px $height $height $theme-shadow;
 }
 
 @mixin shadow_center() {

@@ -1,0 +1,19 @@
+// Extends the sizing and position properties in app frame
+
+.ui-bar {
+  background-color: $theme-white;
+  @include display(flex);
+  // margin: auto;
+}
+
+.ui-bar button {
+  margin: auto;
+}
+
+.ui-bar.top {
+  @include shadow_down(2px);
+}
+
+.ui-bar.bottom {
+  @include shadow_up(2px);
+}
