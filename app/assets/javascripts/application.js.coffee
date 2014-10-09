@@ -17,22 +17,3 @@
 #= require hammerjs
 #= require hammer-jquery/jquery.hammer
 #= require_tree .
-
-# timeline = [
-#   {name: "Life of Einstein"}
-#   {name: "Life of Isaac Hermens"}
-#   {name: "The Best Timeline Ever"}
-#   {name: "Chicago World Fairs"}
-#   {name: "Classical Composers"}
-# ]
-#
-#
-# # appNode = document.getElementById('main')
-# # React.renderComponent(@.EpochUI.TimelineSearch(timelines: timeline), appNode)
-# # React.renderComponent(@.EpochUI.TodoList(), appNode)
-#
-#
-# topBar = document.getElementById('top-bar')
-# bottomBar = document.getElementById('bottom-bar')
-# React.renderComponent(@.EpochUI.UIBar(), topBar)
-# React.renderComponent(@.EpochUI.UIBar(), bottomBar)
