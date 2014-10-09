@@ -3,6 +3,6 @@
 #     @barExpanded = false
 
 
-@.EpochApp.State ?= {
-  barExpanded: false
-}
+# @.EpochApp.State ?= {
+#   barExpanded: false
+# }
