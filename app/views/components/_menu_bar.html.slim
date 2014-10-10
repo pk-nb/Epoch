@@ -6,7 +6,7 @@ header#epoch-menu
   .right
     - if current_user
       = image_tag current_user.picture
-      =link_to current_user.name, profiles_path
+      =link_to current_user.name, current_user.profile
       = link_to logout_path do
         = image_tag 'logout.svg'
     - else

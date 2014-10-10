@@ -1,0 +1,12 @@
+= render partial: 'components/menu_bar'
+/ todo we probably want editing and viewing to happen on the same "page"
+.profile
+  p= "First Name: #{@profile.first_name}"
+  p= "Last Name: #{@profile.last_name}"
+  p= "Email Address: #{@profile.email}"
+  p= "Favorite Cake: #{@profile.favorite_cake}"
+
+  div=link_to 'Edit', edit_profile_path(@profile)
+  br
+  div=link_to 'View Timelines', timelines_path
+
