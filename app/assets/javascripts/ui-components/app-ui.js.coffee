@@ -15,12 +15,12 @@ App = React.createClass
     UI = window.EpochUI
 
     div className: 'app',
-      UI.UIBar
+      UI.UIPrimaryBar
         id: 'top'
         active: @state.barExpanded is 'top'
         setAppState: @setAppState
       UI.TimelineView(),
-      UI.UIBar
+      UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom'
         setAppState: @setAppState

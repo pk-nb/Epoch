@@ -1,6 +1,5 @@
 {div} = React.DOM
 
-
 TimelineView = React.createClass
   displayName: 'TimelineView'
 

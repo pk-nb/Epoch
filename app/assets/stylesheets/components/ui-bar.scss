@@ -3,11 +3,41 @@
 .ui-bar {
   background-color: $theme-white;
   @include display(flex);
-  // margin: auto;
+
+  p {
+    margin: 0;
+    display: inline-block;
+  }
 }
 
-.ui-bar button {
+.left,
+.right {
+  @include flex(1);
   margin: auto;
+}
+
+.left {
+  padding-left: $edge-spacing;
+}
+
+.right {
+  text-align: right;
+  padding-right: $edge-spacing;
+}
+
+.center {
+  margin: auto;
+  text-align: center;
+}
+
+.timeline-dropdown,
+.user-dropdown {
+  @include expand_link();
+}
+
+.logo {
+  font-size: 1.125em;
+  font-weight: bold;
 }
 
 .ui-bar.top {
