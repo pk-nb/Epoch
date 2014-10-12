@@ -6,10 +6,12 @@ Rails.application.routes.draw do
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
 
-  resources :users
-  resources :sessions, only: [:create, :destroy]
+  resources :users, only: [:new, :create, :show, :update]
+  resources :sessions, only: [:new, :create, :destroy]
   get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
+
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
   resources :timelines do
     resources :events #, only: [:new, :create, :update, :edit, :destroy]

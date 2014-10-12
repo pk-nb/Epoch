@@ -1,0 +1,6 @@
+= render partial: 'components/menu_bar'
+
+= simple_form_for @password_reset, url: password_reset_path(params[:id]), method: :put do |f|
+  = f.input :password
+  = f.input :password_confirmation
+  = f.submit 'Reset Password'

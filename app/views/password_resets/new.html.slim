@@ -1,0 +1,5 @@
+= render partial: 'components/menu_bar'
+
+= simple_form_for @password_reset do |f|
+  = f.input :email
+  = f.submit 'Send Reset Email'
