@@ -55,8 +55,7 @@
   text-align: center;
 }
 
-.timeline-dropdown,
-.user-dropdown {
+.dropdown-link {
   @include expand_link();
 }
 

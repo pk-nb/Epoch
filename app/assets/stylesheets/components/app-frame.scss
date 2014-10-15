@@ -29,3 +29,8 @@
   height: 70vh;
   transition: height $slide-animation-speed ease-in-out;
 }
+
+.ui-bar.other-active {
+  // Delay transition if other bar is open (reverse)
+  transition: height $slide-animation-speed ease-in-out;
+}

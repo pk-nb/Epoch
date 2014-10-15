@@ -14,7 +14,12 @@ UIPrimaryBar = React.createClass
   mixins: [UIBarMixin]
 
   render: ->
-    classes = { 'ui-bar': true, 'active': @props.active }
+    classes = {
+      'ui-bar': true,
+      'active': @props.active,
+      'other-active': @props.otherActive
+    }
+
     classes[@props.id] = true
 
     div className: cx(classes),
@@ -23,10 +28,10 @@ UIPrimaryBar = React.createClass
           p null,
             'Epoch'
         div className: 'center',
-          p { onClick: @handleToggle, className: 'timeline-dropdown'},
+          p { onClick: @handleToggle, className: 'dropdown-link'},
             'Timeline Title'
         div className: 'right',
-          p { onClick: @handleToggle, className: 'user-dropdown' },
+          p { onClick: @handleToggle, className: 'dropdown-link' },
             'User'
       div className: 'dropdown-content',
         p null,
@@ -38,14 +43,28 @@ UISecondaryBar = React.createClass
   mixins: [UIBarMixin]
 
   render: ->
-    classes = { 'ui-bar': true, 'active': @props.active }
+    classes = {
+      'ui-bar': true,
+      'active': @props.active,
+      'other-active': @props.otherActive
+    }
+
     classes[@props.id] = true
 
     div className: cx(classes),
-      div null,
-        'SECOND'
-      button onClick: @handleToggle,
-        'Super Toggle'
+      div className: 'dropdown-content',
+        p null,
+          'HI'
+      div className: 'shelf',
+        div className: 'left',
+          p { onClick: @handleToggle, className: 'dropdown-link'},
+            'Event Name'
+        div className: 'center',
+          p { onClick: @handleToggle, className: 'dropdown-link'},
+            '1999'
+        div className: 'right',
+          p { onClick: @handleToggle, className: 'dropdown-link' },
+            '+'
 
 
 @.EpochUI ?= {}

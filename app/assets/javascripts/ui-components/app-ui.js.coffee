@@ -18,11 +18,13 @@ App = React.createClass
       UI.UIPrimaryBar
         id: 'top',
         active: @state.barExpanded is 'top',
+        otherActive: @state.barExpanded is 'bottom',
         setAppState: @setAppState
       UI.TimelineView(),
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom',
+        otherActive: @state.barExpanded is 'top',
         setAppState: @setAppState
 
 
