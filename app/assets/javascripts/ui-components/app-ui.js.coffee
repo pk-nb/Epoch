@@ -16,13 +16,13 @@ App = React.createClass
 
     div className: 'app',
       UI.UIPrimaryBar
-        id: 'top'
-        active: @state.barExpanded is 'top'
+        id: 'top',
+        active: @state.barExpanded is 'top',
         setAppState: @setAppState
       UI.TimelineView(),
       UI.UISecondaryBar
         id: 'bottom',
-        active: @state.barExpanded is 'bottom'
+        active: @state.barExpanded is 'bottom',
         setAppState: @setAppState
 
 

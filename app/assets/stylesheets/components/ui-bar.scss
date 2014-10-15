@@ -3,10 +3,35 @@
 .ui-bar {
   background-color: $theme-white;
   @include display(flex);
+  @include flex-direction(column);
+  width: 100%;
 
   p {
     margin: 0;
     display: inline-block;
+  }
+
+  .shelf {
+    @include display(flex);
+    height: $header-height;
+    width: 100%;
+  }
+
+  .dropdown-content {
+    @include flex(1);
+    width: 100%;
+    background-color: #aaa;
+    // display: none;
+    // height: 0;
+    opacity: 0;
+    transition: opacity $opacity-animation-speed ease-in-out;
+  }
+
+  &.active .dropdown-content {
+    // display: block;
+    // height: auto;
+    opacity: 1;
+    transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
   }
 }
 

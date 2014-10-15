@@ -21,10 +21,11 @@
 .ui-bar {
   height: $header-height;
   -webkit-transform-style: preserve-3d;
-  transition: height 0.3s ease-in-out;
+  transition: height $slide-animation-speed ease-in-out $opacity-animation-speed;
   z-index: 99;
 }
 
 .ui-bar.active {
   height: 70vh;
+  transition: height $slide-animation-speed ease-in-out;
 }

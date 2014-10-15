@@ -18,15 +18,19 @@ UIPrimaryBar = React.createClass
     classes[@props.id] = true
 
     div className: cx(classes),
-      div className: 'left logo',
+      div className: 'shelf',
+        div className: 'left logo',
+          p null,
+            'Epoch'
+        div className: 'center',
+          p { onClick: @handleToggle, className: 'timeline-dropdown'},
+            'Timeline Title'
+        div className: 'right',
+          p { onClick: @handleToggle, className: 'user-dropdown' },
+            'User'
+      div className: 'dropdown-content',
         p null,
-          'Epoch'
-      div className: 'center',
-        p { onClick: @handleToggle, className: 'timeline-dropdown'},
-          'Timeline Title'
-      div className: 'right',
-        p { onClick: @handleToggle, className: 'user-dropdown' },
-          'User'
+          'HI'
 
 
 UISecondaryBar = React.createClass
