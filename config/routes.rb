@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root 'pages#index'
 
+  get 'app', to: 'pages#app', as: :app
+
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
 
@@ -16,7 +18,7 @@ Rails.application.routes.draw do
 
   # Todo Can/should we change this to be singular?
   resources :profiles, only: [:index, :edit, :update]
-  
+
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
     match '*path',  :to => 'application#render_404', :via => :all

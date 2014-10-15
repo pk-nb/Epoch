@@ -7,4 +7,9 @@ class PagesController < ApplicationController
                 Array.new
               end
   end
+
+
+  def app
+    render layout: 'app'
+  end
 end

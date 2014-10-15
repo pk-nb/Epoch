@@ -1,9 +1,9 @@
 @mixin shadow_up($height) {
-  box-shadow: 0px -$height 0px 0px $theme-shadow;
+  box-shadow: 0px (-$height) $height $theme-shadow;
 }
 
 @mixin shadow_down($height) {
-  box-shadow: 0px $height $height 0px $theme-shadow;
+  box-shadow: 0px $height $height $theme-shadow;
 }
 
 @mixin shadow_center() {
@@ -20,4 +20,30 @@
   height: 0;
   border-right: $size solid transparent;
   border-bottom: $size solid $color;
+}
+
+@mixin link_point($size, $color) {
+  position: absolute;
+  content: ' ';
+  // top: -$size;
+  right: -$size * 1.5;
+  bottom: $size;
+  width: 0;
+  height: 0;
+  border-left: $size solid transparent;
+  border-bottom: $size solid $color;
+}
+
+@mixin expand_link() {
+  position: relative;
+  &:before {
+    @include link_point(4px, $theme-black-main);
+  }
+
+  &:hover {
+    color: $theme-magenta;
+    &:before {
+      border-bottom-color: $theme-magenta;
+    }
+  }
 }

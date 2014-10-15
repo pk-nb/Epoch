@@ -1,5 +1,6 @@
 # Javascript
 asset 'jquery'
+asset 'react'
 asset 'hidpi-canvas'
 asset 'lodash'
 asset 'hammerjs'

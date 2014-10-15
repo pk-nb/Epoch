@@ -61,6 +61,7 @@ gem 'omniauth-github'
 gem 'faker'
 gem 'placeholder'
 gem 'validates_timeliness'
+gem 'sprockets-coffee-react'
 
 group :development do
   gem "better_errors"
