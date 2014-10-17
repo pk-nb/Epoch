@@ -4,9 +4,11 @@ class SessionsController < ApplicationController
   end
 
   def create
+    # Handle oauth callbacks
     unless params[:provider].nil?
       user = User.from_omniauth(env['omniauth.auth'])
       session[:user_id] = user.id
+      redirect_to root_path
     else
       @session = Session.new(session_params)
       if @session.valid?

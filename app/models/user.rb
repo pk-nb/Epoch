@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
     user.picture = auth.info.image || auth.extra.raw_info.avatar_url
     # todo test this against Facebook and Github...will need to do in production or modify our accounts
     user.email = auth.info.email # todo email things need work
+    user.password = 'testtest' # How to avoid password validation problems?
     user.profile ||= Profile.new()
     user.save!
   end
@@ -37,6 +38,11 @@ class User < ActiveRecord::Base
     save validate: false
   end
 
+  def provider_is_epoch?
+    self.provider  == 'Epoch'
+  end
+
+
   def remove_reset_token
     self.password_reset_token = nil
     self.password_reset_sent_at = nil
@@ -44,10 +50,6 @@ class User < ActiveRecord::Base
   end
 
   private
-  def provider_is_epoch?
-    self.provider  == 'Epoch'
-  end
-
   def generate_token
     SecureRandom.urlsafe_base64
   end

@@ -3,7 +3,6 @@
 .profile
   p= "First Name: #{@profile.first_name}"
   p= "Last Name: #{@profile.last_name}"
-  p= "Email Address: #{@profile.email}"
   p= "Favorite Cake: #{@profile.favorite_cake}"
 
   div=link_to 'Edit', edit_profile_path(@profile)
