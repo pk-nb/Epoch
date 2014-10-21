@@ -34,4 +34,8 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Set react env and use add-ons
+  config.react.variant = :development
+  config.react.addons = true
 end

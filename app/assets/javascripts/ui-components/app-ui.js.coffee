@@ -1,7 +1,7 @@
 {div} = React.DOM
 cx = React.addons.classSet
 
-App = React.createClass
+EpochApp = React.createClass
   displayName: 'EpochApp'
 
   getInitialState: ->
@@ -20,7 +20,8 @@ App = React.createClass
         active: @state.barExpanded is 'top',
         otherActive: @state.barExpanded is 'bottom',
         setAppState: @setAppState
-      UI.TimelineView(),
+      UI.TimelineView
+        user: @props.user
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom',
@@ -28,5 +29,5 @@ App = React.createClass
         setAppState: @setAppState
 
 
-@.EpochUI ?= {}
-@.EpochUI.App = App
+@.EpochApp ?= {}
+@.EpochApp = EpochApp
