@@ -64,6 +64,14 @@
   font-weight: bold;
 }
 
+.avatar {
+  max-width: 1.5em;
+  max-height: 1.5em;
+  vertical-align: bottom;
+  margin-right: 0.5em;
+  border-radius: 3px;
+}
+
 .ui-bar.top {
   @include shadow_down(2px);
 }

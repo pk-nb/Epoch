@@ -1,26 +1,39 @@
-{div, button, p} = React.DOM
+{div, button, p, img} = React.DOM
 cx = React.addons.classSet
 
 UIBarMixin =
-  handleToggle: ->
+  handleToggle: (panel=null) ->
     if @props.active
-      @props.setAppState(barExpanded: false)
+      @props.setAppState(barExpanded: false, expandedPanel: null)
     else
-      @props.setAppState(barExpanded: @props.id)
+      @props.setAppState(barExpanded: @props.id, expandedPanel: panel)
 
 
 UIPrimaryBar = React.createClass
   displayName: 'UIPrimaryBar'
   mixins: [UIBarMixin]
 
+  getInitialState: ->
+    dropdownPanel: null
+
+  getDefaultProps: ->
+    panelIds: {
+      timeline: 'timeline',
+      user: 'user'
+    }
+
+  handleUserClick: ->
+    @handleToggle(@props.panelIds.user)
+
   render: ->
+    # Create class list with React Addon class helper
     classes = {
       'ui-bar': true,
       'active': @props.active,
       'other-active': @props.otherActive
     }
-
     classes[@props.id] = true
+
 
     div className: cx(classes),
       div className: 'shelf',
@@ -31,11 +44,20 @@ UIPrimaryBar = React.createClass
           p { onClick: @handleToggle, className: 'dropdown-link'},
             'Timeline Title'
         div className: 'right',
-          p { onClick: @handleToggle, className: 'dropdown-link' },
-            'User'
+          img {className: 'avatar', src: @props.user.picture},
+          p { onClick: @handleUserClick, className: 'dropdown-link' },
+            @props.user.name
       div className: 'dropdown-content',
-        p null,
-          'HI'
+        @dropdownContent()
+
+  dropdownContent: ->
+    UI = window.EpochUI
+    if @props.expandedPanel == @props.panelIds.user
+      UI.UserPanel
+        user: @props.user
+    else
+      p null,
+        'Hello from an unimplemented panel'
 
 
 UISecondaryBar = React.createClass

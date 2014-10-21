@@ -6,7 +6,8 @@ TimelineView = React.createClass
   render: ->
     div className: 'timeline-view',
       p null,
-        @props.user
+        'Hello'
+
 
 @.EpochUI ?= {}
 @.EpochUI.TimelineView = TimelineView

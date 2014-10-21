@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
     user.save!
   end
 
+<<<<<<< HEAD
   def add_reset_token
     self.password_reset_token = generate_token
     self.password_reset_sent_at = Time.zone.now
@@ -52,5 +53,11 @@ class User < ActiveRecord::Base
   private
   def generate_token
     SecureRandom.urlsafe_base64
+  end
+
+  # Only give client what it needs to know
+  def as_json(options={})
+    options[:only] ||= [:name, :picture]
+    super(options)
   end
 end
