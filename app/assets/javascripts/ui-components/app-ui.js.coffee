@@ -1,7 +1,7 @@
 {div} = React.DOM
 cx = React.addons.classSet
 
-App = React.createClass
+EpochApp = React.createClass
   displayName: 'EpochApp'
 
   getInitialState: ->
@@ -28,5 +28,5 @@ App = React.createClass
         setAppState: @setAppState
 
 
-@.EpochUI ?= {}
-@.EpochUI.App = App
+@.EpochApp ?= {}
+@.EpochApp = EpochApp
