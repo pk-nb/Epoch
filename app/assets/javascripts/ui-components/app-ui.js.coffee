@@ -20,7 +20,8 @@ EpochApp = React.createClass
         active: @state.barExpanded is 'top',
         otherActive: @state.barExpanded is 'bottom',
         setAppState: @setAppState
-      UI.TimelineView(),
+      UI.TimelineView
+        user: @props.user
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom',
