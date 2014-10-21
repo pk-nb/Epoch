@@ -61,7 +61,10 @@ gem 'omniauth-github'
 gem 'faker'
 gem 'placeholder'
 gem 'validates_timeliness'
-gem 'sprockets-coffee-react'
+
+# React and JSExec VM
+gem 'react-rails', '~> 1.0.0.pre', github: 'reactjs/react-rails'
+gem "therubyracer", :platforms => :ruby
 
 group :development do
   gem "better_errors"

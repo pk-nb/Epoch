@@ -12,8 +12,10 @@
 #
 #= require jquery
 #= require react/react-with-addons
+#= require react_ujs
 #= require lodash/dist/lodash.min
 #= require hammerjs
 #= require hammer-jquery/jquery.hammer
-#= require_tree ./ui-components
+#------- require_tree ./ui-components
+#= require components
 #= require binding
