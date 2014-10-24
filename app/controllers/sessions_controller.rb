@@ -11,11 +11,12 @@ class SessionsController < ApplicationController
       redirect_to root_path
     else
       @session = Session.new(session_params)
-      if @session.valid?
-        self.current_user = @session.user
+      binding.pry
+      if @session.valid? && @session.epoch_user
+        self.current_user = @session.epoch_user
         redirect_to root_path
       else
-        # todo how do I make this error show up?
+        # todo This error isn't currently showing up on the form
         flash.now[:error] = 'The email or password is invalid'
         render :new
       end

@@ -5,13 +5,13 @@ class Session
   validates :login, :password, presence: true
   validate :credentials_valid
 
-  def user
-    @user ||= User.find_by_email(login.downcase)
+  def epoch_user
+    @user ||= User.find_by_email_and_provider(login.downcase, 'Epoch')
   end
 
   private
   def credentials_valid
-    if !self.user || !self.user.authenticate(password)
+    if !self.epoch_user || !self.epoch_user.authenticate(password)
       errors.add(:base, 'Credentials are invalid')
     end
   end
