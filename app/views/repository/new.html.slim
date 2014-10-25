@@ -1,0 +1,7 @@
+= render partial: 'components/menu_bar'
+
+- @repositories.each do |r|
+  p= "#{r.id}: #{r.full_name}"
+  ul
+    -r.commits.each do |c|
+      li= c.commit.message

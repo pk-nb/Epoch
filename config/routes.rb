@@ -17,6 +17,9 @@ Rails.application.routes.draw do
     resources :events #, only: [:new, :create, :update, :edit, :destroy]
     resources :timelines, only: [:index, :new, :create]
   end
+
+  resources :repository, only: [:new, :create]
+
   get 'timelines/:id/children', to: 'timelines#children'
 
   # Todo Can/should we change this to be singular?
