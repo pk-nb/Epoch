@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
     user.password = 'testtest' # How to avoid password validation problems?
     user.profile ||= Profile.new()
     user.save!
+    # github username is in auth.raw_info.login
   end
 
   def add_reset_token
