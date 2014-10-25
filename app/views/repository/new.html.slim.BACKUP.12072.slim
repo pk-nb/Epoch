@@ -1,0 +1,11 @@
+= render partial: 'components/menu_bar'
+<<<<<<< HEAD
+p= "Current Rate Limit: #{@limit}"
+=======
+
+>>>>>>> Installed Octokit and set up some temporary routes/controller actions to explore the Github api.
+- @repositories.each do |r|
+  p= "#{r.id}: #{r.full_name}"
+  ul
+    -r.commits.each do |c|
+      li= c.commit.message

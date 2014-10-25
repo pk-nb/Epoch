@@ -1,0 +1,7 @@
+= render partial: 'components/menu_bar'
+p= "Current Rate Limit: #{@limit}"
+- @repositories.each do |r|
+  p= "#{r.id}: #{r.full_name}"
+  ul
+    -r.commits.each do |c|
+      li= c.commit.message
