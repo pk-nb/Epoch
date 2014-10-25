@@ -97,6 +97,9 @@ GEM
     connection_pool (2.0.0)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
+    dotenv (1.0.2)
+    dotenv-rails (1.0.2)
+      dotenv (= 1.0.2)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -180,6 +183,8 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
+    octokit (3.4.2)
+      sawyer (~> 0.5.3)
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
@@ -273,6 +278,9 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0.0)
+    sawyer (0.5.5)
+      addressable (~> 2.3.5)
+      faraday (~> 0.8, < 0.10)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -349,6 +357,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.0.0)
   compass-rails
+  dotenv-rails
   factory_girl_rails
   faker
   foreigner
@@ -360,6 +369,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   launchy
   normalize-rails
+  octokit (~> 3.0)
   omniauth
   omniauth-facebook (= 1.4.0)
   omniauth-github

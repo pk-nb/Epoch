@@ -61,6 +61,7 @@ gem 'omniauth-github'
 gem 'faker'
 gem 'placeholder'
 gem 'validates_timeliness'
+gem 'octokit', '~> 3.0'
 
 # React and JSExec VM
 gem 'react-rails', '~> 1.0.0.pre', github: 'reactjs/react-rails'
@@ -78,6 +79,7 @@ group :development do
 end
 
 group :test, :development do
+  gem 'dotenv-rails'
   gem "pry"
   gem "rspec-rails"
   gem "factory_girl_rails"
