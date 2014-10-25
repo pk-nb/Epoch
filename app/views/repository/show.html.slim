@@ -1,0 +1,5 @@
+= render partial: 'components/menu_bar'
+p= "#{@repo.id}: #{@repo.full_name}"
+ul
+  -@repo.commits.each do |c|
+    li= c.commit.message
