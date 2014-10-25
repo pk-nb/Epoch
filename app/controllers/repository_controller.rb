@@ -6,11 +6,16 @@ class RepositoryController < ApplicationController
     @repositories.each do |r|
       r[:commits] = @client.commits(r)
     end
-    binding.pry
+    @limit = @client.limit
     respond_to do |format|
       format.html
       format.json {render json: @repositories}
     end
+  end
+
+  def show
+    @repo = @client.repo(params[:id], params[:repo])
+    @repo[:commits] = @client.commits(@repo)
   end
 
   def create

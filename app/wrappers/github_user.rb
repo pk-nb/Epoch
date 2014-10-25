@@ -14,7 +14,15 @@ class GithubUser
     #binding.pry
   end
 
+  def repo(user, repo)
+    @client.repository("#{user}/#{repo}")
+  end
+
   def commits(repo)
     repo.rels[:commits].get.data
+  end
+
+  def limit
+    @client.rate_limit
   end
 end
