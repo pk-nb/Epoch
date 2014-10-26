@@ -1,5 +1,9 @@
 class ProfilesController < ApplicationController
   def index
+    redirect_to profile_path current_user.profile
+  end
+
+  def show
     @profile = current_user.profile
   end
 
@@ -9,7 +13,7 @@ class ProfilesController < ApplicationController
 
   def update
     current_user.profile.update!(profile_params)
-    redirect_to profiles_path
+    redirect_to current_user.profile
   end
 
   private

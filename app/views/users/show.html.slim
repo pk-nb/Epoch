@@ -1,0 +1,9 @@
+= render partial: 'components/menu_bar'
+.user
+  p= "Name: #{@user.name}"
+  p= "Email Address: #{@user.email}"
+  p= "Password: ********"
+div
+  = link_to 'Edit', edit_user_path(@user)
+div
+  = button_to 'Delete Account', user_path(@user), :method => :delete

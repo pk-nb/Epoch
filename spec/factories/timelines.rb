@@ -6,6 +6,7 @@ FactoryGirl.define do
     content "MyString"
     start_date "2014-10-01 19:19:09"
     end_date "2014-10-01 19:19:09"
+    user_id 1
   end
   
   factory :invalid_timeline, parent: :timeline do

@@ -6,9 +6,12 @@ Rails.application.routes.draw do
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
 
-  resources :sessions, only: [:create, :destroy]
+  resources :users, only: [:new, :create, :index, :show, :edit, :update, :destroy]
+  resources :sessions, only: [:new, :create, :destroy]
   get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
+
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
   resources :timelines do
     resources :events #, only: [:new, :create, :update, :edit, :destroy]
@@ -17,8 +20,8 @@ Rails.application.routes.draw do
   get 'timelines/:id/children', to: 'timelines#children'
 
   # Todo Can/should we change this to be singular?
-  resources :profiles, only: [:index, :edit, :update]
-
+  resources :profiles, only: [:index, :show, :edit, :update]
+  
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError
   unless Rails.env.development?
     match '*path',  :to => 'application#render_404', :via => :all
