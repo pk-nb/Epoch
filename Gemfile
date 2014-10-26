@@ -64,7 +64,8 @@ gem 'validates_timeliness'
 
 # React and JSExec VM
 gem 'react-rails', '~> 1.0.0.pre', github: 'reactjs/react-rails'
-gem "therubyracer", :platforms => :ruby
+gem 'therubyracer', :platforms => :ruby
+gem 'js-routes'
 
 group :development do
   gem "better_errors"

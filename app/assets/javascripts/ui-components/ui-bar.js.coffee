@@ -44,9 +44,10 @@ UIPrimaryBar = React.createClass
           p { onClick: @handleToggle, className: 'dropdown-link'},
             'Timeline Title'
         div className: 'right',
-          img {className: 'avatar', src: @props.user.picture},
-          p { onClick: @handleUserClick, className: 'dropdown-link' },
-            @props.user.name
+          @user(),
+          # img {className: 'avatar', src: @props.user.picture},
+          # p { onClick: @handleUserClick, className: 'dropdown-link' },
+          #   @props.user.name
       div className: 'dropdown-content',
         @dropdownContent()
 
@@ -58,6 +59,16 @@ UIPrimaryBar = React.createClass
     else
       p null,
         'Hello from an unimplemented panel'
+
+  user: ->
+    if @props.user
+      div null,
+        img {className: 'avatar', src: @props.user.picture}
+        p { onClick: @handleUserClick, className: 'dropdown-link' },
+          @props.user.name
+    else
+      p { onClick: @handleUserClick, className: 'dropdown-link' },
+        'Login'
 
 
 UISecondaryBar = React.createClass

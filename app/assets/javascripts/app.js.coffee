@@ -16,5 +16,6 @@
 #= require lodash/dist/lodash.min
 #= require hammerjs
 #= require hammer-jquery/jquery.hammer
+#= require js-routes
 #= require components
 #= require binding
