@@ -20,19 +20,41 @@
   .dropdown-content {
     @include flex(1);
     width: 100%;
-    background-color: #aaa;
+    // background-color: #aaa;
     // display: none;
     // height: 0;
-    opacity: 0;
-    transition: opacity $opacity-animation-speed ease-in-out;
+    // opacity: 0;
+    // transition: opacity $opacity-animation-speed ease-in-out;
   }
+
 
   &.active .dropdown-content {
     // display: block;
     // height: auto;
-    opacity: 1;
+    // opacity: 1;
+    // transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+  }
+
+  .dropdown-top-enter {
+    opacity: 0.01;
     transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
   }
+
+  .dropdown-top-enter.dropdown-top-enter-active {
+    opacity: 1;
+  }
+
+  .dropdown-top-leave {
+    opacity: 1;
+    transition: opacity $opacity-animation-speed ease-in-out;
+  }
+
+  .dropdown-top-leave.dropdown-top-leave-active {
+    opacity: 0.01;
+  }
+
+
+
 }
 
 .left,

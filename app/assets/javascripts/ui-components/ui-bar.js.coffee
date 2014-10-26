@@ -1,5 +1,6 @@
 {div, button, p, img} = React.DOM
 cx = React.addons.classSet
+ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 UIBarMixin =
   handleToggle: (panel=null) ->
@@ -49,16 +50,18 @@ UIPrimaryBar = React.createClass
           # p { onClick: @handleUserClick, className: 'dropdown-link' },
           #   @props.user.name
       div className: 'dropdown-content',
-        @dropdownContent()
+        ReactCSSTransitionGroup {transitionName: 'dropdown-top'},
+          @dropdownContent()
 
   dropdownContent: ->
     UI = window.EpochUI
     if @props.expandedPanel == @props.panelIds.user
       UI.UserPanel
         user: @props.user
+        key: 'userPanel'
     else
-      p null,
-        'Hello from an unimplemented panel'
+      # Default Panel set to display: none
+      div {key: 'nothing'}, null
 
   user: ->
     if @props.user
@@ -86,8 +89,8 @@ UISecondaryBar = React.createClass
 
     div className: cx(classes),
       div className: 'dropdown-content',
-        p null,
-          'HI'
+        ReactCSSTransitionGroup {transitionName: 'dropdown-bottom'},
+          div {key: 'nothing'}, null
       div className: 'shelf',
         div className: 'left',
           p { onClick: @handleToggle, className: 'dropdown-link'},
