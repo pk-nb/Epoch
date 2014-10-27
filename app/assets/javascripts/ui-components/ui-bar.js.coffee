@@ -23,8 +23,10 @@ UIPrimaryBar = React.createClass
       user: 'user'
     }
 
-  handleUserClick: ->
-    @handleToggle(@props.panelIds.user)
+  # Returns function (curry) that will be run on click
+  handleClick: (panelId=null)->
+    =>
+      @handleToggle(panelId)
 
   render: ->
     # Create class list with React Addon class helper
@@ -37,18 +39,7 @@ UIPrimaryBar = React.createClass
 
 
     div className: cx(classes),
-      div className: 'shelf',
-        div className: 'left logo',
-          p null,
-            'Epoch'
-        div className: 'center',
-          p { onClick: @handleToggle, className: 'dropdown-link'},
-            'Timeline Title'
-        div className: 'right',
-          @user(),
-          # img {className: 'avatar', src: @props.user.picture},
-          # p { onClick: @handleUserClick, className: 'dropdown-link' },
-          #   @props.user.name
+      @shelf(),
       div className: 'dropdown-content',
         ReactCSSTransitionGroup {transitionName: 'dropdown-top'},
           @dropdownContent()
@@ -63,15 +54,29 @@ UIPrimaryBar = React.createClass
       # Default Panel set to display: none
       div {key: 'nothing'}, null
 
-  user: ->
-    if @props.user
-      div null,
-        img {className: 'avatar', src: @props.user.picture}
-        p { onClick: @handleUserClick, className: 'dropdown-link' },
-          @props.user.name
+  shelf: ->
+    UI = window.EpochUI
+    if @props.expandedPanel == @props.panelIds.user
+      UI.UserShelf
+        user: @props.user,
+        handleClick: @handleClick
+        panelIds: @props.panelIds
     else
-      p { onClick: @handleUserClick, className: 'dropdown-link' },
-        'Login'
+      UI.DefaultTopShelf
+        user: @props.user,
+        handleClick: @handleClick
+        panelIds: @props.panelIds
+
+
+  # user: ->
+  #   if @props.user
+  #     div null,
+  #       img {className: 'avatar', src: @props.user.picture}
+  #       p { onClick: @handleUserClick, className: 'dropdown-link' },
+  #         @props.user.name
+  #   else
+  #     p { onClick: @handleUserClick, className: 'dropdown-link' },
+  #       'Login'
 
 
 UISecondaryBar = React.createClass

@@ -1,0 +1,48 @@
+{div, p, img} = React.DOM
+
+UserNameMixin =
+  user: ->
+    if @props.user
+      div null,
+        img {className: 'avatar', src: @props.user.picture}
+        p { onClick: @props.handleClick(@props.panelIds.user), className: 'dropdown-link' },
+          @props.user.name
+    else
+      p { onClick: @props.handleClick(@props.panelIds.user), className: 'dropdown-link' },
+        'Login'
+
+
+DefaultTopShelf = React.createClass
+  displayName: 'DefaultTopShelf'
+  mixins: [UserNameMixin]
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        p className: 'logo',
+          'Epoch'
+      div className: 'center',
+        p { onClick: @props.handleClick(@props.panelIds.timeline), className: 'dropdown-link'},
+          'Timeline Title'
+      div className: 'right',
+        @user()
+
+
+UserShelf = React.createClass
+  displayName: 'UserShelf'
+  mixins: [UserNameMixin]
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        img {onClick: @props.handleClick(), src: '<%= asset_path 'x-icon.svg' %>' }
+      div className: 'center',
+        p null,
+          if @props.user then 'User Profile' else 'Login'
+      div className: 'right',
+        @user()
+
+
+@.EpochUI ?= {}
+@.EpochUI.DefaultTopShelf = DefaultTopShelf
+@.EpochUI.UserShelf = UserShelf
