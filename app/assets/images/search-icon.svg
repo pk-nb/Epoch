@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
+    <title>search-icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Notes" sketch:type="MSArtboardGroup" transform="translate(-189.000000, -885.000000)" fill="#4A4A4A">
+            <path d="M195.8,898.6 C192.044464,898.6 189,895.555536 189,891.8 C189,888.044464 192.044464,885 195.8,885 C199.555536,885 202.6,888.044464 202.6,891.8 C202.6,893.268608 202.134437,894.628478 201.342848,895.740072 L205.42916,899.826385 C205.877726,900.274951 205.875928,900.990739 205.433333,901.433333 C204.987653,901.879013 204.271284,901.874059 203.826385,901.42916 L199.740072,897.342848 C198.628478,898.134437 197.268608,898.6 195.8,898.6 Z M195.8,896.333333 C198.303691,896.333333 200.333333,894.303691 200.333333,891.8 C200.333333,889.296309 198.303691,887.266667 195.8,887.266667 C193.296309,887.266667 191.266667,889.296309 191.266667,891.8 C191.266667,894.303691 193.296309,896.333333 195.8,896.333333 L195.8,896.333333 Z" id="search-icon" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>
