@@ -18,6 +18,22 @@
 
   &.bottom {
     @include shadow_up(2px);
+    position: relative;
+
+    // Up arrow overlay
+    &:before {
+      position: absolute;
+      content: ' ';
+      z-index: 201;
+      top: -16px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 33px;
+      height: 17px;
+      background-image: image-url('timeline-arrow.svg');
+      background-size: 33px 17px;
+    }
   }
 }
 
