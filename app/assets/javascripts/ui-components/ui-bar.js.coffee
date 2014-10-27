@@ -35,7 +35,9 @@ UIPrimaryBar = React.createClass
     classes[@props.id] = true
 
     div className: cx(classes),
-      @shelf(),
+      div className: 'shelf-content',
+        ReactCSSTransitionGroup {transitionName: 'shelf-top'},
+            @shelf()
       div className: 'dropdown-content',
         ReactCSSTransitionGroup {transitionName: 'dropdown-top'},
           @dropdownContent()
@@ -44,8 +46,9 @@ UIPrimaryBar = React.createClass
     UI = window.EpochUI
     if @props.expandedPanel == @props.panelIds.user
       UI.UserPanel
+        key: 'userPanel',
         user: @props.user
-        key: 'userPanel'
+
     else
       # Default Panel set to display: none
       div {key: 'nothing'}, null
@@ -54,13 +57,15 @@ UIPrimaryBar = React.createClass
     UI = window.EpochUI
     if @props.expandedPanel == @props.panelIds.user
       UI.UserShelf
+        key: 'userShelf',
         user: @props.user,
-        handleClick: @handleClick
+        handleClick: @handleClick,
         panelIds: @props.panelIds
     else
       UI.DefaultTopShelf
+        key: 'defaultTopShelf',
         user: @props.user,
-        handleClick: @handleClick
+        handleClick: @handleClick,
         panelIds: @props.panelIds
 
 
@@ -82,16 +87,17 @@ UISecondaryBar = React.createClass
       div className: 'dropdown-content',
         ReactCSSTransitionGroup {transitionName: 'dropdown-bottom'},
           div {key: 'nothing'}, null
-      div className: 'shelf',
-        div className: 'left',
-          p { onClick: @handleToggle, className: 'dropdown-link'},
-            'Event Name'
-        div className: 'center',
-          p { onClick: @handleToggle, className: 'dropdown-link'},
-            '1999'
-        div className: 'right',
-          p { onClick: @handleToggle, className: 'dropdown-link' },
-            '+'
+      div className: 'shelf-content',
+        div className: 'shelf',
+          div className: 'left',
+            p { onClick: @handleToggle, className: 'dropdown-link'},
+              'Event Name'
+          div className: 'center',
+            p { onClick: @handleToggle, className: 'dropdown-link'},
+              '1999'
+          div className: 'right',
+            p { onClick: @handleToggle, className: 'dropdown-link' },
+              '+'
 
 
 @.EpochUI ?= {}

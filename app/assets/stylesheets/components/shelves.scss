@@ -1,4 +1,14 @@
+.shelf-content {
+  height: $header-height;
+  width: 100%;
+  position: relative;
+}
+
 .shelf {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
   @include display(flex);
   height: $header-height;
   width: 100%;
@@ -68,4 +78,27 @@
       margin-right: 0.5em;
     }
   }
+}
+
+
+// ReactCSSAnimationGroup transitions for top shelf
+.shelf-top-enter {
+  opacity: 0.01;
+}
+
+.shelf-top-enter.shelf-top-enter-active {
+  opacity: 1;
+  // Move transition to here to fix iOS8/Safari bug
+  -webkit-transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+  transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+}
+
+.shelf-top-leave {
+  opacity: 1;
+  -webkit-transition: opacity $opacity-animation-speed ease-in-out;
+  transition: opacity $opacity-animation-speed ease-in-out;
+}
+
+.shelf-top-leave.shelf-top-leave-active {
+  opacity: 0.01;
 }
