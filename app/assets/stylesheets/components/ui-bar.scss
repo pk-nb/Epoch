@@ -20,6 +20,9 @@
   .dropdown-content {
     @include flex(1);
     width: 100%;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+
     // background-color: #aaa;
     // display: none;
     // height: 0;
@@ -37,15 +40,19 @@
 
   .dropdown-top-enter {
     opacity: 0.01;
-    transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+
   }
 
   .dropdown-top-enter.dropdown-top-enter-active {
     opacity: 1;
+    // Move transition to here to fix iOS8/Safari bug
+    -webkit-transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+    transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
   }
 
   .dropdown-top-leave {
     opacity: 1;
+    -webkit-transition: opacity $opacity-animation-speed ease-in-out;
     transition: opacity $opacity-animation-speed ease-in-out;
   }
 
