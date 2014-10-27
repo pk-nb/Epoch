@@ -3,40 +3,36 @@ cx = React.addons.classSet
 ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 UIBarMixin =
-  handleToggle: (panel=null) ->
-    if @props.active
-      @props.setAppState(barExpanded: false, expandedPanel: null)
-    else
-      @props.setAppState(barExpanded: @props.id, expandedPanel: panel)
-
-
-UIPrimaryBar = React.createClass
-  displayName: 'UIPrimaryBar'
-  mixins: [UIBarMixin]
-
-  getInitialState: ->
-    dropdownPanel: null
-
   getDefaultProps: ->
     panelIds: {
       timeline: 'timeline',
       user: 'user'
     }
 
+  handleToggle: (panel=null) ->
+    if @props.active
+      @props.setAppState(barExpanded: false, expandedPanel: null)
+    else
+      @props.setAppState(barExpanded: @props.id, expandedPanel: panel)
+
   # Returns function (curry) that will be run on click
   handleClick: (panelId=null)->
     =>
       @handleToggle(panelId)
 
+
+UIPrimaryBar = React.createClass
+  displayName: 'UIPrimaryBar'
+  mixins: [UIBarMixin]
+
   render: ->
-    # Create class list with React Addon class helper
+    # Turn on / off classes for expansion animation with React Class helper
     classes = {
       'ui-bar': true,
       'active': @props.active,
       'other-active': @props.otherActive
     }
     classes[@props.id] = true
-
 
     div className: cx(classes),
       @shelf(),
@@ -68,22 +64,12 @@ UIPrimaryBar = React.createClass
         panelIds: @props.panelIds
 
 
-  # user: ->
-  #   if @props.user
-  #     div null,
-  #       img {className: 'avatar', src: @props.user.picture}
-  #       p { onClick: @handleUserClick, className: 'dropdown-link' },
-  #         @props.user.name
-  #   else
-  #     p { onClick: @handleUserClick, className: 'dropdown-link' },
-  #       'Login'
-
-
 UISecondaryBar = React.createClass
   displayName: 'UISecondaryBar'
   mixins: [UIBarMixin]
 
   render: ->
+    # Turn on / off classes for expansion animation with React Class helper
     classes = {
       'ui-bar': true,
       'active': @props.active,

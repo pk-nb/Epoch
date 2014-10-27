@@ -1,12 +1,13 @@
-{div, p, img} = React.DOM
+{div, p, img, span} = React.DOM
 
 UserNameMixin =
   user: ->
     if @props.user
-      div null,
-        img {className: 'avatar', src: @props.user.picture}
+      div className: 'shelf-user',
         p { onClick: @props.handleClick(@props.panelIds.user), className: 'dropdown-link' },
-          @props.user.name
+          img {className: 'avatar', src: @props.user.picture},
+          span null,
+            @props.user.name
     else
       p { onClick: @props.handleClick(@props.panelIds.user), className: 'dropdown-link' },
         'Login'

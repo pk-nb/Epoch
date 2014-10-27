@@ -1,0 +1,71 @@
+.shelf {
+  @include display(flex);
+  height: $header-height;
+  width: 100%;
+
+  p {
+    margin: 0;
+    display: inline-block;
+  }
+}
+
+.left,
+.right {
+  @include flex(1);
+  margin: auto;
+}
+
+.left {
+  padding-left: $edge-spacing;
+}
+
+.right {
+  text-align: right;
+  padding-right: $edge-spacing;
+}
+
+.center {
+  margin: auto;
+  text-align: center;
+}
+
+.logo {
+  font-size: 1.125em;
+  font-weight: bold;
+}
+
+.avatar {
+  max-width: 1.5em;
+  max-height: 1.5em;
+  vertical-align: bottom;
+  border-radius: 3px;
+}
+
+.dropdown-link {
+  @include expand_link();
+}
+
+.shelf-icon {
+  display: block;
+}
+
+// Hide username and just show avatar on small screens
+.shelf-user {
+  span {
+    display: none;
+  }
+
+  .avatar {
+    margin-right: 0;
+  }
+
+  @media screen and (min-width: $break-mid) {
+    span {
+      display: inline;
+    }
+
+    .avatar {
+      margin-right: 0.5em;
+    }
+  }
+}
