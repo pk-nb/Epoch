@@ -101,6 +101,10 @@
   border-radius: 3px;
 }
 
+.shelf-icon {
+  display: block;
+}
+
 .ui-bar.top {
   @include shadow_down(2px);
 }
