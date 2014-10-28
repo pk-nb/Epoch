@@ -24,9 +24,8 @@ class PasswordResetsController < ApplicationController
 
   def update
     @password_reset = PasswordReset.find(params[:id])
-    binding.pry
     if @password_reset.update_attributes(reset_params)
-      self.current_user = @password_reset.epoch_user
+      self.current_user = @password_reset.user
       flash[:notice] = 'Password successfully changed'
       redirect_to root_path
     else
