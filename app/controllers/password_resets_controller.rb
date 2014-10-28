@@ -1,3 +1,4 @@
+# TODO FIX THIS CONTROLLER
 class PasswordResetsController < ApplicationController
   def new
     @password_reset = PasswordReset.new

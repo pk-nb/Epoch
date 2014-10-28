@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
   def password_reset(user)
     @user = user
-    mail(to: @user.email,
+    mail(to: @user.epoch_account.email,
          subject: 'Reset Password - Epoch',
          template_path: 'mail')
   end
