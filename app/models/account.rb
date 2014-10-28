@@ -8,8 +8,8 @@ class Account < ActiveRecord::Base
   validates_presence_of :name, :provider
   validates_presence_of :user_id
 
-  def self.user_from_omniauth(auth)
-    account = find_by_provider_and_uid(auth.provider, auth.uid.to_s)
+  def self.user_from_email(auth)
+    account = find_by_email(auth.info.email)
     if account.nil?
       nil
     else

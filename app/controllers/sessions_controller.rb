@@ -9,8 +9,7 @@ class SessionsController < ApplicationController
       auth = env['omniauth.auth']
       # todo handle add account callbacks here
       if current_user.nil?
-        # todo compare email addresses to add to an existing account
-        user = User.new_from_omniauth(auth)
+        user = User.retrieve_or_create_from_omniauth(auth)
       else # user was already logged in
         user = current_user
         user.add_or_update_oauth_account(auth)
