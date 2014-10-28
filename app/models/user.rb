@@ -5,14 +5,15 @@ class User < ActiveRecord::Base
   has_many :accounts
 
   # Create/initialize a new user from an oauth provider
-  def self.from_omniauth(auth)
+  def self.new_from_omniauth(auth)
     user = Account.user_from_omniauth(auth) || User.create
     user.update_with_remote_data(auth)
     user
   end
 
   # Add an oauth account for a new provider to an existing user
-  def add_oauth_account(auth)
+  # If the user already has an oauth account for this provider, the account will be updated instead of a new account being created
+  def add_or_update_oauth_account(auth)
     update_with_remote_data(auth)
   end
 

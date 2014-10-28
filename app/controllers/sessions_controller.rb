@@ -6,7 +6,15 @@ class SessionsController < ApplicationController
   def create
     # Handle oauth callbacks
     unless params[:provider].nil?
-      user = User.from_omniauth(env['omniauth.auth'])
+      auth = env['omniauth.auth']
+      # todo handle add account callbacks here
+      if current_user.nil?
+        # todo compare email addresses to add to an existing account
+        user = User.new_from_omniauth(auth)
+      else # user was already logged in
+        user = current_user
+        user.add_or_update_oauth_account(auth)
+      end
       session[:user_id] = user.id
       redirect_to root_path
     else

@@ -1,0 +1,6 @@
+= simple_form_for [@user, @account] do |f|
+  = f.input :name
+  = f.input :email
+  = f.input :password, required: true
+  = f.input :password_confirmation, required: true
+  = f.submit
