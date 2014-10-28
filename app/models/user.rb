@@ -52,7 +52,4 @@ class User < ActiveRecord::Base
     options[:only] ||= [:name, :picture]
     super(options)
   end
-
-  end
-
 end
