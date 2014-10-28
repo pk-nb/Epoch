@@ -1,18 +1,2 @@
 - profile_form = render partial: 'profiles/form'
-
 = react_component 'EpochApp', {user: current_user.as_json, profile_form: profile_form}, {prerender: true}
-
-
-// Two options
-// Transfer through the app
-// Or put stuff on the winodw
-
-
-
-/ #epoch-app
-  / .loading
-  /   .loading-container
-  /     .spinner
-  /       .double-bounce1
-  /       .double-bounce2
-  /     p.loading-text Epoch is loading...

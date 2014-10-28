@@ -12,6 +12,10 @@
     -webkit-transform-style: preserve-3d;
   }
 
+  .dropdown-container {
+    padding: 1em;
+  }
+
   &.top {
     @include shadow_down(2px);
   }
