@@ -11,7 +11,6 @@ class GithubUser
     @user.rels[:repos].get.data
     #repo = repos[0]
     #commits = repo.rels[:commits].get.data
-    #binding.pry
   end
 
   def repo(user, repo)
