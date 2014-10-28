@@ -8,7 +8,6 @@ class SessionsController < ApplicationController
     unless params[:provider].nil?
       user = User.from_omniauth(env['omniauth.auth'])
       session[:user_id] = user.id
-      binding.pry
       redirect_to root_path
     else
       @session = Session.new(session_params)

@@ -1,4 +1,4 @@
-= simple_form_for @user do |f|
+= simple_form_for @account, url: url_for(action: 'create', controller: 'users') do |f|
   = f.input :name
   = f.input :email
   = f.input :password, required: true

@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    @account = Account.new
   end
 
   # GET /users/1/edit
@@ -25,9 +26,21 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.new(user_params.merge(provider: 'Epoch'))
+    @user = User.new()
+    error = false
     if @user.save
-      self.current_user = @user
+      @account = @user.accounts.new(account_params.merge(provider: 'Epoch'))
+      if @account.save
+        self.current_user = @user
+      else
+        @user.destroy
+        error = true
+      end
+    else
+      error = true
+    end
+
+    unless error
       redirect_to root_path
     else
       flash.now[:error] = 'Unable to create account. Please correct the fields below'
@@ -54,7 +67,6 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     current_user.destroy
-    binding.pry
     respond_to do |format|
       format.html { redirect_to logout_path, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
@@ -63,7 +75,7 @@ class UsersController < ApplicationController
 
   private
     # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    def account_params
+      params.require(:account).permit(:name, :email, :password, :password_confirmation)
     end
 end

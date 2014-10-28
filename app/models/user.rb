@@ -29,12 +29,16 @@ class User < ActiveRecord::Base
     first_account.picture
   end
 
+  def email
+    first_account.email
+  end
+
   def epoch_account
     @epoch_account ||= self.accounts.find_by_provider('Epoch')
   end
 
   def github_account
-    self.accounts.find_by_provider('Github')
+    self.accounts.find_by_provider('github')
   end
 
   def first_account

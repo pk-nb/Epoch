@@ -29,6 +29,8 @@ class AccountsController < ApplicationController
     end
   end
   #TODO FIXME
+  # PATCH/PUT /users/1
+  # PATCH/PUT /users/1.json
   def update
     @user = current_user
     respond_to do |format|
@@ -41,10 +43,9 @@ class AccountsController < ApplicationController
       end
     end
   end
-  # TODO FIX ME
+
   def destroy
     current_user.destroy
-    binding.pry
     respond_to do |format|
       format.html { redirect_to logout_path, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
