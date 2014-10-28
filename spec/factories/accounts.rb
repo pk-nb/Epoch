@@ -6,10 +6,11 @@ FactoryGirl.define do
   end
 
   factory :account_oauth, parent: :account do
-    provider 'MyString'
+    provider 'SomeProvider'
     uid 'MyString'
     oauth_token 'MyString'
     oauth_expires_at '2014-09-03 21:01:29'
+    password 'testtest' #todo not this
   end
 
   factory :account_internal, parent: :account do

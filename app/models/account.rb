@@ -2,10 +2,11 @@ class Account < ActiveRecord::Base
   has_secure_password
   belongs_to :user
 
-  validates :email, presence: true, uniqueness: {case_sensitive: false, scope: :provider},
-            email: true, if: :provider_is_epoch?
+  validates :email, presence: true, email: true, if: :provider_is_epoch?
+  validates_uniqueness_of :email, scope: [:provider], case_sensitive: false, if: :not_empty?
   validates :password, length: { minimum: 8 }, if: :provider_is_epoch?
   validates_presence_of :name, :provider
+  validates_presence_of :user_id
 
   def self.user_from_omniauth(auth)
     account = find_by_provider_and_uid(auth.provider, auth.uid.to_s)
@@ -51,5 +52,9 @@ class Account < ActiveRecord::Base
   private
   def generate_token
     SecureRandom.urlsafe_base64
+  end
+
+  def not_empty?
+    email && email.length > 0
   end
 end

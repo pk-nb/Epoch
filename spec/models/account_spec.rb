@@ -2,15 +2,32 @@ require 'rails_helper'
 
 RSpec.describe Account, :type => :model do
   describe 'oauth accounts' do
-    pending "add oauth examples #{__FILE__}"
+    before do
+      @user = User.create()
+    end
+
+    it 'should not allow duplicate email addresses' do
+      account1 = @user.accounts.create(FactoryGirl.attributes_for(:account_oauth).merge(email: 'isaac.hermens@gmail.com'))
+      expect(account1).to be_valid
+      account2 = @user.accounts.create(FactoryGirl.attributes_for(:account_oauth).merge(email: 'isaac.hermens@gmail.com'))
+      expect(account2).to_not be_valid
+    end
+
+    after do
+      @user.destroy
+    end
+
+    pending "add more oauth examples #{__FILE__}"
   end
+
+  it {should validate_presence_of(:name)}
+  it {should validate_presence_of(:user_id)}
 
   describe 'Epoch accounts' do
     before do
-      @epoch_account = Account.new(FactoryGirl.attributes_for(:account_internal))
+      @user = User.create()
+      @epoch_account = @user.accounts.new(FactoryGirl.attributes_for(:account_internal))
     end
-
-    it {should validate_presence_of(:name)}
 
     it 'should have a valid factory' do
       expect(@epoch_account).to be_valid
@@ -40,6 +57,10 @@ RSpec.describe Account, :type => :model do
       expect{@epoch_account.add_reset_token}.to change{@epoch_account.password_reset_token}
       @epoch_account.remove_reset_token
       expect(@epoch_account.password_reset_token).to be_nil
+    end
+
+    after do
+      @user.destroy
     end
   end
 end
