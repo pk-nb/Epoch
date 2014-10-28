@@ -36,14 +36,32 @@ UserShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+        ''
+        # img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
       div className: 'center',
         p null,
           if @props.user then 'User Profile' else 'Login'
       div className: 'right',
-        @user()
+        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+        # ''
+        # @user()
+
+
+TimelineShelf = React.createClass
+  displayName: 'TimelineShelf'
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+      div className: 'center',
+        p { onClick: @props.handleClick(), className: 'dropdown-link'},
+          'Select Timelines'
+      div className: 'right',
+        ''
 
 
 @.EpochUI ?= {}
 @.EpochUI.DefaultTopShelf = DefaultTopShelf
 @.EpochUI.UserShelf = UserShelf
+@.EpochUI.TimelineShelf = TimelineShelf

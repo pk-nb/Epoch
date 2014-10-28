@@ -61,6 +61,11 @@ UIPrimaryBar = React.createClass
         user: @props.user,
         handleClick: @handleClick,
         panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.timeline
+      UI.TimelineShelf
+        key: 'timelineShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
     else
       UI.DefaultTopShelf
         key: 'defaultTopShelf',
