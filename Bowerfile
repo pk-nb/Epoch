@@ -4,6 +4,7 @@ asset 'hidpi-canvas'
 asset 'lodash'
 asset 'hammerjs'
 asset 'hammer-jquery', github: 'hammerjs/jquery.hammer.js'
+asset 'fastclick'
 
 
 # CSS

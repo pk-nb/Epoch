@@ -1,4 +1,4 @@
-{div, p} = React.DOM
+{div, p, a} = React.DOM
 
 TimelineView = React.createClass
   displayName: 'TimelineView'
@@ -7,6 +7,8 @@ TimelineView = React.createClass
     div className: 'timeline-view',
       p null,
         'Hello'
+      a href: 'google.com',
+        'Link'
 
 
 @.EpochUI ?= {}

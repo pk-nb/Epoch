@@ -12,6 +12,7 @@
 #
 #= require jquery
 #= require js-routes
+#= require fastclick
 #= require react
 #= require react_ujs
 #= require lodash/dist/lodash.min

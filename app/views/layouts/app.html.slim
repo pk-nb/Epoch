@@ -5,7 +5,10 @@ html
       | Epoch
     = stylesheet_link_tag    'application', media: 'all'
     = csrf_meta_tags
-    meta[name='viewport' content='width=device-width, user-scalable=no']
+    meta[name='viewport' content='width=device-width, user-scalable=no, initial-scale=1']
+    meta[name='apple-mobile-web-app-capable' content='yes']
+    meta[name='apple-mobile-web-app-status-bar-style' content='default']
+    meta[name='mobile-web-app-capable' content='yes']
   body
     = yield
     = javascript_include_tag 'app'
