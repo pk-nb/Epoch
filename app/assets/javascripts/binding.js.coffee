@@ -3,6 +3,7 @@
 window.addEventListener 'load', ->
   FastClick.attach(document.body)
 
+# Prevent Scrolling for mobile
 document.ontouchmove = (event) ->
     event.preventDefault();
 
