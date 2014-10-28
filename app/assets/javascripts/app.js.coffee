@@ -11,6 +11,7 @@
 # about supported directives.
 #
 #= require jquery
+#= require js-routes
 #= require react
 #= require react_ujs
 #= require lodash/dist/lodash.min

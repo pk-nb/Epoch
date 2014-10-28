@@ -1,10 +1,10 @@
 // Global Styles
-@import 'font-face';
-@import 'colors';
-@import 'variables';
-@import 'mixins';
-@import 'typography';
+@import 'core/font-face';
+@import 'core/colors';
+@import 'core/variables';
+@import 'core/mixins';
+@import 'core/typography';
 
-@import 'common';
+@import 'core/common';
+@import 'elements/*';
 @import 'components/*';
-@import 'forms';

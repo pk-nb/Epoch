@@ -1,0 +1,64 @@
+// Extends the sizing and position properties in app frame
+.ui-bar {
+  background-color: $theme-white;
+  @include display(flex);
+  @include flex-direction(column);
+  width: 100%;
+
+  .dropdown-content {
+    @include flex(1);
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+  }
+
+  .dropdown-container {
+    padding: 1em;
+  }
+
+  &.top {
+    @include shadow_down(2px);
+  }
+
+  &.bottom {
+    @include shadow_up(2px);
+    position: relative;
+
+    // Up arrow overlay
+    &:before {
+      position: absolute;
+      content: ' ';
+      z-index: 201;
+      top: -16px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 33px;
+      height: 17px;
+      background-image: image-url('timeline-arrow.svg');
+      background-size: 33px 17px;
+    }
+  }
+}
+
+// ReactCSSAnimationGroup transitions for top bar
+.dropdown-top-enter {
+  opacity: 0.01;
+}
+
+.dropdown-top-enter.dropdown-top-enter-active {
+  opacity: 1;
+  // Move transition to here to fix iOS8/Safari bug
+  -webkit-transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+  transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
+}
+
+.dropdown-top-leave {
+  opacity: 1;
+  -webkit-transition: opacity $opacity-animation-speed ease-in-out;
+  transition: opacity $opacity-animation-speed ease-in-out;
+}
+
+.dropdown-top-leave.dropdown-top-leave-active {
+  opacity: 0.01;
+}

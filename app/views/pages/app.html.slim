@@ -1,9 +1,2 @@
-= react_component('EpochApp', {user: 'server person'}, {prerender: true})
-
-/ #epoch-app
-  / .loading
-  /   .loading-container
-  /     .spinner
-  /       .double-bounce1
-  /       .double-bounce2
-  /     p.loading-text Epoch is loading...
+- profile_form = render partial: 'profiles/form'
+= react_component 'EpochApp', {user: current_user.as_json, profile_form: profile_form}, {prerender: true}

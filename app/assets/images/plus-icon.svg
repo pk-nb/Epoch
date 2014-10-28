@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
+    <title>plus-icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Notes" sketch:type="MSArtboardGroup" transform="translate(-162.000000, -885.000000)" fill="#4A4A4A">
+            <path d="M169.5,895 L163.258557,895 C162.562436,895 162,894.440356 162,893.75 C162,893.054831 162.563475,892.5 163.258557,892.5 L169.5,892.5 L169.5,886.258557 C169.5,885.562436 170.059644,885 170.75,885 C171.445169,885 172,885.563475 172,886.258557 L172,892.5 L178.241443,892.5 C178.937564,892.5 179.5,893.059644 179.5,893.75 C179.5,894.445169 178.936525,895 178.241443,895 L172,895 L172,901.241443 C172,901.937564 171.440356,902.5 170.75,902.5 C170.054831,902.5 169.5,901.936525 169.5,901.241443 L169.5,895 L169.5,895 Z" id="plus-icon" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

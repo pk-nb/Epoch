@@ -1,0 +1,19 @@
+.user-panel {
+  // background-color: #911;
+  padding: $edge-spacing $edge-spacing 0 $edge-spacing;
+
+  .logged-in {
+    text-align: center;
+  }
+
+  .avatar {
+    max-width: 5em;
+    max-height: 5em;
+    border-radius: 1em;
+  }
+
+  p {
+    margin-top: 1em;
+    margin-bottom: 0;
+  }
+}

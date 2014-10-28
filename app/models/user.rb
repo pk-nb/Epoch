@@ -49,6 +49,12 @@ class User < ActiveRecord::Base
     save validate: false
   end
 
+  # Only give client what it needs to know
+  def as_json(options={})
+    options[:only] ||= [:name, :picture]
+    super(options)
+  end
+
   private
   def generate_token
     SecureRandom.urlsafe_base64
