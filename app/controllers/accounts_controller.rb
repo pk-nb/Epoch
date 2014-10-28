@@ -6,6 +6,11 @@ class AccountsController < ApplicationController
   end
 
   def new
+    unless current_user.epoch_account.nil?
+      redirect_to root_path
+      return
+    end
+    @user = current_user
     @account = Account.new
   end
 
@@ -19,15 +24,26 @@ class AccountsController < ApplicationController
 
   # POST /users
   def create
-    @account = current_user.accounts.new(account_params.merge(provider: 'Epoch'))
-    if @account.save
+    error = nil
+    unless current_user.epoch_account.nil?
+      error = 'The current user already has an Epoch account and cannot create a second Epoch account'
+    end
+
+    @account = current_user.accounts.create(account_params.merge(provider: 'Epoch'))
+    if @account.valid?
       self.current_user = @account.user
       redirect_to root_path
     else
-      flash.now[:error] = 'Unable to create account. Please correct the fields below'
+      error = 'Unable to create account. Please correct the fields below'
+    end
+
+    unless error.nil?
+      flash.now[:error] = error
       render :new
     end
+
   end
+
   #TODO FIXME
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
@@ -55,6 +71,6 @@ class AccountsController < ApplicationController
   private
   # Never trust parameters from the scary internet, only allow the white list through.
   def account_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:account).permit(:name, :email, :password, :password_confirmation)
   end
 end
