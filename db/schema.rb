@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141012142506) do
+ActiveRecord::Schema.define(version: 20141028140952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: true do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "name"
+    t.string   "oauth_token"
+    t.string   "login"
+    t.datetime "oauth_expires_at"
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
+    t.string   "picture"
+    t.datetime "date_added"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "events", force: true do |t|
     t.string   "title"
@@ -29,15 +47,6 @@ ActiveRecord::Schema.define(version: 20141012142506) do
   create_table "events_timelines", id: false, force: true do |t|
     t.integer "event_id"
     t.integer "timeline_id"
-  end
-
-  create_table "profiles", force: true do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "favorite_cake"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "timelines", force: true do |t|
@@ -56,23 +65,13 @@ ActiveRecord::Schema.define(version: 20141012142506) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "name"
-    t.string   "oauth_token"
-    t.datetime "oauth_expires_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "picture"
-    t.string   "email"
-    t.string   "password_digest"
-    t.string   "password_reset_token"
-    t.datetime "password_reset_sent_at"
   end
 
-  add_foreign_key "events", "users", name: "event_user_foreign_key", dependent: :delete
+  add_foreign_key "accounts", "users", name: "accounts_user_id_fk", dependent: :delete
 
-  add_foreign_key "profiles", "users", name: "profiles_user_id_fk", dependent: :delete
+  add_foreign_key "events", "users", name: "event_user_foreign_key", dependent: :delete
 
   add_foreign_key "timelines", "users", name: "timeline_user_foreign_key", dependent: :delete
 

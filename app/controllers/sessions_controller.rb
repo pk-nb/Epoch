@@ -8,12 +8,12 @@ class SessionsController < ApplicationController
     unless params[:provider].nil?
       user = User.from_omniauth(env['omniauth.auth'])
       session[:user_id] = user.id
+      binding.pry
       redirect_to root_path
     else
       @session = Session.new(session_params)
-      binding.pry
-      if @session.valid? && @session.epoch_user
-        self.current_user = @session.epoch_user
+      if @session.valid? && @session.epoch_account
+        self.current_user = @session.epoch_account.user
         redirect_to root_path
       else
         # todo This error isn't currently showing up on the form
