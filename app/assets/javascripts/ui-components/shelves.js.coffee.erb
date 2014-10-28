@@ -1,4 +1,4 @@
-{div, p, img, span} = React.DOM
+{div, p, a, button, img, span} = React.DOM
 
 UserNameMixin =
   user: ->
@@ -16,6 +16,11 @@ UserNameMixin =
 DefaultTopShelf = React.createClass
   displayName: 'DefaultTopShelf'
   mixins: [UserNameMixin]
+
+  componentDidMount: ->
+
+  componentWillUnmount: ->
+
 
   render: ->
     div className: 'shelf',
