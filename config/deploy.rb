@@ -25,7 +25,7 @@ set :deploy_to, '/home/deploy/epoch'
 
 # Default value for :linked_files is []
 # set :linked_files, %w{config/database.yml}
-set :linked_files, %w{.rbenv-vars} # Copy over important keys
+set :linked_files, %w{.rbenv-vars .env} # Copy over important keys
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system app/assets/fonts/licensed}
