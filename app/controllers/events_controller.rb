@@ -26,7 +26,7 @@ class EventsController < ApplicationController
   end
 
   def create
-    timeline.events.create(event_params.merge(user_id: current_user.id))
+    timeline.events.create(event_params.merge(user_id: current_user.id, event_type: 'Epoch'))
     respond_to do |format|
       format.html { redirect_to timeline_events_path }
       format.json {render json: @event}

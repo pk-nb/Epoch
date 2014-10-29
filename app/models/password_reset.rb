@@ -12,12 +12,12 @@ class PasswordReset
   end
 
   def save
-    valid? && user.add_reset_token && deliver_email
+    valid? && user.epoch_account.add_reset_token && deliver_email
   end
 
   def self.find(token)
     return nil if token.blank?
-    user = User.find_by(password_reset_token: token)
+    user = Account.find_by(password_reset_token: token).user
     user.present? ? new(user: user) : nil
   end
 
@@ -31,12 +31,14 @@ class PasswordReset
   end
 
   def expired?
-    user.password_reset_sent_at.nil? || user.password_reset_sent_at <= 2.hours.ago
+    user.epoch_account.password_reset_sent_at.nil? ||
+        user.epoch_account.password_reset_sent_at <= 2.hours.ago
   end
 
   def update_user
-    if user.update_attributes(password: password, password_confirmation: password_confirmation)
-      user.remove_reset_token
+    if user.epoch_account.
+        update_attributes(password: password, password_confirmation: password_confirmation)
+      user.epoch_account.remove_reset_token
       true
     else
       false
@@ -49,11 +51,13 @@ class PasswordReset
   end
 
   def user_from_token
-    User.find_by(password_reset_token: token) if token.present?
+    account = Account.find_by(password_reset_token: token) if token.present? else nil
+    account.nil? ? nil : account.user
   end
 
   def user_from_email
-    User.find_by(email: email) if email.present?
+    account = Account.find_by_email_and_provider(email, 'Epoch') if email.present? else nil
+    account.nil? ? nil : account.user
   end
 
   def new_record?

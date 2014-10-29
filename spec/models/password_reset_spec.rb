@@ -3,21 +3,23 @@ require 'rails_helper'
 RSpec.describe PasswordReset, :type => :model do
   describe 'creation validation' do
     before do
-      @user = User.create(FactoryGirl.attributes_for :user_internal)
+      @user = User.create()
+      @account = @user.accounts.create(FactoryGirl.attributes_for :account_internal)
     end
+
     it 'should not be valid with an invalid email address' do
       p = PasswordReset.new(email: 'junk@junk.com')
       expect(p).to_not be_valid
     end
 
     it 'should be valid with a valid user email' do
-      p = PasswordReset.new(email: @user.email)
+      p = PasswordReset.new(email: @account.email)
       expect(p).to be_valid
     end
 
     it 'should correctly find by token' do
-      @user.add_reset_token
-      p = PasswordReset.find(@user.password_reset_token)
+      @account.add_reset_token
+      p = PasswordReset.find(@account.password_reset_token)
       expect(p).to_not be_nil
     end
 
@@ -28,8 +30,9 @@ RSpec.describe PasswordReset, :type => :model do
 
   describe 'an object created by #new' do
     before do
-      @user = User.create(FactoryGirl.attributes_for :user_internal)
-      @reset = PasswordReset.new({email: @user.email})
+      @user = User.create()
+      @account = @user.accounts.create(FactoryGirl.attributes_for :account_internal)
+      @reset = PasswordReset.new({email: @account.email})
     end
 
     it 'creates token and sends an email' do
@@ -45,7 +48,7 @@ RSpec.describe PasswordReset, :type => :model do
         expect(@reset).to_not be_expired
       end
       it 'returns true if expired' do
-        @reset.user.password_reset_sent_at = 3.hours.ago
+        @reset.user.epoch_account.password_reset_sent_at = 3.hours.ago
         expect(@reset).to be_expired
       end
     end
@@ -57,10 +60,11 @@ RSpec.describe PasswordReset, :type => :model do
 
   describe 'an object instantiated by #find' do
     before do
-      @user = User.create(FactoryGirl.attributes_for :user_internal)
+      @user = User.create()
+      @account = @user.accounts.create(FactoryGirl.attributes_for :account_internal)
       @new_password = 'testtesttest'
-      @user.add_reset_token
-      @reset = PasswordReset.find(@user.password_reset_token)
+      @account.add_reset_token
+      @reset = PasswordReset.find(@account.password_reset_token)
     end
 
     it 'should not be valid without a password' do
@@ -78,7 +82,7 @@ RSpec.describe PasswordReset, :type => :model do
       end
 
       it 'should update the user\'s password with #update_user' do
-        expect{@reset.update_user}.to change{@reset.user.password_digest}
+        expect{@reset.update_user}.to change{@reset.user.epoch_account.password_digest}
       end
     end
 

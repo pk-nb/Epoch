@@ -1,24 +1,22 @@
-class UsersController < ApplicationController
+class AccountsController < ApplicationController
   #before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
     redirect_to user_path current_user
   end
 
-  def show
-    @user = current_user
-  end
-
-  # GET /users/new
   def new
-    @user = User.new
+    unless current_user.epoch_account.nil?
+      redirect_to root_path
+      return
+    end
+    @user = current_user
     @account = Account.new
   end
 
-  # GET /users/1/edit
   def edit
-    if current_user.provider_is_epoch?
-      @user = current_user
+    unless current_user.epoch_account.nil?
+      @account = current_user.epoch_account
     else
       redirect_to root_path
     end
@@ -26,28 +24,27 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.new()
-    error = false
-    if @user.save
-      @account = @user.accounts.new(account_params.merge(provider: 'Epoch'))
-      if @account.save
-        self.current_user = @user
-      else
-        @user.destroy
-        error = true
-      end
-    else
-      error = true
+    error = nil
+    unless current_user.epoch_account.nil?
+      error = 'The current user already has an Epoch account and cannot create a second Epoch account'
     end
 
-    unless error
+    @account = current_user.accounts.create(account_params.merge(provider: 'Epoch'))
+    if @account.valid?
+      self.current_user = @account.user
       redirect_to root_path
     else
-      flash.now[:error] = 'Unable to create account. Please correct the fields below'
+      error = 'Unable to create account. Please correct the fields below'
+    end
+
+    unless error.nil?
+      flash.now[:error] = error
       render :new
     end
+
   end
 
+  #TODO FIXME
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
@@ -63,8 +60,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     current_user.destroy
     respond_to do |format|
@@ -74,8 +69,8 @@ class UsersController < ApplicationController
   end
 
   private
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def account_params
-      params.require(:account).permit(:name, :email, :password, :password_confirmation)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def account_params
+    params.require(:account).permit(:name, :email, :password, :password_confirmation)
+  end
 end

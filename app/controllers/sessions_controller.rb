@@ -6,14 +6,20 @@ class SessionsController < ApplicationController
   def create
     # Handle oauth callbacks
     unless params[:provider].nil?
-      user = User.from_omniauth(env['omniauth.auth'])
+      auth = env['omniauth.auth']
+      # todo handle add account callbacks here
+      if current_user.nil?
+        user = User.retrieve_or_create_from_omniauth(auth)
+      else # user was already logged in
+        user = current_user
+        user.add_or_update_oauth_account(auth)
+      end
       session[:user_id] = user.id
       redirect_to root_path
     else
       @session = Session.new(session_params)
-      binding.pry
-      if @session.valid? && @session.epoch_user
-        self.current_user = @session.epoch_user
+      if @session.valid? && @session.epoch_account
+        self.current_user = @session.epoch_account.user
         redirect_to root_path
       else
         # todo This error isn't currently showing up on the form
