@@ -1,7 +1,9 @@
 = render partial: 'components/menu_bar'
-p= "Current Rate Limit: #{@limit}"
-- @repositories.each do |r|
-  p= "#{r.id}: #{r.full_name}"
-  ul
-    -r.commits.each do |c|
-      li= c.commit.message
+
+form accept-charset="UTF-8" action="/repository" class="simple_form new_repository" id="new_repository" method="post" novalidate="novalidate"
+  div
+    =select_tag('owned_repo_name', options_for_select(@repo_select))
+  div
+    =text_field_tag('other_repo_name')
+  div
+    =submit_tag('Create Timeline')
