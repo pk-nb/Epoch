@@ -1,2 +1,2 @@
-- profile_form = render partial: 'profiles/form'
+- profile_form = ''#= render partial: 'profiles/form'
 = react_component 'EpochApp', {user: current_user.as_json, profile_form: profile_form}, {prerender: true}
