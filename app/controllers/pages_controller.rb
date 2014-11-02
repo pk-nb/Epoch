@@ -10,7 +10,6 @@ class PagesController < ApplicationController
 
 
   def app
-    @profile = Profile.new
     render layout: 'app'
   end
 end

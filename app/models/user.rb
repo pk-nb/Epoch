@@ -49,7 +49,8 @@ class User < ActiveRecord::Base
 
   # Only give client what it needs to know
   def as_json(options={})
-    options[:only] ||= [:name, :picture]
+    options[:only] ||= []
+    options[:methods] ||= [:name, :picture] #include results of name and picture methods
     super(options)
   end
 end
