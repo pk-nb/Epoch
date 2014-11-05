@@ -42,6 +42,12 @@ class User < ActiveRecord::Base
   def github_account
     self.accounts.find_by_provider('github')
   end
+
+  # Get a list of auth providers for which this user has linked accounts
+  # possible options are: github, google_oauth2, twitter, facebook, & Epoch
+  def providers
+    self.accounts.map{|a| a.provider}
+  end
   
   def first_account
     self.accounts.sort_by {|a| a.date_added}.first
@@ -50,7 +56,7 @@ class User < ActiveRecord::Base
   # Only give client what it needs to know
   def as_json(options={})
     options[:only] ||= []
-    options[:methods] ||= [:name, :picture] #include results of name and picture methods
+    options[:methods] ||= [:name, :picture, :providers] #include results of name and picture methods
     super(options)
   end
 end
