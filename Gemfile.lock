@@ -98,6 +98,8 @@ GEM
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
     dotenv (1.0.2)
+    dotenv-deployment (0.2.0)
+      dotenv (~> 1.0)
     dotenv-rails (1.0.2)
       dotenv (= 1.0.2)
     em-websocket (0.5.1)
@@ -360,6 +362,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.0.0)
   compass-rails
+  dotenv-deployment
   dotenv-rails
   factory_girl_rails
   faker

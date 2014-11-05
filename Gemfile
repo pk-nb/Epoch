@@ -98,5 +98,6 @@ group :assets do
 end
 
 group :production do
+  gem 'dotenv-deployment'
   gem 'rails_12factor'
 end
