@@ -27,8 +27,22 @@ UserPanel = React.createClass
       img { className: 'avatar', src: @props.user.picture }
       p null,
         @props.user.name
-      a { href: Routes.logout_path() },
-        'Logout'
+      div null,
+        a { href: Routes.logout_path() },
+          'Logout'
+        @accountLink('facebook', 'sign_in_facebook', 'Facebook'),
+        @accountLink('github', 'sign_in_github', 'Github'),
+        @accountLink('google_oauth2', 'sign_in_google', 'Google'),
+        @accountLink('twitter', 'sign_in_twitter', 'Twitter')
+
+  accountLink: (loginId, cssId, serviceName) ->
+    if loginId in @props.user.providers
+      # TODO style this better
+      p null,
+        "Logged in with #{serviceName}"
+    else
+      a { href: "/auth/#{loginId}", id: cssId, className: 'button' },
+        "Link account with #{serviceName}"
 
 
 @.EpochUI ?= {}
