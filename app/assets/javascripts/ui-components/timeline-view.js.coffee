@@ -3,17 +3,44 @@
 class SnapTimelineView
   constructor: (svgId)->
     # TODO Wipe existing svg here?
-    @snap = Snap(svgId)
+    @snap = Snap("##{svgId}")
+
+    @hammer = new Hammer(document.getElementById(svgId))
+    @hammer.get('pinch').set(enable: true)
     @circle = @snap.circle(250, 100, 50)
-    @snap.zpd()
+    @text = @snap.text(200, 200, 'React, Hammer, and Snap.svg playing nice together')
+    @snap.zpd(pan: false, zoom: false)
+
+    @hammer.on 'tap', (event) =>
+      @circle.attr
+        fill: @circleColor()
+        stroke: '#000',
+        strokeWidth: 5
+
+    @hammer.on 'pinchmove', (event) =>
+      @snap.zoomTo(event.scale, 5)
+
+    @hammer.on 'pan', (event) =>
+      @snap.panTo event.center.x, event.center.y, 0
 
 
-
-  redraw: (props=null, state=null)->
+  redraw: (props=null, state=null) ->
     @circle.attr
       fill: '#bada55',
       stroke: '#000',
       strokeWidth: 5
+
+  circleColor: ->
+    Snap.rgb(@getRandomInt(255), @getRandomInt(255), @getRandomInt(255))
+
+  getRandomInt: (max) ->
+    Math.floor(Math.random() * max)
+
+
+  # TODO Set all default zoom / pan stuff to false
+  # Bind all zoom pan stuff to hammer.js events
+
+  # Click events here get sent back to the react class
 
 
 
@@ -27,7 +54,7 @@ TimelineView = React.createClass
 
   componentDidMount: ->
     # Bind snap.svg stuff here
-    snapTimelineView = new SnapTimelineView('#timeline-view')
+    snapTimelineView = new SnapTimelineView('timeline-view')
     @forceUpdate()
 
   componentWillUnmount: ->
