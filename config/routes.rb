@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [:new, :create, :edit, :update]
 
+  get 'timelines/list', to: 'timelines#list'
   resources :timelines do
     resources :events #, only: [:new, :create, :update, :edit, :destroy]
     resources :timelines, only: [:index, :new, :create]

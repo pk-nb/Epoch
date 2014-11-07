@@ -26,6 +26,13 @@ class TimelinesController < ApplicationController
       format.json { render json: @children }
     end
   end
+
+  def list
+    result = params[:ids].nil? ? {} : Timeline.list_by_ids(params[:ids], current_user)
+    respond_to do |format|
+        format.json {render json: result}
+    end
+  end
   
   def new
     @form_objs = [Timeline.new]

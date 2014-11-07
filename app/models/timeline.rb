@@ -23,11 +23,26 @@ class Timeline < ActiveRecord::Base
     unless end_date.nil?
       end_date.strftime('%B %d, %Y')
     else
-      "Ongoing"
+      'Ongoing'
     end
   end
   
   def all_children
     (children + events).sort { |a, b| a.start_date <=> b.start_date }
+  end
+
+  def as_json(options={})
+    #include all timeline and event children
+    options[:include] ||= [:events]
+    options[:methods] ||= [:timelines]
+    super(options)
+  end
+
+  def self.list_by_ids(ids, user)
+    result = {}
+    ids.each do |id|
+      result[id] = user.timelines.find(id)
+    end
+    result
   end
 end
