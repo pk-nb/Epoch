@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     resources :timelines, only: [:index, :new, :create]
   end
 
-  resources :repository, only: [:new, :create, :show]
+  resources :repository, only: [:new]
 
   get 'timelines/:id/children', to: 'timelines#children'
 
