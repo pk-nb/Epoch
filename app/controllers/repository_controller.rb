@@ -1,6 +1,5 @@
 class RepositoryController < ApplicationController
   before_action :init
-  skip_before_filter :verify_authenticity_token #todo fix and don't have this
 
   def new
     repositories = @client.repos
@@ -9,7 +8,6 @@ class RepositoryController < ApplicationController
       @repo_select[r.full_name] = r.full_name
     end
     respond_to do |format|
-      format.html
       format.json {render json: @repo_select}
     end
   end
