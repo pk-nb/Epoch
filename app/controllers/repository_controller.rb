@@ -41,11 +41,16 @@ class RepositoryController < ApplicationController
     overall_min_date = repos.map{|r| r[:min_date]}.min
     overall_max_date = repos.map{|r| r[:max_date]}.max
     # todo in a perfect world, some of this creation logic should take place in models?
-    master_timeline = current_user.timelines.create(title: params[:name], content: "A log of activity from the following repositories: #{repo_names.join(', ')}", start_date: overall_min_date, end_date: overall_max_date)
+    # if there is more than 1 repository timeline to create, create a single timeline to hold the others
+    master_timeline = repos.count > 1 ?
+        current_user.timelines.create(title: params[:name], content: "A log of activity from the following repositories: #{repo_names.join(', ')}", start_date: overall_min_date, end_date: overall_max_date) :
+        nil
     # create timelines and events for each repository
     repos.each do |repo|
-      # create a nested timeline
-      timeline = master_timeline.timelines.create(title: repo.full_name, content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
+      # create a nested timeline if the master timeline exists, otherwise create a top level timeline
+      timeline = master_timeline.nil? ? current_user.timelines.create(title: params[:name], content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
+                                                                         start_date: repo[:min_date], end_date: repo[:max_date]) :
+                                        master_timeline.timelines.create(title: "Repository: #{repo.full_name}", content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
                                                   start_date: repo[:min_date], end_date: repo[:max_date], user_id: current_user.id)
       # create events for commits
       repo.commits.each do |c|
@@ -59,6 +64,10 @@ class RepositoryController < ApplicationController
         event = timeline.events.create(user_id: current_user.id, title: "#{activity_type} (#{i.state})", content: "#{i.title}: #{i.body}", start_date: i.created_at, end_date: i.closed_at, event_type: 'Repo')
         event.repo_event = RepoEvent.create(event_id: event.id, repository: repo.full_name, author: i.user.login,
                                             activity_type: activity_type, html_url: i.html_url)
+      end
+      # If we're only creating one repository, then we're done now. Set master timeline to the timeline we created so that it can be returned
+      if master_timeline.nil?
+        master_timeline = timeline
       end
     end
     respond_to do |format|
