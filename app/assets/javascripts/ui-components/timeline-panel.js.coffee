@@ -34,9 +34,10 @@ TimelinePanel = React.createClass
 
 
   timelineList: ->
-    @props.timelines.map (timeline) =>
-      p {key: timeline.title},
-        timeline.title
+    if @props.timelines
+      @props.timelines.map (timeline) =>
+        p {key: timeline.title},
+          timeline.title
 
   render: ->
     Forms = window.EpochForms
