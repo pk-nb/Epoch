@@ -1,0 +1,6 @@
+= simple_fields_for @form_objs do |form|
+  = token_tag
+  = form.input :title, input_html: {class: 'narrow-input'}
+  = form.input :content, as: :text
+  = form.input :start_date
+  = form.input :end_date

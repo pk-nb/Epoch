@@ -48,7 +48,11 @@ UIPrimaryBar = React.createClass
       UI.UserPanel
         key: 'userPanel',
         user: @props.user
-
+    else if @props.expandedPanel == @props.panelIds.timeline
+      UI.TimelinePanel
+        key: 'timelinePanel',
+        user: @props.user
+        timelines: @props.timelines
     else
       # Default Panel set to display: none
       div {key: 'nothing'}, null
@@ -65,13 +69,15 @@ UIPrimaryBar = React.createClass
       UI.TimelineShelf
         key: 'timelineShelf',
         handleClick: @handleClick,
-        panelIds: @props.panelIds
+        panelIds: @props.panelIds,
+        timelines: @props.timelines
     else
       UI.DefaultTopShelf
         key: 'defaultTopShelf',
         user: @props.user,
         handleClick: @handleClick,
-        panelIds: @props.panelIds
+        panelIds: @props.panelIds,
+        timelines: @props.timelines
 
 
 UISecondaryBar = React.createClass

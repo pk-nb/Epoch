@@ -1,2 +1,8 @@
-- profile_form = ''
-= react_component 'EpochApp', {user: current_user.as_json, profile_form: profile_form, timelines: @timelines}, {prerender: true}
+- @form_objs = Timeline.new
+- timeline_form = j render partial: 'timelines/ajax_form'
+
+= react_component 'EpochApp', {user: current_user.as_json, timelines: @timelines}, {prerender: true}
+
+javascript:
+  window.EpochForms = {};
+  window.EpochForms.newTimeline = '#{timeline_form}';
