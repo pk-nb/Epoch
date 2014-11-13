@@ -15,10 +15,9 @@ UserNameMixin =
 TimelineTitleMixin =
   # TODO Truncate more than three titles if large set of timelines
   timelineTitle: ->
-    keys = Object.keys(@props.timelines)
-    if keys.length > 0
-      keys.reduce (prev, key) =>
-        prev + @props.timelines[key].title + ', '
+    if @props.timelines.length > 0
+      @props.timelines.reduce (prev, timeline) =>
+        prev + timeline.title + ', '
       , ''
     else
       'Select Timelines'

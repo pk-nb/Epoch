@@ -9,12 +9,12 @@ class Timeline < ActiveRecord::Base
                           class_name: "Timeline",
                           foreign_key: "child_id",
                           association_foreign_key: "parent_id"
-  
+
   alias_method :timelines, :children
-  
+
   validates_datetime :end_date, on_or_after: :start_date, allow_nil: true
   validates_presence_of :title, :content, :start_date, :user_id
-  
+
   def start_date_pretty
     start_date.strftime('%B %d, %Y')
   end
@@ -27,14 +27,6 @@ class Timeline < ActiveRecord::Base
     end
   end
 
-  def self.list_by_ids(ids, user)
-    result = {}
-    ids.each do |id|
-      result[id] = user.timelines.find(id)
-    end
-    result
-  end
-  
   def all_children
     (children + events).sort { |a, b| a.start_date <=> b.start_date }
   end
@@ -49,5 +41,12 @@ class Timeline < ActiveRecord::Base
 
     options[:methods] ||= [:timelines, :events]
     super(options)
+  end
+
+
+  def self.list_by_ids(ids, user)
+    ids.map do |id|
+      user.timelines.find(id)
+    end
   end
 end

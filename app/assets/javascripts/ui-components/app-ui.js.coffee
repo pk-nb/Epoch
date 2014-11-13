@@ -29,7 +29,7 @@ EpochApp = React.createClass
         expandedPanel: @state.expandedPanel
         setAppState: @setAppState,
         user: @props.user
-        timelines: @props.timelines
+        timelines: @state.timelines || @props.timelines
       UI.TimelineView(),
         # user: @props.user
       UI.UISecondaryBar

@@ -3,11 +3,13 @@
 TimelinePanel = React.createClass
   displayName: 'TimelinePanel'
 
+  # onPostSuccess: (data) ->
+
+
+
   handleSubmit: (e) ->
     console.log 'Submit form'
     e.preventDefault()
-    # $.post Routes.timelines_path(), $(@refs.newTimelineForm.getDOMNode()).serialize(), (data) ->
-    #     console.log data
     $.ajax {
       type: 'POST',
       url: Routes.timelines_path(),
@@ -27,9 +29,9 @@ TimelinePanel = React.createClass
 
 
   timelineList: ->
-    Object.keys(@props.timelines).map (key) =>
-      p {key: @props.timelines[key].title},
-        @props.timelines[key].title
+    @props.timelines.map (timeline) =>
+      p {key: timeline.title},
+        timeline.title
 
   render: ->
     Forms = window.EpochForms
@@ -40,7 +42,7 @@ TimelinePanel = React.createClass
       h1 null,
         'New Timeline'
       form ref: 'newTimelineForm', onSubmit: @handleSubmit,
-        div dangerouslySetInnerHTML: {__html: Forms.newTimeline },
+        div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
           null
         button null,
           'Submit'
