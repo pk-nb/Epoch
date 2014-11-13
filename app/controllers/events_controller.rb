@@ -29,7 +29,13 @@ class EventsController < ApplicationController
     timeline.events.create(event_params.merge(user_id: current_user.id, event_type: 'Epoch'))
     respond_to do |format|
       format.html { redirect_to timeline_events_path }
-      format.json {render json: @event}
+      format.json do
+        if @event.valid?
+          render json: @event
+        else
+          render json: {errors: @event.errors.full_messages}, status: 422
+        end
+      end
     end
   end
 
@@ -48,7 +54,13 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html { redirect_to timeline_event_path }
-      format.json { render json: @event }
+      format.json do
+        if @event.valid?
+          render json: @event
+        else
+          render json: {errors: @event.errors.full_messages}, status: 422
+        end
+      end
     end
   end
 

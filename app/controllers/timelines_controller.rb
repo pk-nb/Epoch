@@ -47,7 +47,13 @@ class TimelinesController < ApplicationController
     @timeline = owner.timelines.create(timeline_params.merge(user_id: current_user.id))
     respond_to do |format|
       format.html { redirect_to timelines_path }
-      format.json { render json: @timeline }
+      format.json do
+       if @timeline.valid?
+         render json: @timeline
+       else
+         render json: {errors: @timeline.errors.full_messages}, status: 422
+       end
+      end
     end
   end
 
@@ -65,7 +71,13 @@ class TimelinesController < ApplicationController
     end
     respond_to do |format|
       format.html { redirect_to timelines_path }
-      format.json { render json: @timeline }
+      format.json do
+        if @timeline.valid?
+          render json: @timeline
+        else
+          render json: {errors: @timeline.errors.full_messages}, status: 422
+        end
+      end
     end
   end
 
