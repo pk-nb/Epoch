@@ -49,10 +49,12 @@ UIPrimaryBar = React.createClass
         key: 'userPanel',
         user: @props.user
     else if @props.expandedPanel == @props.panelIds.timeline
+      # Pass down setAppState as this view can modify top app state
       UI.TimelinePanel
         key: 'timelinePanel',
         user: @props.user
         timelines: @props.timelines
+        setAppState: @props.setAppState
     else
       # Default Panel set to display: none
       div {key: 'nothing'}, null

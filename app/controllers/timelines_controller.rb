@@ -1,16 +1,16 @@
 class TimelinesController < ApplicationController
   include TimelineHelper
   before_action :require_login
-  
+
   def index
     @timelines = owner.timelines
-    
+
     respond_to do |format|
       format.html
       format.json { render json: @timelines }
     end
   end
-  
+
   def show
     @timeline = owner.timelines.find(params[:id])
     respond_to do |format|
@@ -18,7 +18,7 @@ class TimelinesController < ApplicationController
       format.json { render json: @timeline }
     end
   end
-  
+
   def children
     @children = owner.timelines.find(params[:id]).all_children
     respond_to do |format|
@@ -33,7 +33,7 @@ class TimelinesController < ApplicationController
         format.json {render json: result}
     end
   end
-  
+
   def new
     @form_objs = [Timeline.new]
     @form_objs.insert(0, owner) if nested?
@@ -42,7 +42,7 @@ class TimelinesController < ApplicationController
       format.json { render json: @form_objs }
     end
   end
-  
+
   def create
     @timeline = owner.timelines.create(timeline_params.merge(user_id: current_user.id))
     respond_to do |format|
@@ -50,7 +50,7 @@ class TimelinesController < ApplicationController
       format.json { render json: @timeline }
     end
   end
-  
+
   def edit
     @form_objs = owner.timelines.find(params[:id])
     respond_to do |format|
@@ -58,7 +58,7 @@ class TimelinesController < ApplicationController
       format.json { render json: @timeline }
     end
   end
-  
+
   def update
     @timeline = owner.timelines.find(params[:id]).tap do |timeline|
       timeline.update!(timeline_params)
@@ -68,7 +68,7 @@ class TimelinesController < ApplicationController
       format.json { render json: @timeline }
     end
   end
-  
+
   def destroy
     timeline = owner.timelines.destroy(params[:id])
     respond_to do |format|
@@ -76,7 +76,7 @@ class TimelinesController < ApplicationController
       format.json
     end
   end
-  
+
   private
   def timeline_params
     params.require(:timeline).permit(:title, :content, :start_date, :end_date)

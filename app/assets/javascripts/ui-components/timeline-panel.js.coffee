@@ -3,7 +3,13 @@
 TimelinePanel = React.createClass
   displayName: 'TimelinePanel'
 
-  # onPostSuccess: (data) ->
+  onPostSuccess: (data) ->
+    console.log data
+    console.log @props.timelines
+    timelines = @props.timelines
+    timelines.push(data)
+
+    @props.setAppState(timelines: timelines)
 
 
 
@@ -16,10 +22,9 @@ TimelinePanel = React.createClass
       data: $(@refs.newTimelineForm.getDOMNode()).serialize(),
       dataType: 'json'
 
-      success: (data, status, xhr) ->
+      success: (data, status, xhr) =>
         console.log 'Ajax success'
-        console.log data
-        console.log status
+        @onPostSuccess(data)
 
       error: (xhr, status, error) ->
         console.log 'Ajax failure'
