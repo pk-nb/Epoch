@@ -3,12 +3,9 @@ class RepositoryController < ApplicationController
 
   def new
     repositories = @client.repos
-    @repo_select = {}
-    repositories.each do |r|
-      @repo_select[r.full_name] = r.full_name
-    end
+    repo_names = repositories.map{|r| r.full_name}
     respond_to do |format|
-      format.json {render json: @repo_select}
+      format.json {render json: repo_names}
     end
   end
 
