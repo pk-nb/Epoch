@@ -12,11 +12,6 @@ class RepositoryController < ApplicationController
     end
   end
 
-  def show
-    @repo = @client.repo(params[:id], params[:repo])
-    @repo[:commits] = @client.commits(@repo)
-  end
-
   # POST /create?name=someTimelineName&repos[]=first/repo&repos[]=second/repo...
   def create
     repo_names = params[:repos].nil? ? [] : params[:repos]
