@@ -4,10 +4,10 @@ class TweetsController < ApplicationController
   def new
     result = []
     unless current_user.twitter_account.nil?
-      followers = @client.friends(current_user.twitter_account.uid.to_i)
-      result = followers.map{|f| {name: f.name, id: f.id}}
+      @client.friends(current_user.twitter_account.uid.to_i, {count: 200}).each do |user|
+        result.push({name: user.name, id: user.id})
+      end
     end
-
     respond_to do |format|
       format.json {render json: result}
     end
@@ -31,6 +31,7 @@ class TweetsController < ApplicationController
       timeline = current_user.timelines.create(title: params.require(:timeline_name), content:
           "A Timeline of Tweets by #{@client.user(params[:user_id].to_i)}", start_date: extreme_dates[:min], end_date: extreme_dates[:max])
       tweets.each do |tweet|
+        # todo use <br> tags instead of newlines? Remove altogether? Create seperate model?
         timeline.events.create(user_id: current_user.id, title: 'Tweet', content: "#{tweet.full_text}\nFavorited #{tweet.favorite_count} times\nRetweeted #{tweet.retweet_count} times",
                                        start_date: tweet.created_at, end_date: tweet.created_at, event_type: 'Tweet')
       end
@@ -48,7 +49,7 @@ class TweetsController < ApplicationController
 
   private
   # Pulled from https://github.com/sferik/twitter/blob/master/examples/AllTweets.md
-  # used by get_all_tweets
+  # used by get_all_{resource}
   def collect_with_max_id(collection=[], max_id=nil, &block)
     response = yield(max_id)
     collection += response
@@ -61,6 +62,14 @@ class TweetsController < ApplicationController
       options = {count: 200, include_rts: true}
       options[:max_id] = max_id unless max_id.nil?
       @client.user_timeline(user, options)
+    end
+  end
+
+  def get_all_friends(user)
+    collect_with_max_id do |max_id|
+      options = {count: 200}
+      options[:max_id] = max_id unless max_id.nil?
+      @client.friends(user, options)
     end
   end
 
