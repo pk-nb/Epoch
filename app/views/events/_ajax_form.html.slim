@@ -1,4 +1,5 @@
-= simple_form_for [@timeline, @event] do |form|
+= simple_fields_for @event do |form|
+  = form.input :timeline_id, collection: @all_timelines_select, as: :select, label_method: lambda {|obj| obj[:name]}, value_method: lambda{|obj| obj[:value]}, selected: '0'
   = form.input :title, input_html: {class: 'narrow-input'}
   = form.input :content, as: :text
   = form.input :start_date

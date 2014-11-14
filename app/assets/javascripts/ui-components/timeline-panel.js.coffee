@@ -52,6 +52,13 @@ TimelinePanel = React.createClass
           null
         button null,
           'Submit'
+      h1 null,
+        'New Event'
+      form ref: 'newEventForm', onSubmit: @handleSubmit,
+        div dangerouslySetInnerHTML: { __html: Forms.newEvent },
+          null
+        button null,
+          'Submit'
 
 
 @.EpochUI ?= {}
