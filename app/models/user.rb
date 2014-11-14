@@ -43,6 +43,10 @@ class User < ActiveRecord::Base
     self.accounts.find_by_provider('github')
   end
 
+  def twitter_account
+    self.accounts.find_by_provider('twitter')
+  end
+
   # Get a list of auth providers for which this user has linked accounts
   # possible options are: github, google_oauth2, twitter, facebook, & Epoch
   def providers
