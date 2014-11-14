@@ -22,6 +22,7 @@ class Account < ActiveRecord::Base
     self.uid      = auth.uid.to_s
     self.name     = auth.info.name
     self.oauth_token = auth.credentials.token
+    self.oauth_secret = auth.credentials.secret
     self.oauth_expires_at = auth.credentials.expires_at ?
         Time.at(auth.credentials.expires_at) :
         Time.new() + (60*60*24) # 1 day from present
