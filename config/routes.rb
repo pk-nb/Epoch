@@ -22,6 +22,8 @@ Rails.application.routes.draw do
 
   resources :repository, only: [:new, :create]
   resources :tweets, only: [:new, :create]
+  get 'tweets/create', to: 'tweets#create'
+  get 'repository/create', to: 'repository#create'
 
   get 'repository/create', to: 'repository#create'
 
