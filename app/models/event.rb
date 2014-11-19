@@ -4,7 +4,7 @@ class Event < ActiveRecord::Base
   has_one :repo_event
 
 
-  attr_accessor :start_date_pretty, :end_date_pretty
+  attr_accessor :start_date_pretty, :end_date_pretty, :timeline_id
   # Chicken or Egg bauk bauk bauk
   # For now, the rule that an event must belong to at least one timeline will be enforced
   #  by the UI. Enforcing it at the model level is made difficult by the join table

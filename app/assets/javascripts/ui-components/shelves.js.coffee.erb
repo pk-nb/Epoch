@@ -12,10 +12,20 @@ UserNameMixin =
       p { onClick: @props.handleClick(@props.panelIds.user), className: 'dropdown-link' },
         'Login'
 
+TimelineTitleMixin =
+  # TODO Truncate more than three titles if large set of timelines
+  timelineTitle: ->
+    if @props.timelines.length > 0
+      @props.timelines.reduce (prev, timeline) =>
+        prev + timeline.title + ', '
+      , ''
+    else
+      'Select Timelines'
+
 
 DefaultTopShelf = React.createClass
   displayName: 'DefaultTopShelf'
-  mixins: [UserNameMixin]
+  mixins: [UserNameMixin, TimelineTitleMixin]
 
   render: ->
     div className: 'shelf',
@@ -24,7 +34,7 @@ DefaultTopShelf = React.createClass
           'Epoch'
       div className: 'center',
         p { onClick: @props.handleClick(@props.panelIds.timeline), className: 'dropdown-link'},
-          'Timeline Title'
+          @timelineTitle()
       div className: 'right',
         @user()
 

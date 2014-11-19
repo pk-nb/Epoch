@@ -10,6 +10,12 @@ class RepositoryController < ApplicationController
   end
 
   # POST /create?name=someTimelineName&repos[]=first/repo&repos[]=second/repo...
+  def show
+    @repo = @client.repo(params[:id], params[:repo])
+    @repo[:commits] = @client.commits(@repo)
+  end
+
+  # todo Nathanael, do you want me to return some sort of direct indicator if one or more repository can't be loaded?
   def create
     repo_names = params[:repos].nil? ? [] : params[:repos]
     # retrieve activity/commits/issues for each repository

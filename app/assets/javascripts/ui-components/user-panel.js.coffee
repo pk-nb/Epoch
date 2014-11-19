@@ -4,8 +4,9 @@ UserPanel = React.createClass
   displayName: 'UserPanel'
 
   render: ->
-    div className: 'panel user-panel',
-      if @props.user then @userPanel() else @loginPanel()
+    div className: 'panel-container',
+      div className: 'panel user-panel',
+        if @props.user then @userPanel() else @loginPanel()
 
 
   loginPanel: ->

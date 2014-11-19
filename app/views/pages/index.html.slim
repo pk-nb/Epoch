@@ -27,8 +27,8 @@
   - for event in @events do
     .card.event.expanded
       h1= event.title
-      =button_to 'Edit', edit_timeline_event_path(event.timelines.first, event), :method => :get
-      =button_to 'Delete', timeline_event_path(event.timelines.first, event), :method => :delete
+      =button_to 'Edit', edit_event_path(event), :method => :get
+      =button_to 'Delete', event_path(event), :method => :delete
       .date
         p= event.start_date_pretty
       .content

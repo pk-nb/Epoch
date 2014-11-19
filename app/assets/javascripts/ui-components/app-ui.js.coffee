@@ -12,6 +12,7 @@ EpochApp = React.createClass
   getDefaultProps: ->
     user: {name: 'Login', picture: null},
     profile_form: ''
+    timelines: []
 
   # Change app state by sending this function as a prop on children
   setAppState: (data) ->
@@ -28,6 +29,7 @@ EpochApp = React.createClass
         expandedPanel: @state.expandedPanel
         setAppState: @setAppState,
         user: @props.user
+        timelines: @state.timelines || @props.timelines
       UI.TimelineView(),
         # user: @props.user
       UI.UISecondaryBar

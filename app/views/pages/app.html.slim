@@ -1,2 +1,11 @@
-- profile_form = ''
-= react_component 'EpochApp', {user: current_user.as_json, profile_form: profile_form, timelines: @timelines}, {prerender: true}
+- @timeline = Timeline.new
+- @event = Event.new
+- timeline_form = j render partial: 'timelines/ajax_form'
+- event_form = j render partial: 'events/ajax_form'
+
+= react_component 'EpochApp', {user: current_user.as_json, timelines: @timelines}, {prerender: true}
+
+javascript:
+  window.EpochForms = {};
+  window.EpochForms.newTimeline = '#{timeline_form}';
+  window.EpochForms.newEvent = '#{event_form}';
