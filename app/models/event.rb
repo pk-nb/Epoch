@@ -24,4 +24,11 @@ class Event < ActiveRecord::Base
       'Ongoing'
     end
   end
+
+  def as_json(options={})
+    if event_type == 'Repo'
+      options[:include] ||= [:repo_event]
+    end
+    super(options)
+  end
 end

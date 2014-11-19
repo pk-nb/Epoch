@@ -26,17 +26,6 @@ class Timeline < ActiveRecord::Base
       'Ongoing'
     end
   end
-  
-  def all_children
-    (children + events).sort { |a, b| a.start_date <=> b.start_date }
-  end
-
-  def as_json(options={})
-    #include all timeline and event children
-    options[:include] ||= [:events]
-    options[:methods] ||= [:timelines]
-    super(options)
-  end
 
   def self.list_by_ids(ids, user)
     result = {}
@@ -44,5 +33,21 @@ class Timeline < ActiveRecord::Base
       result[id] = user.timelines.find(id)
     end
     result
+  end
+  
+  def all_children
+    (children + events).sort { |a, b| a.start_date <=> b.start_date }
+  end
+
+  def as_json(options={})
+    #include all timeline and event children
+
+    # UGLINESS AND BAD THINGS
+    # options[:include] does NOT call as_json on assiociations
+    # options[:methods] does however, so associations will be rendered using [:methods]
+    #options[:include] ||= [:events]
+
+    options[:methods] ||= [:timelines, :events]
+    super(options)
   end
 end

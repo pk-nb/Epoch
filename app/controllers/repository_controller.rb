@@ -1,53 +1,81 @@
 class RepositoryController < ApplicationController
   before_action :init
-  skip_before_filter :verify_authenticity_token #todo fix and don't have this
 
   def new
     repositories = @client.repos
-    @repo_select = {}
-    repositories.each do |r|
-      @repo_select[r.full_name] = r.full_name
-    end
-    #@limit = @client.limit
+    repo_names = repositories.map{|r| r.full_name}
     respond_to do |format|
-      format.html
-      format.json {render json: @repositories}
+      format.json {render json: repo_names}
     end
   end
 
-  def show
-    @repo = @client.repo(params[:id], params[:repo])
-    @repo[:commits] = @client.commits(@repo)
-  end
-
+  # POST /create?name=someTimelineName&repos[]=first/repo&repos[]=second/repo...
   def create
-    #@timeline = current_user.timeslines.create()
-
-    repo_name = params[:other_repo_name].present? ? params[:other_repo_name] : params[:owned_repo_name]
-    parts = repo_name.split('/')
-    repo = @client.repo(parts.first, parts.last)
-    repo[:commits] = @client.commits(repo)
-    start = repo.commits.first.commit.author.date
-    timeline = current_user.timelines.create(title: repo_name, content: "A log of activity from the #{repo_name} repository", start_date: start)
-    timeline.save!
-    #todo finish
-    repo.commits.each do |c|
-      e = timeline.events.create(title: "#{c.commit.author.date} commit", content: c.commit.message, start_date: c.commit.author.date, user_id: current_user.id, event_type: 'Repo')
-      e.save!
+    repo_names = params[:repos].nil? ? [] : params[:repos]
+    # retrieve activity/commits/issues for each repository
+    repos = []
+    repo_names.each do |name|
+      name_parts = name.split('/')
+      if(name_parts.length != 2)
+        return; # todo...error, what to do?
+      end
+      repo = @client.repo(name_parts.first, name_parts.last)
+      unless repo.nil?
+        repo[:commits] = @client.commits(repo)
+        repo[:issues] = @client.issues(repo)
+        repos.append(repo)
+        dates = get_extreme_dates(repo)
+        repo[:min_date] = dates[:min]
+        repo[:max_date] = dates[:max]
+      end
     end
-
+    # Create a timeline to hold all of the repositories
+    overall_min_date = repos.map{|r| r[:min_date]}.min
+    overall_max_date = repos.map{|r| r[:max_date]}.max
+    # todo in a perfect world, some of this creation logic should take place in models?
+    # if there is more than 1 repository timeline to create, create a single timeline to hold the others
+    master_timeline = repos.count > 1 ?
+        current_user.timelines.create(title: params[:name], content: "A log of activity from the following repositories: #{repo_names.join(', ')}", start_date: overall_min_date, end_date: overall_max_date) :
+        nil
+    # create timelines and events for each repository
+    repos.each do |repo|
+      # create a nested timeline if the master timeline exists, otherwise create a top level timeline
+      timeline = master_timeline.nil? ? current_user.timelines.create(title: params[:name], content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
+                                                                         start_date: repo[:min_date], end_date: repo[:max_date]) :
+                                        master_timeline.timelines.create(title: "Repository: #{repo.full_name}", content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
+                                                  start_date: repo[:min_date], end_date: repo[:max_date], user_id: current_user.id)
+      # create events for commits
+      repo.commits.each do |c|
+        event = timeline.events.create(user_id: current_user.id, title: 'Commit', content: c.commit.message, start_date: c.commit.author.date, end_date: c.commit.author.date, event_type: 'Repo')
+        event.repo_event = RepoEvent.create(event_id: event.id, repository: repo.full_name, author: c.commit.author.name,
+                                            activity_type: 'Commit', html_url: c.html_url)
+      end
+      # create events for issues & pull requests
+      repo.issues.each do |i|
+        activity_type = i.pull_request.nil? ? 'Issue' : 'Pull Request'
+        event = timeline.events.create(user_id: current_user.id, title: "#{activity_type} (#{i.state})", content: "#{i.title}: #{i.body}", start_date: i.created_at, end_date: i.closed_at, event_type: 'Repo')
+        event.repo_event = RepoEvent.create(event_id: event.id, repository: repo.full_name, author: i.user.login,
+                                            activity_type: activity_type, html_url: i.html_url)
+      end
+      # If we're only creating one repository, then we're done now. Set master timeline to the timeline we created so that it can be returned
+      if master_timeline.nil?
+        master_timeline = timeline
+      end
+    end
     respond_to do |format|
-      format.html { redirect_to timeline_path(timeline) }
-      format.json {render json: @event}
+      format.json {render json: master_timeline}
     end
   end
 
   private
-  def repository_params
-    params.require(:event).permit(:title, :content, :start_date, :end_date)
+  def init
+    @client = GithubUser.new current_user
   end
 
-  def init
-    @client = GithubUser.new
+  # Inspects the issues, commits, and pull requests of a repository
+  # returns the earliest and latest dates found
+  def get_extreme_dates(repo)
+    dates = repo.commits.map{|c| c.commit.author.date} + repo.issues.map{|i| i.created_at}
+    {min: dates.min, max: dates.max}
   end
 end
