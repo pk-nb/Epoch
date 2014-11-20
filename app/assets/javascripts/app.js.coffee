@@ -12,6 +12,7 @@
 #
 #= require jquery
 #= require js-routes
+#= require history.js/scripts/bundled/html5/jquery.history
 #= require fastclick
 #= require react
 #= require react_ujs

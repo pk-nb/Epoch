@@ -1,0 +1,133 @@
+{div, form, button, p, h1, hr, span, img} = React.DOM
+
+unless Array::filter
+  Array::filter = (callback) ->
+    element for element in this when callback(element)
+
+
+TimelinePanel = React.createClass
+  displayName: 'TimelinePanel'
+
+  onPostSuccess: (data) ->
+    console.log data
+    console.log @props.timelines
+    timelines = @props.timelines
+    timelines.push(data)
+    @props.setAppState(timelines: timelines)
+
+  onPostError: (data) ->
+    # TODO Render error by setting state
+    console.log 'Ajax failure'
+    console.log(data)
+
+
+  handleSubmit: (e) ->
+    console.log 'Submit form'
+    e.preventDefault()
+    $.ajax {
+      type: 'POST',
+      url: Routes.timelines_path(),
+      data: $(@refs.newTimelineForm.getDOMNode()).serialize(),
+      dataType: 'json'
+
+      success: (data, status, xhr) =>
+        console.log 'Ajax success'
+        @onPostSuccess(data)
+
+      error: (xhr, status, error) =>
+        # console.log status
+        @onPostError(error)
+    }
+
+
+  unselectedTimelines: ->
+    tIds = @props.timelines.map (timeline) ->
+      timeline.id
+    @props.userTimelines.filter (userTimeline) =>
+       userTimeline.id not in tIds
+
+
+  addSelectedTimeline: (data) ->
+    newTimelines = $.extend(true, [], @props.timelines)
+    newTimelines.push(data)
+    @props.setAppState(timelines: newTimelines)
+
+
+  handleSelectTimeline: (id) ->
+    =>
+      # TODO Start spinner state here and end spinner state in success method
+
+      # Request timeline and append to selected timelines
+      $.ajax {
+        type: 'GET',
+        url: Routes.timeline_path(id),
+        dataType: 'json'
+
+        success: (data, status, xhr) =>
+          @addSelectedTimeline(data)
+
+        error: (xhr, status, error) =>
+          # TODO Error handling in view with state
+          console.log error
+      }
+
+  handleRemoveTimeline: (id) ->
+    =>
+      newTimelines = $.extend(true, [], @props.timelines).filter (timeline) ->
+        timeline.id != id
+      @props.setAppState(timelines: newTimelines)
+
+
+
+
+  userTimelinesSection: ->
+    if @props.user
+      div null,
+        h1 null,
+          "#{@props.user.name}'s Timelines"
+        @userTimelineList()
+
+  userTimelineList: ->
+    @unselectedTimelines().map (timeline) =>
+      div {key: timeline.title + timeline.id, className: 'timeline-item'},
+        div className: 'title',
+          div className: 'circle',
+            ''
+          span null,
+            timeline.title
+        div className: 'icons',
+          img { onClick: @handleSelectTimeline(timeline.id), className: 'plus-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
+
+  timelineList: ->
+    if @props.timelines.length > 0
+      @props.timelines.map (timeline) =>
+        div {key: timeline.title, className: 'timeline-item'},
+          div className: 'title',
+            div className: 'circle',
+              ''
+            span null,
+              timeline.title
+          div className: 'icons',
+            img { onClick: @handleRemoveTimeline(timeline.id), className: 'x-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+    else
+      p null,
+        'No Selected Timelines'
+
+  render: ->
+    Forms = window.EpochForms
+    div className: 'panel timeline-panel',
+      h1 null,
+        'Selected Timelines'
+      @timelineList(),
+      @userTimelinesSection(),
+      h1 null,
+        'New Timeline'
+      form ref: 'newTimelineForm', onSubmit: @handleSubmit,
+        div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
+          null
+        button null,
+          'Submit'
+
+
+@.EpochUI ?= {}
+@.EpochUI.TimelinePanel = TimelinePanel
