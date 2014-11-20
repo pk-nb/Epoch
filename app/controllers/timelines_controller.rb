@@ -1,5 +1,4 @@
 class TimelinesController < ApplicationController
-  include TimelineHelper
   before_action :require_login
 
   def index
@@ -39,7 +38,7 @@ class TimelinesController < ApplicationController
   end
 
   def create
-    @timeline = current_user.timelines.create(timeline_params.merge(user_id: current_user.id))
+    @timeline = current_user.timelines.create(timeline_params)
     respond_to do |format|
       format.json do
        if @timeline.valid?
