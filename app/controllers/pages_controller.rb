@@ -10,8 +10,9 @@ class PagesController < ApplicationController
 
 
   def app
-    @timelines = params[:ids].nil? ? [] : Timeline.list_by_ids(params[:ids], current_user).as_json
-    @all_timelines_select = current_user.nil? ? [] : [{name: 'Select a timeline', value: 0}] + current_user.timelines.map{|t|{name: t.title, value: t.id}}
+
+    @timelines = (params[:ids].nil? || current_user.nil?) ? [] : Timeline.list_by_ids(params[:ids], current_user).as_json
+    @user_timelines = current_user.nil? ? [] : current_user.timelines.map{|t|{title: t.title, id: t.id}}
     render layout: 'app'
   end
 end

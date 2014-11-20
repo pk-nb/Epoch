@@ -56,6 +56,7 @@ UIPrimaryBar = React.createClass
         key: 'timelinePanel',
         user: @props.user
         timelines: @props.timelines
+        userTimelines: @props.userTimelines
         setAppState: @props.setAppState
     else
       # Default Panel set to display: none

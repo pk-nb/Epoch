@@ -37,12 +37,27 @@ TimelinePanel = React.createClass
         # console.log error
     }
 
+  userTimelines: ->
+    if @props.user
+      div null,
+        h1 null,
+          "#{@props.user.name}'s Timelines"
+        @userTimelineList()
+
+  userTimelineList: ->
+    @props.userTimelines.map (timeline) =>
+      p {key: timeline.title + timeline.id},
+        timeline.title
+
 
   timelineList: ->
-    if @props.timelines
+    if @props.timelines.length > 0
       @props.timelines.map (timeline) =>
         p {key: timeline.title},
           timeline.title
+    else
+      p null,
+        'No Selected Timelines'
 
   render: ->
     Forms = window.EpochForms
@@ -50,6 +65,9 @@ TimelinePanel = React.createClass
       h1 null,
         'Selected Timelines'
       @timelineList(),
+      @userTimelines(),
+      # h1 null,
+      #   'My Timelines'
       h1 null,
         'New Timeline'
       form ref: 'newTimelineForm', onSubmit: @handleSubmit,

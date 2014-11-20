@@ -11,8 +11,8 @@ EpochApp = React.createClass
   # Default props that should be set on server render
   getDefaultProps: ->
     user: {name: 'Login', picture: null},
-    profile_form: ''
-    timelines: []
+    timelines: [],
+    userTimelines: []
 
   # Change app state by sending this function as a prop on children
   setAppState: (data) ->
@@ -30,15 +30,16 @@ EpochApp = React.createClass
         setAppState: @setAppState,
         user: @props.user
         timelines: @state.timelines || @props.timelines
-      UI.TimelineView(),
-        # user: @props.user
+        userTimelines: @state.userTimelines || @props.userTimelines
+      UI.TimelineView
+        timelines: @state.timelines || @props.timelines
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom',
         otherActive: @state.barExpanded is 'top',
         setAppState: @setAppState,
-        expandedPanel: @state.expandedPanel
-
+        expandedPanel: @state.expandedPanel,
+        timelines: @state.timelines || @props.timelines
 
 
 @.EpochApp ?= {}
