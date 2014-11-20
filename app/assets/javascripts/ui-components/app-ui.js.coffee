@@ -36,7 +36,9 @@ EpochApp = React.createClass
         id: 'bottom',
         active: @state.barExpanded is 'bottom',
         otherActive: @state.barExpanded is 'top',
-        setAppState: @setAppState
+        setAppState: @setAppState,
+        expandedPanel: @state.expandedPanel
+
 
 
 @.EpochApp ?= {}

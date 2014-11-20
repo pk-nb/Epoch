@@ -11,6 +11,10 @@ TimelinePanel = React.createClass
 
     @props.setAppState(timelines: timelines)
 
+  onPostError: (data) ->
+    # Render error by setting state
+    console.log 'Ajax failure'
+    console.log(data)
 
 
   handleSubmit: (e) ->
@@ -26,10 +30,11 @@ TimelinePanel = React.createClass
         console.log 'Ajax success'
         @onPostSuccess(data)
 
-      error: (xhr, status, error) ->
-        console.log 'Ajax failure'
+      error: (xhr, status, error) =>
         console.log status
-        console.log error
+        @onPostError(error)
+
+        # console.log error
     }
 
 
@@ -49,13 +54,6 @@ TimelinePanel = React.createClass
         'New Timeline'
       form ref: 'newTimelineForm', onSubmit: @handleSubmit,
         div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
-          null
-        button null,
-          'Submit'
-      h1 null,
-        'New Event'
-      form ref: 'newEventForm', onSubmit: @handleSubmit,
-        div dangerouslySetInnerHTML: { __html: Forms.newEvent },
           null
         button null,
           'Submit'

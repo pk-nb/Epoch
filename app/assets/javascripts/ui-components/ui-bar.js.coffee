@@ -6,7 +6,9 @@ UIBarMixin =
   getDefaultProps: ->
     panelIds: {
       timeline: 'timeline',
-      user: 'user'
+      user: 'user',
+      event: 'event',
+      newEvent: 'newEvent'
     }
 
   handleToggle: (panel=null) ->
@@ -97,20 +99,39 @@ UISecondaryBar = React.createClass
     classes[@props.id] = true
 
     div className: cx(classes),
+      div className: 'shelf-content',
+        ReactCSSTransitionGroup {transitionName: 'shelf-bottom'},
+            @shelf()
       div className: 'dropdown-content',
         ReactCSSTransitionGroup {transitionName: 'dropdown-bottom'},
-          div {key: 'nothing'}, null
-      div className: 'shelf-content',
-        div className: 'shelf',
-          div className: 'left',
-            p { onClick: @handleToggle, className: 'dropdown-link'},
-              'Event Name'
-          div className: 'center',
-            p { onClick: @handleToggle, className: 'dropdown-link'},
-              '1999'
-          div className: 'right',
-            p { onClick: @handleToggle, className: 'dropdown-link' },
-              '+'
+          @dropdownContent()
+
+  shelf: ->
+    UI = window.EpochUI
+    if @props.expandedPanel == @props.panelIds.newEvent
+      UI.NewEventShelf
+        key: 'newEventShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+    else
+      UI.DefaultBottomShelf
+        key: 'defaultBottomShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+
+
+  dropdownContent: ->
+    UI = window.EpochUI
+    if @props.expandedPanel == @props.panelIds.newEvent
+      UI.NewEventPanel
+        key: 'newEventPanel',
+        user: @props.user,
+        timelines: @props.timelines,
+        setAppState: @props.setAppState
+    else
+      # Default Panel set to display: none
+      div {key: 'nothing'}, null
+
 
 
 @.EpochUI ?= {}

@@ -40,25 +40,3 @@
     }
   }
 }
-
-// ReactCSSAnimationGroup transitions for top bar
-.dropdown-top-enter {
-  opacity: 0.01;
-}
-
-.dropdown-top-enter.dropdown-top-enter-active {
-  opacity: 1;
-  // Move transition to here to fix iOS8/Safari bug
-  -webkit-transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
-  transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
-}
-
-.dropdown-top-leave {
-  opacity: 1;
-  -webkit-transition: opacity $opacity-animation-speed ease-in-out;
-  transition: opacity $opacity-animation-speed ease-in-out;
-}
-
-.dropdown-top-leave.dropdown-top-leave-active {
-  opacity: 0.01;
-}

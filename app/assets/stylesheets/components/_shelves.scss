@@ -82,23 +82,28 @@
 
 
 // ReactCSSAnimationGroup transitions for top shelf
-.shelf-top-enter {
+.shelf-top-enter,
+.shelf-bottom-enter {
   opacity: 0.01;
 }
 
-.shelf-top-enter.shelf-top-enter-active {
+.shelf-top-enter.shelf-top-enter-active,
+.shelf-bottom-enter.shelf-bottom-enter-active {
   opacity: 1;
   // Move transition to here to fix iOS8/Safari bug
   -webkit-transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
   transition: opacity $opacity-animation-speed ease-in-out $slide-animation-speed;
 }
 
-.shelf-top-leave {
+.shelf-top-leave,
+.shelf-bottom-leave,
+ {
   opacity: 1;
   -webkit-transition: opacity $opacity-animation-speed ease-in-out;
   transition: opacity $opacity-animation-speed ease-in-out;
 }
 
-.shelf-top-leave.shelf-top-leave-active {
+.shelf-top-leave.shelf-top-leave-active,
+.shelf-bottom-leave.shelf-bottom-leave-active {
   opacity: 0.01;
 }

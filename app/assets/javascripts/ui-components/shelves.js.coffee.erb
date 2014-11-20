@@ -68,7 +68,40 @@ TimelineShelf = React.createClass
         ''
 
 
+DefaultBottomShelf = React.createClass
+  displayName: 'DefaultBottomShelf'
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        p { onClick: @props.handleClick(), className: 'dropdown-link'},
+          'Event Name'
+      div className: 'center',
+        p { onClick: @props.handleClick(), className: 'dropdown-link'},
+          '1999'
+      div className: 'right',
+        p { onClick: @props.handleClick(@props.panelIds.newEvent), className: 'dropdown-link' },
+          '+'
+
+NewEventShelf = React.createClass
+  displayName: 'NewEventShelf'
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        ''
+      div className: 'center',
+        p null,
+          'New Event'
+      div className: 'right',
+        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+
+
+
 @.EpochUI ?= {}
 @.EpochUI.DefaultTopShelf = DefaultTopShelf
 @.EpochUI.UserShelf = UserShelf
 @.EpochUI.TimelineShelf = TimelineShelf
+
+@.EpochUI.DefaultBottomShelf = DefaultBottomShelf
+@.EpochUI.NewEventShelf = NewEventShelf
