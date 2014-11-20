@@ -5,6 +5,8 @@ asset 'lodash'
 asset 'hammerjs'
 asset 'hammer-jquery', github: 'hammerjs/jquery.hammer.js'
 asset 'fastclick'
+asset 'Snap.svg'
+asset 'snap.svg.zpd'
 
 
 # CSS

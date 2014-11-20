@@ -15,8 +15,8 @@
 #= require fastclick
 #= require react
 #= require react_ujs
-#= require lodash/dist/lodash.min
 #= require hammerjs
-#= require hammer-jquery/jquery.hammer
+#= require Snap.svg/dist/snap.svg-min.js
+#= require snap.svg.zpd/snap.svg.zpd.js
 #= require components
 #= require binding
