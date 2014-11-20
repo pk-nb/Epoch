@@ -11,5 +11,42 @@
   text-align: center;
   color: $theme-black-main;
 
+  a, p {
+    margin: 0;
+  }
+
   // TODO add hover effect
+  // &:hover {
+  //   background-color:
+  // }
+}
+
+.timeline-item {
+  display: inline-block;
+
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+
+  border: 2px solid $theme-gray;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 1em;
+
+  color: $theme-black-main;
+
+  a, p, span {
+    margin: 0;
+    vertical-align: middle;
+  }
+
+  .circle {
+    display: inline-block;
+    // vertical-align: middle;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    background-color: #aaa;
+    border-radius: 100%;
+  }
 }

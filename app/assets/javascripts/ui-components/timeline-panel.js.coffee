@@ -1,4 +1,9 @@
-{div, form, button, p, h1, hr} = React.DOM
+{div, form, button, p, h1, hr, span} = React.DOM
+
+unless Array::filter
+  Array::filter = (callback) ->
+    element for element in this when callback(element)
+
 
 TimelinePanel = React.createClass
   displayName: 'TimelinePanel'
@@ -37,7 +42,15 @@ TimelinePanel = React.createClass
         # console.log error
     }
 
-  userTimelines: ->
+
+  unselectedTimelines: ->
+    tIds = @props.timelines.map (timeline) ->
+      timeline.id
+    @props.userTimelines.filter (userTimeline) =>
+       userTimeline.id not in tIds
+
+
+  userTimelinesSection: ->
     if @props.user
       div null,
         h1 null,
@@ -45,16 +58,24 @@ TimelinePanel = React.createClass
         @userTimelineList()
 
   userTimelineList: ->
-    @props.userTimelines.map (timeline) =>
-      p {key: timeline.title + timeline.id},
-        timeline.title
-
+    @unselectedTimelines().map (timeline) =>
+      div {key: timeline.title + timeline.id, className: 'timeline-item'},
+        div className: 'title',
+          div className: 'circle',
+            ''
+          span null,
+            timeline.title
 
   timelineList: ->
     if @props.timelines.length > 0
       @props.timelines.map (timeline) =>
-        p {key: timeline.title},
-          timeline.title
+
+        div {key: timeline.title, className: 'timeline-item'},
+          div className: 'title',
+            div className: 'circle',
+              ''
+            span null,
+              timeline.title
     else
       p null,
         'No Selected Timelines'
@@ -65,9 +86,7 @@ TimelinePanel = React.createClass
       h1 null,
         'Selected Timelines'
       @timelineList(),
-      @userTimelines(),
-      # h1 null,
-      #   'My Timelines'
+      @userTimelinesSection(),
       h1 null,
         'New Timeline'
       form ref: 'newTimelineForm', onSubmit: @handleSubmit,
