@@ -1,4 +1,4 @@
-{div, form, button, p, h1, hr, span} = React.DOM
+{div, form, button, p, h1, hr, span, img} = React.DOM
 
 unless Array::filter
   Array::filter = (callback) ->
@@ -65,17 +65,20 @@ TimelinePanel = React.createClass
             ''
           span null,
             timeline.title
+        div className: 'icons',
+          img {className: 'shelf-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
 
   timelineList: ->
     if @props.timelines.length > 0
       @props.timelines.map (timeline) =>
-
         div {key: timeline.title, className: 'timeline-item'},
           div className: 'title',
             div className: 'circle',
               ''
             span null,
               timeline.title
+          div className: 'icons',
+            img {className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
     else
       p null,
         'No Selected Timelines'

@@ -81,7 +81,7 @@ DefaultBottomShelf = React.createClass
           '1999'
       div className: 'right',
         p { onClick: @props.handleClick(@props.panelIds.newEvent), className: 'dropdown-link' },
-          '+'
+          img {className: 'shelf-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
 
 NewEventShelf = React.createClass
   displayName: 'NewEventShelf'

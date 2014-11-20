@@ -35,6 +35,8 @@
 
   color: $theme-black-main;
 
+  @include display(flex);
+
   a, p, span {
     margin: 0;
     vertical-align: middle;
@@ -48,5 +50,13 @@
     margin-right: 6px;
     background-color: #aaa;
     border-radius: 100%;
+  }
+
+  .title {
+    margin: auto 0;
+  }
+
+  .icons {
+    margin-right: 0;
   }
 }
