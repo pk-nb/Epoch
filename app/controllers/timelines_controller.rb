@@ -24,7 +24,7 @@ class TimelinesController < ApplicationController
   end
 
   def list
-    result = params[:ids].nil? ? {} : Timeline.list_by_ids(params[:ids], current_user)
+    result = params[:ids].nil? ? {} : Timeline.list_by_ids(params[:ids])
     respond_to do |format|
         format.json {render json: result}
     end

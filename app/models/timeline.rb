@@ -44,9 +44,9 @@ class Timeline < ActiveRecord::Base
   end
 
 
-  def self.list_by_ids(ids, user)
+  def self.list_by_ids(ids)
     ids.map do |id|
-      user.timelines.find(id)
+      Timeline.find(id)
     end
   end
 end
