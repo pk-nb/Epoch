@@ -1,4 +1,4 @@
-{div, form, button, p, h1, hr} = React.DOM
+{div, form, button, p, h1, hr, select, option} = React.DOM
 
 NewEventPanel = React.createClass
   displayName: 'NewEventPanel'
@@ -48,11 +48,14 @@ NewEventPanel = React.createClass
       h1 null,
         'New Event'
       form ref: 'newEventForm', onSubmit: @handleSubmit,
+        select {name: 'timeline_id'},
+          @props.timelines.map (timeline) =>
+            option value: timeline.id,
+              timeline.title
         div dangerouslySetInnerHTML: { __html: Forms.newEvent },
           null
         button null,
           'Submit'
-
 
 @.EpochUI ?= {}
 @.EpochUI.NewEventPanel = NewEventPanel

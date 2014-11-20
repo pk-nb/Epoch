@@ -2,7 +2,6 @@
 
 = simple_fields_for @event do |form|
   = token_tag
-  = form.input :timeline_id, collection: select_collection, as: :select, label_method: lambda {|obj| obj[:title]}, value_method: lambda{|obj| obj[:id]}, selected: '0'
   = form.input :title, input_html: {class: 'narrow-input'}
   = form.input :content, as: :text
   = form.input :start_date
