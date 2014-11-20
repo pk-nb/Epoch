@@ -62,6 +62,8 @@ gem 'faker'
 gem 'placeholder'
 gem 'validates_timeliness'
 gem 'octokit', '~> 3.0'
+gem 'twitter'
+gem 'certified'
 
 # React and JSExec VM
 gem 'react-rails', '~> 1.0.0.pre', github: 'reactjs/react-rails'

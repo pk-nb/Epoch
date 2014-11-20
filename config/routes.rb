@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :events
 
   resources :repository, only: [:new, :create]
+  resources :tweets, only: [:new, :create]
 
   get 'repository/create', to: 'repository#create'
 
