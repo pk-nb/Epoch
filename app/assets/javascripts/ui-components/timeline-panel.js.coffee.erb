@@ -13,11 +13,10 @@ TimelinePanel = React.createClass
     console.log @props.timelines
     timelines = @props.timelines
     timelines.push(data)
-
     @props.setAppState(timelines: timelines)
 
   onPostError: (data) ->
-    # Render error by setting state
+    # TODO Render error by setting state
     console.log 'Ajax failure'
     console.log(data)
 
@@ -36,10 +35,8 @@ TimelinePanel = React.createClass
         @onPostSuccess(data)
 
       error: (xhr, status, error) =>
-        console.log status
+        # console.log status
         @onPostError(error)
-
-        # console.log error
     }
 
 
@@ -48,6 +45,39 @@ TimelinePanel = React.createClass
       timeline.id
     @props.userTimelines.filter (userTimeline) =>
        userTimeline.id not in tIds
+
+
+  addSelectedTimeline: (data) ->
+    newTimelines = $.extend(true, [], @props.timelines)
+    newTimelines.push(data)
+    @props.setAppState(timelines: newTimelines)
+
+
+  handleSelectTimeline: (id) ->
+    =>
+      # TODO Start spinner state here and end spinner state in success method
+
+      # Request timeline and append to selected timelines
+      $.ajax {
+        type: 'GET',
+        url: Routes.timeline_path(id),
+        dataType: 'json'
+
+        success: (data, status, xhr) =>
+          @addSelectedTimeline(data)
+
+        error: (xhr, status, error) =>
+          # TODO Error handling in view with state
+          console.log error
+      }
+
+  handleRemoveTimeline: (id) ->
+    =>
+      newTimelines = $.extend(true, [], @props.timelines).filter (timeline) ->
+        timeline.id != id
+      @props.setAppState(timelines: newTimelines)
+
+
 
 
   userTimelinesSection: ->
@@ -66,7 +96,7 @@ TimelinePanel = React.createClass
           span null,
             timeline.title
         div className: 'icons',
-          img {className: 'shelf-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
+          img { onClick: @handleSelectTimeline(timeline.id), className: 'plus-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
 
   timelineList: ->
     if @props.timelines.length > 0
@@ -78,7 +108,7 @@ TimelinePanel = React.createClass
             span null,
               timeline.title
           div className: 'icons',
-            img {className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+            img { onClick: @handleRemoveTimeline(timeline.id), className: 'x-icon', src: '<%= asset_path 'x-icon.svg' %>'}
     else
       p null,
         'No Selected Timelines'

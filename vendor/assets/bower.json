@@ -9,6 +9,7 @@
     "fastclick": "latest",
     "Snap.svg": "latest",
     "snap.svg.zpd": "latest",
+    "history.js": "latest",
     "normalize-css": "latest",
     "normalize-opentype": "git://github.com/kennethormandy/normalize-opentype.css"
   }

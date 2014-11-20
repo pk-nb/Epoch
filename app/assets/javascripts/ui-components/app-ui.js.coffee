@@ -14,9 +14,25 @@ EpochApp = React.createClass
     timelines: [],
     userTimelines: []
 
+  updateURLParams: ->
+    newParams = ''
+    if @state.timelines.length > 0
+      for timeline in @state.timelines
+        newParams += "&ids[]=#{timeline.id}"
+      newParams = "?" + newParams.slice(1)
+    window.History.replaceState(null, null, newParams)
+
   # Change app state by sending this function as a prop on children
   setAppState: (data) ->
+    # if data.timelines
+    #   @updateURLParams(data.timelines)
     @setState data
+
+
+  componentDidUpdate: (prevProps, prevState) ->
+    if @state.timelines
+      console.log @state.timelines
+      @updateURLParams()
 
   render: ->
     UI = window.EpochUI

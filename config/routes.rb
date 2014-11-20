@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  root 'pages#index'
+  root 'pages#app'
 
   get 'app', to: 'pages#app', as: :app
+  get 'oldindex', to: 'pages#index', as: :oldindex
 
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
@@ -20,6 +21,8 @@ Rails.application.routes.draw do
   resources :events
 
   resources :repository, only: [:new, :create]
+
+  get 'repository/create', to: 'repository#create'
 
   get 'timelines/:id/children', to: 'timelines#children'
 

@@ -54,9 +54,13 @@
 
   .title {
     margin: auto 0;
+    @include flex(1);
   }
 
   .icons {
-    margin-right: 0;
+    @include display(flex);
+    & > * {
+      margin: auto;
+    }
   }
 }
