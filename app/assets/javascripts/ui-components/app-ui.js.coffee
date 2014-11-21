@@ -20,6 +20,11 @@ EpochApp = React.createClass
     repos: [],
     selectedEvent: {title: 'test'} # todo init to or something
 
+  componentDidUpdate: (prevProps, prevState) ->
+    if @state.timelines
+      console.log @state.timelines
+      @updateURLParams()
+
   updateURLParams: ->
     newParams = ''
     if @state.timelines.length > 0
@@ -33,11 +38,6 @@ EpochApp = React.createClass
 # Change app state by sending this function as a prop on children
   setAppState: (data) ->
     @setState data
-
-  componentDidUpdate: (prevProps, prevState) ->
-    if @state.timelines
-      console.log @state.timelines
-      @updateURLParams()
 
   render: ->
     UI = window.EpochUI
