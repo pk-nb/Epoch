@@ -13,7 +13,6 @@ EpochApp = React.createClass
     user: {name: 'Login', picture: null},
     timelines: [],
     userTimelines: [],
-    events: [],
     event_errors: [],
     timeline_errors: []
 
@@ -60,7 +59,6 @@ EpochApp = React.createClass
         setAppState: @setAppState,
         expandedPanel: @state.expandedPanel,
         timelines: @state.timelines || @props.timelines
-        events: @state.timelines || @props.timelines
         event_errors: @state.event_errors || @props.event_errors
 
 

@@ -35,7 +35,7 @@ class Timeline < ActiveRecord::Base
     #include all timeline and event children
 
     # UGLINESS AND BAD THINGS
-    # options[:include] does NOT call as_json on assiociations
+    # options[:include] does NOT call as_json on associations
     # options[:methods] does however, so associations will be rendered using [:methods]
     #options[:include] ||= [:events]
 

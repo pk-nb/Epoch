@@ -3,13 +3,14 @@
 NewEventPanel = React.createClass
   displayName: 'NewEventPanel'
 
-  onPostSuccess: (data) ->
+  onPostSuccess: (event) ->
     # todo IJH 11/23/14, I'm not entirely sure what our desired behavior is at this point in time...need to consult Nathanael.
-    console.log data
-    console.log @props.events
-    events = @props.events
-    events.push(data)
-    @props.setAppState(events: events)
+    console.log event
+    timelines = @props.timelines
+    for val, index in timelines
+      if val.id in event.timeline_ids
+        val.events.push(event)
+    @props.setAppState(timelines: timelines)
 
   onPostError: (messages) ->
     # Render error by setting state

@@ -25,7 +25,12 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def timeline_ids
+    self.timelines.map{|el| el.id}
+  end
+
   def as_json(options={})
+    options[:methods] ||= [:timeline_ids]
     if event_type == 'Repo'
       options[:include] ||= [:repo_event]
     end
