@@ -2,10 +2,8 @@ class RepositoryController < ApplicationController
   before_action :init
 
   def new
-    repositories = @client.repos
-    repo_names = repositories.map{|r| r.full_name}
     respond_to do |format|
-      format.json {render json: repo_names}
+      format.json {render json: Repositories.new(@client)}
     end
   end
 
@@ -15,7 +13,7 @@ class RepositoryController < ApplicationController
     @repo[:commits] = @client.commits(@repo)
   end
 
-  # todo Nathanael, do you want me to return some sort of direct indicator if one or more repository can't be loaded?
+  # todo IJH: Nathanael, do you want me to return some sort of direct indicator if one or more repository can't be loaded?
   def create
     repo_names = params[:repos].nil? ? [] : params[:repos]
     # retrieve activity/commits/issues for each repository

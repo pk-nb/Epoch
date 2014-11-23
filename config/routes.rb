@@ -23,8 +23,6 @@ Rails.application.routes.draw do
   resources :repository, only: [:new, :create]
   resources :tweets, only: [:new, :create]
 
-  get 'repository/create', to: 'repository#create'
-
   get 'timelines/:id/children', to: 'timelines#children'
 
   # need this because Rails `rescue_from` doesn't catch ActionController::RoutingError

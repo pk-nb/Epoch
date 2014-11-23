@@ -14,7 +14,8 @@ EpochApp = React.createClass
     timelines: [],
     userTimelines: [],
     event_errors: [],
-    timeline_errors: []
+    timeline_errors: [],
+    repos: []
 
   updateURLParams: ->
     newParams = ''
@@ -50,6 +51,7 @@ EpochApp = React.createClass
         timelines: @state.timelines || @props.timelines
         userTimelines: @state.userTimelines || @props.userTimelines
         timeline_errors: @state.timeline_errors || @props.timeline_errors
+        repos: @state.repos || @props.repos
       UI.TimelineView
         timelines: @state.timelines || @props.timelines
       UI.UISecondaryBar

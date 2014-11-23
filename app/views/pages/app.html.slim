@@ -1,11 +1,15 @@
 - @timeline = Timeline.new
 - @event = Event.new
+- @repositories = Repositories.new(GithubUser.new current_user)
 - timeline_form = j render partial: 'timelines/ajax_form'
 - event_form = j render partial: 'events/ajax_form'
+- repo_form = j render partial: 'repository/ajax_form'
 
-= react_component 'EpochApp', {user: current_user.as_json, timelines: @timelines, userTimelines: @user_timelines}, {prerender: true}
+= react_component 'EpochApp', {user: current_user.as_json, timelines: @timelines,
+ userTimelines: @user_timelines, repos: @repositories.repos}, {prerender: true}
 
 javascript:
   window.EpochForms = {};
   window.EpochForms.newTimeline = '#{timeline_form}';
   window.EpochForms.newEvent = '#{event_form}';
+  window.EpochForms.newRepository = '#{repo_form}'
