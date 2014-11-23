@@ -23,7 +23,7 @@ class EventsController < ApplicationController
   end
 
   def create
-    @timeline.events.create(event_params.merge(user_id: current_user.id, event_type: 'Epoch'))
+    @event = @timeline.events.create(event_params.merge(user_id: current_user.id, event_type: 'Epoch'))
     respond_to do |format|
       format.json do
         if @event.valid?
