@@ -12,7 +12,10 @@ EpochApp = React.createClass
   getDefaultProps: ->
     user: {name: 'Login', picture: null},
     timelines: [],
-    userTimelines: []
+    userTimelines: [],
+    events: [],
+    event_errors: [],
+    timeline_errors: []
 
   updateURLParams: ->
     newParams = ''
@@ -47,6 +50,7 @@ EpochApp = React.createClass
         user: @props.user
         timelines: @state.timelines || @props.timelines
         userTimelines: @state.userTimelines || @props.userTimelines
+        timeline_errors: @state.timeline_errors || @props.timeline_errors
       UI.TimelineView
         timelines: @state.timelines || @props.timelines
       UI.UISecondaryBar
@@ -56,6 +60,8 @@ EpochApp = React.createClass
         setAppState: @setAppState,
         expandedPanel: @state.expandedPanel,
         timelines: @state.timelines || @props.timelines
+        events: @state.timelines || @props.timelines
+        event_errors: @state.event_errors || @props.event_errors
 
 
 @.EpochApp ?= {}

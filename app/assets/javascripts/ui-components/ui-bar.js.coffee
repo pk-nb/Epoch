@@ -57,6 +57,8 @@ UIPrimaryBar = React.createClass
         user: @props.user
         timelines: @props.timelines
         userTimelines: @props.userTimelines
+        timeline_errors: @props.timeline_errors
+        events: @props.events
         setAppState: @props.setAppState
     else
       # Default Panel set to display: none
@@ -128,7 +130,9 @@ UISecondaryBar = React.createClass
         key: 'newEventPanel',
         user: @props.user,
         timelines: @props.timelines,
-        setAppState: @props.setAppState
+        setAppState: @props.setAppState,
+        events: @props.events
+        event_errors: @props.event_errors
     else
       # Default Panel set to display: none
       div {key: 'nothing'}, null
