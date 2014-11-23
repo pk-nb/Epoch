@@ -4,7 +4,8 @@ class GithubUser
     # Instructing Octokit to automatically concatenate all pages. This may need to be revisited at a later date.
     Octokit.auto_paginate = true
     @client = Octokit::Client.new({client_id: ENV['GITHUB_ID'], client_secret: ENV['GITHUB_SECRET']})
-    @user = @client.user user.github_account.login
+    login = user.nil? || user.github_account.nil? ? 'usernotfound' : user.github_account.login
+    @user = @client.user login
   end
 
   def repos
