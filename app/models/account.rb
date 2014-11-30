@@ -30,7 +30,7 @@ class Account < ActiveRecord::Base
     # todo test this against Facebook and Github...will need to do in production or modify our accounts
     self.email = auth.info.email # todo email things need checking
     self.password = 'testtest' # How to avoid password validation problems?
-    self.login = auth.extra.raw_info.login
+    self.login = auth.provider == 'twitter' ? auth.info.nickname : auth.extra.raw_info.login
     save!
   end
 

@@ -1,6 +1,10 @@
-= simple_fields_for @timeline do |form|
-  = token_tag
-  = form.input :title, input_html: {class: 'narrow-input'}
-  = form.input :content, as: :text
-  = form.input :start_date
-  = form.input :end_date
+div= token_tag
+div
+  =label_tag :timeline_name, 'Timeline Name'
+  =text_field_tag :timeline_name
+div
+  =label_tag :user_id, 'Import tweets from a friend\'s timeline'
+  =select_tag :user_id, options_for_select(@friends.unshift(['Select a friend...', 0]))
+div
+  =label_tag :alternate_user_id, 'Or specify any Twitter user\'s screen name'
+  =text_field_tag :alternate_user_id

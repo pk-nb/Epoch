@@ -1,4 +1,4 @@
-{div, form, button, p, h1, hr, span, img, input, label} = React.DOM
+{div, form, button, p, h1, hr, span, img, input, label, a} = React.DOM
 
 unless Array::filter
   Array::filter = (callback) ->
@@ -35,6 +35,7 @@ TimelinePanel = React.createClass
       success: (data, status, xhr) =>
         console.log 'Ajax success'
         @onPostSuccess(data)
+        @refs.newTimelineForm.getDOMNode().reset()
 
       error: (xhr, status, error) =>
         # Retrieve/parse error messages from response text
@@ -54,17 +55,42 @@ TimelinePanel = React.createClass
 
       success: (data, status, xhr) =>
         console.log 'Ajax success'
+        # todo IJH 11/30/14: do we only want to add the top level timeline in the success callback?
         @onPostSuccess(data)
+        @refs.newRepoForm.getDOMNode().reset()
 
       error: (xhr, status, error) =>
         # Retrieve/parse error messages from response text
         messages = [];
         try messages = JSON.parse(xhr.responseText).errors
         catch e then messages = [xhr.responseText]
-        # todo IJH 11/23/2014: errors will need to be changed to display by the appropriate form maybe
+        # todo IJH 11/23/2014: errors will need to be changed to display by the appropriate form
         @onPostError(messages)
     }
 
+  handleTweetSubmit: (e) ->
+    e.preventDefault()
+    form_data = $(@refs.newTweetForm.getDOMNode()).serialize()
+    # if the user hasn't chosen an option from the selector, use the text field value
+    $.ajax {
+      type: 'POST',
+      url: Routes.tweets_path(),
+      data: form_data,
+      dataType: 'json'
+
+      success: (data, status, xhr) =>
+        console.log 'Ajax success'
+        @onPostSuccess(data)
+        @refs.newTweetForm.getDOMNode().reset()
+
+      error: (xhr, status, error) =>
+        # Retrieve/parse error messages from response text
+        messages = [];
+        try messages = JSON.parse(xhr.responseText).errors
+        catch e then messages = [xhr.responseText]
+        # todo IJH 11/30/2014: errors will need to be changed to display by the appropriate form
+        @onPostError(messages)
+    }
 
   unselectedTimelines: ->
     tIds = @props.timelines.map (timeline) ->
@@ -137,7 +163,9 @@ TimelinePanel = React.createClass
         'No Selected Timelines'
 
   handleAddRepoName: ->
-    =>
+    (e) =>
+      e.preventDefault()
+      # todo we may want more direct dom manipulation here to avoid resetting the list?
       repos = @props.repos
       repo_input = $(@refs.addRepo.getDOMNode())
       repos.push(repo_input.val())
@@ -172,7 +200,7 @@ TimelinePanel = React.createClass
         div dangerouslySetInnerHTML: { __html: Forms.newRepository },
             null
         div null,
-          label for: 'name',
+          label htmlFor: 'name',
             'Timeline Name'
           input {type: 'text', className: 'narrow-input', name: 'name'}
         @props.repos.map (repo) =>
@@ -180,13 +208,21 @@ TimelinePanel = React.createClass
             input { type: 'checkbox', name: 'repos[]', value: repo},
               repo
         div null,
-          label for: 'additional_repo',
+          label htmlFor: 'additional_repo',
                 'Other Repo'
           input {ref: 'addRepo', type: 'text', className: 'narrow-input', name: 'additional_repo'}
           button onClick: @handleAddRepoName(),
            'Add To List'
         button null,
           'Submit'
+      # Twitter import form
+      h1 null,
+        'Import from Twitter'
+      form ref: 'newTweetForm', onSubmit: @handleTweetSubmit,
+        div dangerouslySetInnerHTML: { __html: Forms.newTweet },
+         null
+        button null,
+         'Submit'
 
 
 @.EpochUI ?= {}
