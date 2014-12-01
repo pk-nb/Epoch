@@ -7,19 +7,21 @@ class TweetsController < ApplicationController
     end
   end
 
-  #create?timeline_name=Something&user_id=someTwitterID&start_date=SomeDate&end_date=SomeDate
   def create
     twitter_int = TwitterIntegration.new current_user.twitter_account
     user_id = params.require(:user_id)
     if user_id == 0 then user_id = params.require(:alternate_user_id) end
     tweets = twitter_int.get_all_tweets(user_id)
     # Filter by start date, if provided
-    unless params[:start_date].nil?
-      tweets = tweets.select{|t| t.created_at > params[:start_date]}
+    filters = params[:filters]
+    start_date = Date.parse("#{filters['start_date(1i)']}-#{filters['start_date(2i)']}-#{filters['start_date(3i)']}")
+    end_date = Date.parse("#{filters['end_date(1i)']}-#{filters['end_date(2i)']}-#{filters['end_date(3i)']}")
+    unless start_date.nil?
+      tweets = tweets.select{|t| t.created_at >= start_date}
     end
     # Filter by start date, if provided
-    unless params[:end_date].nil?
-      tweets = tweets.select{|t| t.created_at < params[:end_date]}
+    unless end_date.nil?
+      tweets = tweets.select{|t| t.created_at <= end_date}
     end
 
     # Only create a new timeline/events if there are more than 0 tweets, no reason to create empty timelines
@@ -29,7 +31,7 @@ class TweetsController < ApplicationController
       timeline = current_user.timelines.create(title: params.require(:timeline_name), content:
           "A Timeline of Tweets by #{user_id}", start_date: extreme_dates[:min], end_date: extreme_dates[:max])
       tweets.each do |tweet|
-        # todo use <br> tags instead of newlines? Remove altogether? Create separate model?
+        # todo IJH: use <br> tags instead of newlines? Remove altogether? Create separate model?
         timeline.events.create(user_id: current_user.id, title: 'Tweet', content: "#{tweet.full_text}\nFavorited #{tweet.favorite_count} times\nRetweeted #{tweet.retweet_count} times",
                                        start_date: tweet.created_at, end_date: tweet.created_at, event_type: 'Tweet')
       end

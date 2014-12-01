@@ -8,3 +8,9 @@ div
 div
   =label_tag :alternate_user_id, 'Or specify any Twitter user\'s screen name'
   =text_field_tag :alternate_user_id
+div
+  =label_tag :start_date, 'Start Date'
+  =date_select :filters, :start_date, default: 1.years.ago
+div
+  =label_tag :end_date, 'End Date'
+  =date_select :filters, :end_date, default: 1.days.from_now
