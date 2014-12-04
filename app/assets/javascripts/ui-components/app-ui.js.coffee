@@ -8,7 +8,7 @@ EpochApp = React.createClass
     barExpanded: false,
     expandedPanel: null
 
-  # Default props that should be set on server render
+# Default props that should be set on server render
   getDefaultProps: ->
     user: {name: 'Login', picture: null},
     timelines: [],
@@ -17,7 +17,8 @@ EpochApp = React.createClass
     timeline_errors: [],
     repo_errors: [],
     tweet_errors: [],
-    repos: []
+    repos: [],
+    selectedEvent: {title: 'test'} # todo init to or something
 
   updateURLParams: ->
     newParams = ''
@@ -27,7 +28,7 @@ EpochApp = React.createClass
       newParams = "?" + newParams.slice(1)
     window.History.replaceState(null, null, newParams)
 
-  # Change app state by sending this function as a prop on children
+# Change app state by sending this function as a prop on children
   setAppState: (data) ->
     # if data.timelines
     #   @updateURLParams(data.timelines)
@@ -44,9 +45,9 @@ EpochApp = React.createClass
 
     div className: 'app',
       UI.UIPrimaryBar
-        id: 'top',
-        active: @state.barExpanded is 'top',
-        otherActive: @state.barExpanded is 'bottom',
+        id: 'top'
+        active: @state.barExpanded is 'top'
+        otherActive: @state.barExpanded is 'bottom'
         expandedPanel: @state.expandedPanel
         setAppState: @setAppState,
         user: @props.user
@@ -58,14 +59,17 @@ EpochApp = React.createClass
         repos: @state.repos || @props.repos
       UI.TimelineView
         timelines: @state.timelines || @props.timelines
+        selectedEvent: @state.selectedEvent || @props.selectedEvent
+
       UI.UISecondaryBar
         id: 'bottom',
-        active: @state.barExpanded is 'bottom',
-        otherActive: @state.barExpanded is 'top',
-        setAppState: @setAppState,
-        expandedPanel: @state.expandedPanel,
+        active: @state.barExpanded is 'bottom'
+        otherActive: @state.barExpanded is 'top'
+        setAppState: @setAppState
+        expandedPanel: @state.expandedPanel
         timelines: @state.timelines || @props.timelines
         event_errors: @state.event_errors || @props.event_errors
+        selectedEvent: @state.selectedEvent || @props.selectedEvent
 
 
 @.EpochApp ?= {}
