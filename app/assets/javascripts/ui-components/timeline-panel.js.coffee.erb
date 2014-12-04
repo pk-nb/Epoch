@@ -204,7 +204,7 @@ TimelinePanel = React.createClass
             'Timeline Name'
           input {type: 'text', className: 'narrow-input', name: 'name'}
         @props.repos.map (repo) =>
-          div null,
+          div key: repo,
             input { type: 'checkbox', name: 'repos[]', value: repo},
               repo
         div null,
