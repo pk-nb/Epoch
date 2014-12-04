@@ -4,12 +4,14 @@ NewRepoPanel = React.createClass
   displayName: 'NewRepoPanel'
 
   onPostSuccess: (data) ->
-      console.log data
-      console.log @props.timelines
       timelines = @props.timelines
+      userTimelines = @props.userTimelines
       timelines.push(data)
+      data.timelines.map (t) =>
+        userTimelines.push(t)
       #todo IJH 12/4/2014 add all child timelines to userTimelines prop
       @props.setAppState(timelines: timelines)
+      @props.setAppState(userTimelines: userTimelines)
 
   onPostError: (messages) ->
     # Render error by setting state
