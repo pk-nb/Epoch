@@ -44,7 +44,7 @@ NewTweetPanel = React.createClass
   renderErrors: ->
     div className: 'form-errors',
       @props.tweet_errors.map (error) =>
-        p null,
+        p key: error + 'NewTweetPanel',
           error
 
   render: ->
@@ -53,7 +53,7 @@ NewTweetPanel = React.createClass
       h1 null,
         'Import from Twitter'
       @renderErrors()
-      form ref: 'newTweetForm', onSubmit: @handleTweetSubmit,
+      form ref: 'newTweetForm', onSubmit: @handleSubmit,
         div dangerouslySetInnerHTML: { __html: Forms.newTweet },
          null
         button null,

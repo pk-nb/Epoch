@@ -48,7 +48,7 @@ NewTimelinePanel = React.createClass
   renderErrors: ->
     div className: 'form-errors',
       @props.timeline_errors.map (error) =>
-        p key: error,
+        p key: error + 'NewTimelinePanel',
           error
 
   render: ->

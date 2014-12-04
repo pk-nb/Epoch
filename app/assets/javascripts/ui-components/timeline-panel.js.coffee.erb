@@ -45,53 +45,6 @@ TimelinePanel = React.createClass
         @onPostError(messages)
     }
 
-  handleRepoSubmit: (e) ->
-    e.preventDefault()
-    $.ajax {
-      type: 'POST',
-      url: Routes.repository_index_path(),
-      data: $(@refs.newRepoForm.getDOMNode()).serialize(),
-      dataType: 'json'
-
-      success: (data, status, xhr) =>
-        console.log 'Ajax success'
-        # todo IJH 11/30/14: do we only want to add the top level timeline in the success callback?
-        @onPostSuccess(data)
-        @refs.newRepoForm.getDOMNode().reset()
-
-      error: (xhr, status, error) =>
-        # Retrieve/parse error messages from response text
-        messages = [];
-        try messages = JSON.parse(xhr.responseText).errors
-        catch e then messages = [xhr.responseText]
-        # todo IJH 11/23/2014: errors will need to be changed to display by the appropriate form
-        @onPostError(messages)
-    }
-
-  handleTweetSubmit: (e) ->
-    e.preventDefault()
-    form_data = $(@refs.newTweetForm.getDOMNode()).serialize()
-    # if the user hasn't chosen an option from the selector, use the text field value
-    $.ajax {
-      type: 'POST',
-      url: Routes.tweets_path(),
-      data: form_data,
-      dataType: 'json'
-
-      success: (data, status, xhr) =>
-        console.log 'Ajax success'
-        @onPostSuccess(data)
-        @refs.newTweetForm.getDOMNode().reset()
-
-      error: (xhr, status, error) =>
-        # Retrieve/parse error messages from response text
-        messages = [];
-        try messages = JSON.parse(xhr.responseText).errors
-        catch e then messages = [xhr.responseText]
-        # todo IJH 11/30/2014: errors will need to be changed to display by the appropriate form
-        @onPostError(messages)
-    }
-
   unselectedTimelines: ->
     tIds = @props.timelines.map (timeline) ->
       timeline.id
@@ -161,22 +114,6 @@ TimelinePanel = React.createClass
     else
       p null,
         'No Selected Timelines'
-
-  handleAddRepoName: ->
-    (e) =>
-      e.preventDefault()
-      # todo we may want more direct dom manipulation here to avoid resetting the list?
-      repos = @props.repos
-      repo_input = $(@refs.addRepo.getDOMNode())
-      repos.push(repo_input.val())
-      repo_input.val('')
-      @props.setAppState(repos: repos)
-
-  renderTimelineErrors: ->
-    div className: 'form-errors',
-      @props.timeline_errors.map (error) =>
-        p null,
-          error
 
   render: ->
     UI = window.EpochUI

@@ -55,7 +55,7 @@ NewRepoPanel = React.createClass
   renderErrors: ->
     div className: 'form-errors',
       @props.repo_errors.map (error) =>
-        p null,
+        p key: error + 'NewRepoPanel',
           error
 
   render: ->
