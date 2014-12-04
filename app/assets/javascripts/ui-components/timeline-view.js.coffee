@@ -1,4 +1,5 @@
 {div, p, a, svg, text, canvas} = React.DOM
+cx = React.addons.classSet
 
 class SnapTimelineView
   constructor: (svgId)->
@@ -72,8 +73,17 @@ class CanvasTimelineView
     @context = @canvas.getContext('2d')
     @context.scale(2,2)
 
+    window.onresize = @redraw
 
-  redraw: ->
+    # TODO redraw during animation
+    $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
+      console.log 'transition end yay!'
+      # Mysteriously getting called 5 times
+      @redraw()
+
+
+
+  redraw: =>
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
@@ -118,7 +128,7 @@ TimelineView = React.createClass
 
     # Check if timelines changed?
     # if prevProps.timelines.length != @props.timelines.length
-    console.log @props.timelines
+    # console.log @props.timelines
     # snapTimelineView.redraw(@props.timelines)
     canvasTimelineView.redraw()
 
@@ -132,7 +142,13 @@ TimelineView = React.createClass
           event.content
 
   render: ->
-    canvas className: 'timeline-view', id: 'timeline-view',
+
+    classes = {
+      'timeline-view': true
+    }
+    classes[@props.expandedPanel] = true
+
+    canvas className: cx(classes), id: 'timeline-view',
       ''
       # @textNodes()
 
