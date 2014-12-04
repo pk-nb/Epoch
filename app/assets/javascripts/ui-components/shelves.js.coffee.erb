@@ -82,6 +82,20 @@ NewTimelineShelf = React.createClass
       div className: 'right',
         ''
 
+NewRepoShelf = React.createClass
+  displayName: 'NewRepoShelf'
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        p { onClick: @props.handleClick(@props.panelIds.timeline) },
+          'Back'
+        # img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+      div className: 'center',
+        p null,
+          'Import Repositories as Timelines'
+      div className: 'right',
+        ''
 
 
 DefaultBottomShelf = React.createClass
@@ -133,6 +147,7 @@ EventShelf = React.createClass
 @.EpochUI.UserShelf = UserShelf
 @.EpochUI.TimelineShelf = TimelineShelf
 @.EpochUI.NewTimelineShelf = NewTimelineShelf
+@.EpochUI.NewRepoShelf = NewRepoShelf
 
 @.EpochUI.DefaultBottomShelf = DefaultBottomShelf
 @.EpochUI.NewEventShelf = NewEventShelf

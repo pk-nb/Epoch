@@ -7,6 +7,8 @@ UIBarMixin =
     panelIds: {
       timeline: 'timeline',
       newTimeline: 'newTimeline',
+      newRepo: 'newRepo',
+      newTweet: 'newTweet',
       user: 'user',
       event: 'event',
       newEvent: 'newEvent'
@@ -70,7 +72,16 @@ UIPrimaryBar = React.createClass
         setAppState: @props.setAppState,
         # Calling directly instead of sending callback, so don't need to curry
         goBack: @handleClick(@props.panelIds.timeline)
-        # panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.newRepo
+      UI.NewRepoPanel
+        key: 'newRepoPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        # repo_errors: @props.repo_errors
+        repos: @props.repos
+        setAppState: @props.setAppState
+        goBack: @handleClick(@props.panelIds.timeline)
     else
       # Default Panel set to display: none
       div {key: 'nothing-UIPrimaryBar'}, null
@@ -92,7 +103,11 @@ UIPrimaryBar = React.createClass
     else if @props.expandedPanel == @props.panelIds.newTimeline
       UI.NewTimelineShelf
         key: 'newTimelineShelf',
-
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.newRepo
+      UI.NewRepoShelf
+        key: 'newRepoShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
     else

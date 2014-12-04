@@ -15,6 +15,7 @@ NewRepoPanel = React.createClass
       #todo IJH 12/4/2014 add all child timelines to userTimelines prop
       @props.setAppState(timelines: timelines)
       @props.setAppState(userTimelines: userTimelines)
+      @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
@@ -63,7 +64,7 @@ NewRepoPanel = React.createClass
 
   render: ->
     Forms = window.EpochForms
-    div className: 'new-repo-panel',
+    div className: 'panel new-repo-panel',
       # Github import form
       h1 null,
           'Import from Github'

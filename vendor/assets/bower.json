@@ -7,6 +7,7 @@
     "hammerjs": "latest",
     "hammer-jquery": "git://github.com/hammerjs/jquery.hammer.js",
     "fastclick": "latest",
+    "iNoBounce": "git://github.com/lazd/iNoBounce.git",
     "Snap.svg": "latest",
     "snap.svg.zpd": "latest",
     "history.js": "latest",

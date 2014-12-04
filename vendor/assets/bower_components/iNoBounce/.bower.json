@@ -1,0 +1,13 @@
+{
+  "name": "iNoBounce",
+  "homepage": "https://github.com/lazd/iNoBounce",
+  "_release": "ec6e64a1ed",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ec6e64a1ed19c03669ae89e625dca808837b62b9"
+  },
+  "_source": "git://github.com/lazd/iNoBounce.git",
+  "_target": "*",
+  "_originalSource": "git://github.com/lazd/iNoBounce.git"
+}
