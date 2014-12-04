@@ -64,16 +64,26 @@ class SnapTimelineView
 
 
 class CanvasTimelineView
-  constructor: (canvasId) ->
+  constructor: (canvasId, timelines=[]) ->
     @canvasId = canvasId
+    @timelines = timelines
     jqCanvas = $(canvasId)
     @canvas = jqCanvas[0] # Get native object out
+    @hammer = new Hammer(@canvas)
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
     @context = @canvas.getContext('2d')
     @context.scale(2,2)
 
+    @scrollSpeed = 1.5
+    @focus = @canvas.width / 2
+    @tempFocus = @focus
     window.onresize = @redraw
+
+    @hammer.on 'pan', (event) =>
+      @onPan(event)
+    @hammer.on 'panend', (event) =>
+      @afterPan(event)
 
     # TODO redraw during animation
     $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
@@ -81,20 +91,34 @@ class CanvasTimelineView
       # Mysteriously getting called 5 times
       @redraw()
 
-
-
   redraw: =>
+    # Recalcuate
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
 
+
+    # Test drawing
     @context.fillStyle = "rgb(200,0,0)"
-    @context.fillRect(10, 10, 55, 50)
+    @context.fillRect(@focus, 10, 55, 50)
 
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
-    @context.fillRect(30, 30, 55, 50)
+    @context.fillRect(@focus + 30, 30, 55, 50)
 
 
+  updateTimelines: (timelines) ->
+    @timelines = timelines
+    @redraw()
+
+  onPan: (event) ->
+    console.log "Panning all the gold!"
+    console.log event.deltaX
+    @focus = @tempFocus + (event.deltaX * @scrollSpeed)
+    @redraw()
+
+  afterPan: (event) ->
+    @tempFocus += event.deltaX
+    @focus = @tempFocus
 
 
 # Local/Global object for hanging on to
