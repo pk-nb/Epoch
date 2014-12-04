@@ -1,3 +1,8 @@
+// Modified version of
+// https://gist.github.com/irae/1042167
+
+// Prevents links from being opened in mobile safari from web app
+
 (function(document,navigator,standalone) {
   // prevents links from apps from oppening in mobile safari
   // this javascript must be the first script in your <head>
@@ -10,7 +15,10 @@
       }
       // Condidions to do this only on links to your own app
       // if you want all links, use if('href' in curnode) instead.
-      if('href' in curnode) {
+      if(
+        'href' in curnode && // is a link
+        (chref=curnode.href).replace(location.href,'').indexOf('#')
+      ) {
         e.preventDefault();
         location.href = curnode.href;
       }
