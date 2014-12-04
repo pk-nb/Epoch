@@ -117,17 +117,19 @@ TimelinePanel = React.createClass
 
   tryRenderTwitter: (providers, UI) ->
     if 'twitter' in providers
-      UI.NewTweetPanel
-        key: 'newTweetPanel',
-        user: @props.user
-        timelines: @props.timelines
-        userTimelines: @props.userTimelines
-        tweet_errors: @props.tweet_errors
-        setAppState: @props.setAppState
+      p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newTweet)},
+        'Import Twitter Timelines'
+      # UI.NewTweetPanel
+      #   key: 'newTweetPanel',
+      #   user: @props.user
+      #   timelines: @props.timelines
+      #   userTimelines: @props.userTimelines
+      #   tweet_errors: @props.tweet_errors
+      #   setAppState: @props.setAppState
     else
       div null,
         a { href: '/auth/twitter', id: 'sign_in_twitter', className: 'button' },
-            'Sign in to Twitter to Import Tweets'
+            'Sign in to Twitter to Import Timelines'
 
   tryRenderGithub: (providers, UI) ->
     if 'github' in providers
@@ -140,20 +142,23 @@ TimelinePanel = React.createClass
 
   renderCreateAndImport: ->
     if @props.user
-      h1 null,
-        'Create and Import Timelines'
-      p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newTimeline)},
-        'Create New Timeline'
-      @tryRenderGithub(providers, UI)
-      @tryRenderTwitter(providers, UI)
+      UI = window.EpochUI
+      providers = @props.user.providers
+      div null,
+        h1 null,
+          'Create and Import Timelines'
+        p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newTimeline)},
+          'Create New Timeline'
+        @tryRenderGithub(providers, UI)
+        @tryRenderTwitter(providers, UI)
     else
       p {className: 'button',  onClick: @props.handleClick(@props.panelIds.user)},
         'Login to Create and Import Timelines'
 
 
   render: ->
-    UI = window.EpochUI
-    providers = if @props.user == null then [] else @props.user.providers
+    # UI = window.EpochUI
+    # providers = if @props.user == null then [] else @props.user.providers
     div className: 'panel timeline-panel',
       h1 null,
         'Selected Timelines'

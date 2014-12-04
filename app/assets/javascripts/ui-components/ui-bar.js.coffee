@@ -78,8 +78,15 @@ UIPrimaryBar = React.createClass
         user: @props.user
         timelines: @props.timelines
         userTimelines: @props.userTimelines
-        # repo_errors: @props.repo_errors
         repos: @props.repos
+        setAppState: @props.setAppState
+        goBack: @handleClick(@props.panelIds.timeline)
+    else if @props.expandedPanel == @props.panelIds.newTweet
+      UI.NewTweetPanel
+        key: 'newTweetPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
         setAppState: @props.setAppState
         goBack: @handleClick(@props.panelIds.timeline)
     else
@@ -108,6 +115,11 @@ UIPrimaryBar = React.createClass
     else if @props.expandedPanel == @props.panelIds.newRepo
       UI.NewRepoShelf
         key: 'newRepoShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.newTweet
+      UI.NewTweetShelf
+        key: 'newTweetShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
     else

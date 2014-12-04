@@ -11,8 +11,8 @@ NewTweetPanel = React.createClass
       console.log @props.timelines
       timelines = @props.timelines
       timelines.push(data)
-      #
       @props.setAppState(timelines: timelines)
+      @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
@@ -53,7 +53,7 @@ NewTweetPanel = React.createClass
 
   render: ->
     Forms = window.EpochForms
-    div className: 'new-tweet-panel',
+    div className: 'panel new-tweet-panel',
       h1 null,
         'Import from Twitter'
       @renderErrors()
