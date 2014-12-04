@@ -74,7 +74,7 @@ DefaultBottomShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        p { onClick: @props.handleClick(), className: 'dropdown-link'},
+        p { onClick: @props.handleClick(@props.panelIds.event), className: 'dropdown-link'},
           'Event Name'
       div className: 'center',
         p { onClick: @props.handleClick(), className: 'dropdown-link'},
@@ -96,6 +96,20 @@ NewEventShelf = React.createClass
       div className: 'right',
         img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
 
+EventShelf = React.createClass
+  displayName: 'EventShelf'
+
+  render: ->
+    selectedEvent = @props.selectedEvent
+    div className: 'shelf',
+        div className: 'left',
+            ''
+        div className: 'center',
+            p null,
+              selectedEvent.title
+        div className: 'right',
+            img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+
 
 
 @.EpochUI ?= {}
@@ -105,3 +119,4 @@ NewEventShelf = React.createClass
 
 @.EpochUI.DefaultBottomShelf = DefaultBottomShelf
 @.EpochUI.NewEventShelf = NewEventShelf
+@.EpochUI.EventShelf = EventShelf

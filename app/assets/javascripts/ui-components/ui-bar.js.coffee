@@ -17,7 +17,7 @@ UIBarMixin =
     else
       @props.setAppState(barExpanded: @props.id, expandedPanel: panel)
 
-  # Returns function (curry) that will be run on click
+# Returns function (curry) that will be run on click
   handleClick: (panelId=null)->
     =>
       @handleToggle(panelId)
@@ -39,7 +39,7 @@ UIPrimaryBar = React.createClass
     div className: cx(classes),
       div className: 'shelf-content',
         ReactCSSTransitionGroup {transitionName: 'shelf-top'},
-            @shelf()
+          @shelf()
       div className: 'dropdown-content',
         ReactCSSTransitionGroup {transitionName: 'dropdown-top'},
           @dropdownContent()
@@ -57,6 +57,10 @@ UIPrimaryBar = React.createClass
         user: @props.user
         timelines: @props.timelines
         userTimelines: @props.userTimelines
+        timeline_errors: @props.timeline_errors
+        tweet_errors: @props.tweet_errors
+        repo_errors: @props.repo_errors
+        repos: @props.repos
         setAppState: @props.setAppState
     else
       # Default Panel set to display: none
@@ -102,7 +106,7 @@ UISecondaryBar = React.createClass
     div className: cx(classes),
       div className: 'shelf-content',
         ReactCSSTransitionGroup {transitionName: 'shelf-bottom'},
-            @shelf()
+          @shelf()
       div className: 'dropdown-content',
         ReactCSSTransitionGroup {transitionName: 'dropdown-bottom'},
           @dropdownContent()
@@ -114,12 +118,17 @@ UISecondaryBar = React.createClass
         key: 'newEventShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.event
+      UI.EventShelf
+        key: 'eventShelf'
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+        selectedEvent: @props.selectedEvent
     else
       UI.DefaultBottomShelf
         key: 'defaultBottomShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
-
 
   dropdownContent: ->
     UI = window.EpochUI
@@ -128,11 +137,17 @@ UISecondaryBar = React.createClass
         key: 'newEventPanel',
         user: @props.user,
         timelines: @props.timelines,
-        setAppState: @props.setAppState
+        setAppState: @props.setAppState,
+        events: @props.events
+        event_errors: @props.event_errors
+    else if @props.expandedPanel == @props.panelIds.event
+      UI.EventPanel
+        key: 'eventPanel'
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
     else
       # Default Panel set to display: none
       div {key: 'nothing'}, null
-
 
 
 @.EpochUI ?= {}

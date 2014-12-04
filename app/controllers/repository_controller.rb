@@ -2,10 +2,8 @@ class RepositoryController < ApplicationController
   before_action :init
 
   def new
-    repositories = @client.repos
-    repo_names = repositories.map{|r| r.full_name}
     respond_to do |format|
-      format.json {render json: repo_names}
+      format.json {render json: Repositories.new(@client)}
     end
   end
 
@@ -15,15 +13,37 @@ class RepositoryController < ApplicationController
     @repo[:commits] = @client.commits(@repo)
   end
 
-  # todo Nathanael, do you want me to return some sort of direct indicator if one or more repository can't be loaded?
+  # todo IJH: Nathanael, do you want me to return some sort of direct indicator if one or more repository can't be loaded?
   def create
+    success, result = try_import
+    respond_to do |format|
+      format.json do
+        if success
+          render json: result
+        else
+          render json: {errors: [result]}, status: 422
+        end
+      end
+    end
+  end
+
+  private
+  def init
+    @client = GithubUser.new current_user
+  end
+
+  def try_import
+    # check for repository names to be present
+    if params[:repos].nil? || params[:repos] == []
+      return false, 'Please select one or more repositories'
+    end
     repo_names = params[:repos].nil? ? [] : params[:repos]
     # retrieve activity/commits/issues for each repository
     repos = []
     repo_names.each do |name|
       name_parts = name.split('/')
       if(name_parts.length != 2)
-        return; # todo...error, what to do?
+        return false, 'Please enter repository names in the form {owner}/{repoName}'
       end
       repo = @client.repo(name_parts.first, name_parts.last)
       unless repo.nil?
@@ -34,6 +54,10 @@ class RepositoryController < ApplicationController
         repo[:min_date] = dates[:min]
         repo[:max_date] = dates[:max]
       end
+    end
+    # If more than one repository was specified, we need a name for the master timeline
+    if params[:name].nil? || params[:name].empty?
+      return false, 'Please enter a name for the timeline'
     end
     # Create a timeline to hold all of the repositories
     overall_min_date = repos.map{|r| r[:min_date]}.min
@@ -47,9 +71,9 @@ class RepositoryController < ApplicationController
     repos.each do |repo|
       # create a nested timeline if the master timeline exists, otherwise create a top level timeline
       timeline = master_timeline.nil? ? current_user.timelines.create(title: params[:name], content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
-                                                                         start_date: repo[:min_date], end_date: repo[:max_date]) :
-                                        master_timeline.timelines.create(title: "Repository: #{repo.full_name}", content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
-                                                  start_date: repo[:min_date], end_date: repo[:max_date], user_id: current_user.id)
+                                                                      start_date: repo[:min_date], end_date: repo[:max_date]) :
+          master_timeline.timelines.create(title: "Repository: #{repo.full_name}", content: "A log of commits, issues, and pull requests from the #{repo.full_name} repository.",
+                                           start_date: repo[:min_date], end_date: repo[:max_date], user_id: current_user.id)
       # create events for commits
       repo.commits.each do |c|
         event = timeline.events.create(user_id: current_user.id, title: 'Commit', content: c.commit.message, start_date: c.commit.author.date, end_date: c.commit.author.date, event_type: 'Repo')
@@ -68,14 +92,7 @@ class RepositoryController < ApplicationController
         master_timeline = timeline
       end
     end
-    respond_to do |format|
-      format.json {render json: master_timeline}
-    end
-  end
-
-  private
-  def init
-    @client = GithubUser.new current_user
+    return true, master_timeline
   end
 
   # Inspects the issues, commits, and pull requests of a repository

@@ -2,5 +2,5 @@
   = token_tag
   = form.input :title, input_html: {class: 'narrow-input'}
   = form.input :content, as: :text
-  = form.input :start_date
-  = form.input :end_date
+  = form.input :start_date, start_year: 0, max_years_allowed: Date.today.year + 20
+  = form.input :end_date, start_year: 0, max_years_allowed: Date.today.year + 20

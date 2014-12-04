@@ -1,4 +1,4 @@
-{div, form, button, p, h1, hr, span, img} = React.DOM
+{div, form, button, p, h1, hr, span, img, input, label, a} = React.DOM
 
 unless Array::filter
   Array::filter = (callback) ->
@@ -9,16 +9,18 @@ TimelinePanel = React.createClass
   displayName: 'TimelinePanel'
 
   onPostSuccess: (data) ->
-    console.log data
-    console.log @props.timelines
-    timelines = @props.timelines
-    timelines.push(data)
-    @props.setAppState(timelines: timelines)
+      console.log data
+      console.log @props.timelines
+      timelines = @props.timelines
+      timelines.push(data)
+      #
+      @props.setAppState(timelines: timelines)
 
-  onPostError: (data) ->
-    # TODO Render error by setting state
+  onPostError: (messages) ->
+    # Render error by setting state
     console.log 'Ajax failure'
-    console.log(data)
+    console.log(messages)
+    @props.setAppState(timeline_errors: messages)
 
 
   handleSubmit: (e) ->
@@ -33,12 +35,15 @@ TimelinePanel = React.createClass
       success: (data, status, xhr) =>
         console.log 'Ajax success'
         @onPostSuccess(data)
+        @refs.newTimelineForm.getDOMNode().reset()
 
       error: (xhr, status, error) =>
-        # console.log status
-        @onPostError(error)
+        # Retrieve/parse error messages from response text
+        messages = [];
+        try messages = JSON.parse(xhr.responseText).errors
+        catch e then messages = [xhr.responseText]
+        @onPostError(messages)
     }
-
 
   unselectedTimelines: ->
     tIds = @props.timelines.map (timeline) ->
@@ -77,9 +82,6 @@ TimelinePanel = React.createClass
         timeline.id != id
       @props.setAppState(timelines: newTimelines)
 
-
-
-
   userTimelinesSection: ->
     if @props.user
       div null,
@@ -113,20 +115,56 @@ TimelinePanel = React.createClass
       p null,
         'No Selected Timelines'
 
+  tryRenderTwitter: (providers, UI) ->
+    if 'twitter' in providers
+      UI.NewTweetPanel
+        key: 'newTweetPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        tweet_errors: @props.tweet_errors
+        setAppState: @props.setAppState
+    else
+      div null,
+        h1 null,
+          'Sign in to Twitter to import tweets'
+        a { href: '/auth/twitter', id: 'sign_in_twitter', className: 'button' },
+            'Sign in with Twitter'
+
+  tryRenderGithub: (providers, UI) ->
+    if 'github' in providers
+      UI.NewRepoPanel
+        key: 'newRepoPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        repo_errors: @props.repo_errors
+        repos: @props.repos
+        setAppState: @props.setAppState
+    else
+      div null,
+        h1 null,
+            'Sign in to Github to import repositories'
+        a { href: '/auth/github', id: 'sign_in_github', className: 'button' },
+            'Sign in with Github'
+
   render: ->
-    Forms = window.EpochForms
+    UI = window.EpochUI
+    providers = if @props.user == null then [] else @props.user.providers
     div className: 'panel timeline-panel',
       h1 null,
         'Selected Timelines'
       @timelineList(),
       @userTimelinesSection(),
-      h1 null,
-        'New Timeline'
-      form ref: 'newTimelineForm', onSubmit: @handleSubmit,
-        div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
-          null
-        button null,
-          'Submit'
+      UI.NewTimelinePanel
+        key: 'newTimelinePanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        timeline_errors: @props.timeline_errors
+        setAppState: @props.setAppState
+      @tryRenderGithub(providers, UI)
+      @tryRenderTwitter(providers, UI)
 
 
 @.EpochUI ?= {}

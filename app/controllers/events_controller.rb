@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :init, :require_login
+  before_action :require_login
   def index
     @events = @timeline.events
 
@@ -9,7 +9,7 @@ class EventsController < ApplicationController
   end
   
   def show
-    @event = @timeline.events.find(params[:id])
+    @event = current_user.events.find(params[:id])
     respond_to do |format|
       format.json {render json: @event}
     end
@@ -23,7 +23,8 @@ class EventsController < ApplicationController
   end
 
   def create
-    @timeline.events.create(event_params.merge(user_id: current_user.id, event_type: 'Epoch'))
+    @timeline = current_user.timelines.find(params.require(:timeline_id))
+    @event = @timeline.events.create(event_params.merge(user_id: current_user.id, event_type: 'Epoch'))
     respond_to do |format|
       format.json do
         if @event.valid?
@@ -68,9 +69,4 @@ class EventsController < ApplicationController
   def event_params
     params.require(:event).permit(:title, :content, :start_date, :end_date)
   end
-
-  def init
-    @timeline = current_user.timelines.find(params.require(:timeline_id))
-  end
-
 end

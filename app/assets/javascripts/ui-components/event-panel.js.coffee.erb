@@ -1,0 +1,11 @@
+{div, form, button, p, h1, hr, select, option} = React.DOM
+
+EventPanel = React.createClass
+  displayName: 'EventPanel'
+
+  render: ->
+    div null,
+      'Hello!'
+
+@.EpochUI ?= {}
+@.EpochUI.EventPanel = EventPanel
