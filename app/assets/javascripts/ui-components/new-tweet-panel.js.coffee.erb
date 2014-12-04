@@ -3,6 +3,9 @@
 NewTweetPanel = React.createClass
   displayName: 'NewTweetPanel'
 
+  getInitialState: ->
+    tweetErrors: []
+
   onPostSuccess: (data) ->
       console.log data
       console.log @props.timelines
@@ -15,7 +18,8 @@ NewTweetPanel = React.createClass
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
-    @props.setAppState(tweet_errors: messages)
+    @setState(tweetErrors: messages)
+
 
   handleSubmit: (e) ->
     e.preventDefault()
@@ -43,7 +47,7 @@ NewTweetPanel = React.createClass
 
   renderErrors: ->
     div className: 'form-errors',
-      @props.tweet_errors.map (error) =>
+      @state.tweetErrors.map (error) =>
         p key: error + 'NewTweetPanel',
           error
 

@@ -3,6 +3,9 @@
 NewRepoPanel = React.createClass
   displayName: 'NewRepoPanel'
 
+  getInitialState: ->
+    repoErrors: []
+
   onPostSuccess: (data) ->
       timelines = @props.timelines
       userTimelines = @props.userTimelines
@@ -17,7 +20,7 @@ NewRepoPanel = React.createClass
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
-    @props.setAppState(repo_errors: messages)
+    @setState(repoErrors: messages)
 
   handleSubmit: (e) ->
     e.preventDefault()
@@ -54,7 +57,7 @@ NewRepoPanel = React.createClass
 
   renderErrors: ->
     div className: 'form-errors',
-      @props.repo_errors.map (error) =>
+      @state.repoErrors.map (error) =>
         p key: error + 'NewRepoPanel',
           error
 
@@ -67,7 +70,7 @@ NewRepoPanel = React.createClass
       @renderErrors()
       form ref: 'newRepoForm', onSubmit: @handleSubmit,
         div dangerouslySetInnerHTML: { __html: Forms.newRepository },
-            null
+          null
         div null,
           label htmlFor: 'name',
             'Timeline Name'

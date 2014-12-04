@@ -156,13 +156,16 @@ TimelinePanel = React.createClass
         'Selected Timelines'
       @timelineList(),
       @userTimelinesSection(),
-      UI.NewTimelinePanel
-        key: 'newTimelinePanel',
-        user: @props.user
-        timelines: @props.timelines
-        userTimelines: @props.userTimelines
-        timeline_errors: @props.timeline_errors
-        setAppState: @props.setAppState
+
+      p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newTimeline)},
+        'Create New Timeline'
+      # UI.NewTimelinePanel
+      #   key: 'newTimelinePanel',
+      #   user: @props.user
+      #   timelines: @props.timelines
+      #   userTimelines: @props.userTimelines
+      #   timeline_errors: @props.timeline_errors
+      #   setAppState: @props.setAppState
       @tryRenderGithub(providers, UI)
       @tryRenderTwitter(providers, UI)
 
