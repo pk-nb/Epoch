@@ -1,3 +1,4 @@
+button,
 .button {
   display: inline-block;
   width: 100%;
@@ -10,6 +11,8 @@
   font-size: 1em;
   text-align: center;
   color: $theme-black-main;
+
+  background: none;
 
   a, p {
     margin: 0;

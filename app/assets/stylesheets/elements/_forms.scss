@@ -1,0 +1,31 @@
+form {
+  label {
+    margin-top: 0.5em;
+    display: block;
+
+    &.required {
+      // font-weight: bold;
+
+      &:after {
+        content: '*';
+        color: $theme-magenta;
+      }
+    }
+  }
+
+  input[type='text'],
+  textarea {
+    display: block;
+    width: 100%;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 0.5em;
+  }
+
+  button {
+    margin-bottom: 0.5em;
+  }
+
+
+}
