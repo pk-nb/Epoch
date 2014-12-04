@@ -179,51 +179,34 @@ TimelinePanel = React.createClass
           error
 
   render: ->
-    Forms = window.EpochForms
+    UI = window.EpochUI
     div className: 'panel timeline-panel',
       h1 null,
         'Selected Timelines'
       @timelineList(),
       @userTimelinesSection(),
-      h1 null,
-        'New Timeline'
-      @renderTimelineErrors()
-      form ref: 'newTimelineForm', onSubmit: @handleSubmit,
-        div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
-          null
-        button null,
-          'Submit'
-      # Github import form
-      h1 null,
-          'Import from Github'
-      form ref: 'newRepoForm', onSubmit: @handleRepoSubmit,
-        div dangerouslySetInnerHTML: { __html: Forms.newRepository },
-            null
-        div null,
-          label htmlFor: 'name',
-            'Timeline Name'
-          input {type: 'text', className: 'narrow-input', name: 'name'}
-        @props.repos.map (repo) =>
-          div key: repo,
-            input { type: 'checkbox', name: 'repos[]', value: repo},
-              repo
-        div null,
-          label htmlFor: 'additional_repo',
-                'Other Repo'
-          input {ref: 'addRepo', type: 'text', className: 'narrow-input', name: 'additional_repo'}
-          button onClick: @handleAddRepoName(),
-           'Add To List'
-        button null,
-          'Submit'
-      # Twitter import form
-      h1 null,
-        'Import from Twitter'
-      form ref: 'newTweetForm', onSubmit: @handleTweetSubmit,
-        div dangerouslySetInnerHTML: { __html: Forms.newTweet },
-         null
-        button null,
-         'Submit'
-
+      UI.NewTimelinePanel
+        key: 'newTimelinePanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        timeline_errors: @props.timeline_errors
+        setAppState: @props.setAppState
+      UI.NewRepoPanel
+        key: 'newRepoPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        repo_errors: @props.repo_errors
+        repos: @props.repos
+        setAppState: @props.setAppState
+      UI.NewTweetPanel
+        key: 'newTweetPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        tweet_errors: @props.tweet_errors
+        setAppState: @props.setAppState
 
 @.EpochUI ?= {}
 @.EpochUI.TimelinePanel = TimelinePanel

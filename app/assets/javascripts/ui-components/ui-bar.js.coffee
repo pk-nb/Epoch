@@ -58,6 +58,8 @@ UIPrimaryBar = React.createClass
         timelines: @props.timelines
         userTimelines: @props.userTimelines
         timeline_errors: @props.timeline_errors
+        tweet_errors: @props.tweet_errors
+        repo_errors: @props.repo_errors
         repos: @props.repos
         setAppState: @props.setAppState
     else

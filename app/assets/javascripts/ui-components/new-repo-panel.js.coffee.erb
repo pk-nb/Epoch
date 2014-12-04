@@ -1,0 +1,88 @@
+{div, form, button, p, h1, hr, span, img, input, label, a} = React.DOM
+
+NewRepoPanel = React.createClass
+  displayName: 'NewRepoPanel'
+
+  onPostSuccess: (data) ->
+      console.log data
+      console.log @props.timelines
+      timelines = @props.timelines
+      timelines.push(data)
+      #todo IJH 12/4/2014 add all child timelines to userTimelines prop
+      @props.setAppState(timelines: timelines)
+
+  onPostError: (messages) ->
+    # Render error by setting state
+    console.log 'Ajax failure'
+    console.log(messages)
+    @props.setAppState(repo_errors: messages)
+
+  handleSubmit: (e) ->
+    e.preventDefault()
+    $.ajax {
+      type: 'POST',
+      url: Routes.repository_index_path(),
+      data: $(@refs.newRepoForm.getDOMNode()).serialize(),
+      dataType: 'json'
+
+      success: (data, status, xhr) =>
+        console.log 'Ajax success'
+        @onPostSuccess(data)
+        @refs.newRepoForm.getDOMNode().reset()
+
+      error: (xhr, status, error) =>
+        # Retrieve/parse error messages from response text
+        messages = [];
+        try messages = JSON.parse(xhr.responseText).errors
+        catch e then messages = [xhr.responseText]
+        #todo IJH 11/23/2014: errors will need to be changed to display by the appropriate form
+        @onPostError(messages)
+    }
+
+  handleAddRepoName: ->
+    (e) =>
+      e.preventDefault()
+      repos = @props.repos
+      repo_input = $(@refs.addRepo.getDOMNode())
+      newName = repo_input.val()
+      if newName != ''
+        repos.push(repo_input.val())
+        repo_input.val('')
+        @props.setAppState(repos: repos)
+
+  renderErrors: ->
+    div className: 'form-errors',
+      @props.repo_errors.map (error) =>
+        p null,
+          error
+
+  render: ->
+    Forms = window.EpochForms
+    div className: 'panel new-repo-panel',
+      # Github import form
+      h1 null,
+          'Import from Github'
+      @renderErrors()
+      form ref: 'newRepoForm', onSubmit: @handleSubmit,
+        div dangerouslySetInnerHTML: { __html: Forms.newRepository },
+            null
+        div null,
+          label htmlFor: 'name',
+            'Timeline Name'
+          input {type: 'text', className: 'narrow-input', name: 'name'}
+        @props.repos.map (repo) =>
+          div key: repo,
+            input { type: 'checkbox', name: 'repos[]', value: repo},
+              repo
+        div null,
+          label htmlFor: 'additional_repo',
+                'Other Repo'
+          input {ref: 'addRepo', type: 'text', className: 'narrow-input', name: 'additional_repo'}
+          button onClick: @handleAddRepoName(),
+           'Add To List'
+        button null,
+          'Submit'
+
+
+@.EpochUI ?= {}
+@.EpochUI.NewRepoPanel = NewRepoPanel

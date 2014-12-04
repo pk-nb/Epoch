@@ -1,0 +1,68 @@
+{div, form, button, p, h1, hr, span, img, input, label, a} = React.DOM
+
+unless Array::filter
+  Array::filter = (callback) ->
+    element for element in this when callback(element)
+
+
+NewTimelinePanel = React.createClass
+  displayName: 'NewTimelinePanel'
+
+  onPostSuccess: (data) ->
+      console.log data
+      console.log @props.timelines
+      timelines = @props.timelines
+      timelines.push(data)
+      #
+      @props.setAppState(timelines: timelines)
+
+  onPostError: (messages) ->
+    # Render error by setting state
+    console.log 'Ajax failure'
+    console.log(messages)
+    @props.setAppState(timeline_errors: messages)
+
+
+  handleSubmit: (e) ->
+    console.log 'Submit form'
+    e.preventDefault()
+    $.ajax {
+      type: 'POST',
+      url: Routes.timelines_path(),
+      data: $(@refs.newTimelineForm.getDOMNode()).serialize(),
+      dataType: 'json'
+
+      success: (data, status, xhr) =>
+        console.log 'Ajax success'
+        @onPostSuccess(data)
+        @refs.newTimelineForm.getDOMNode().reset()
+
+      error: (xhr, status, error) =>
+        # Retrieve/parse error messages from response text
+        messages = [];
+        try messages = JSON.parse(xhr.responseText).errors
+        catch e then messages = [xhr.responseText]
+        @onPostError(messages)
+    }
+
+  renderErrors: ->
+    div className: 'form-errors',
+      @props.timeline_errors.map (error) =>
+        p key: error,
+          error
+
+  render: ->
+    Forms = window.EpochForms
+    div className: 'panel timeline-panel',
+      h1 null,
+        'New Timeline'
+      @renderErrors()
+      form ref: 'newTimelineForm', onSubmit: @handleSubmit,
+        div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
+          null
+        button null,
+          'Submit'
+
+
+@.EpochUI ?= {}
+@.EpochUI.NewTimelinePanel = NewTimelinePanel
