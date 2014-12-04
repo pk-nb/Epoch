@@ -10,10 +10,10 @@ class PagesController < ApplicationController
 
 
   def app
-
     @timelines = (params[:ids].nil? || current_user.nil?) ? [] : Timeline.list_by_ids(params[:ids]).as_json
     @user_timelines = current_user.nil? ? [] : current_user.timelines.map {|t| {title: t.title, id: t.id} }
-    @friends = (TwitterIntegration.new current_user.twitter_account).friends_list
+    account = current_user.nil? ? nil : current_user.twitter_account
+    @friends = (TwitterIntegration.new account).friends_list
     render layout: 'app'
   end
 end

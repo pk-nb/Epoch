@@ -150,7 +150,7 @@ TimelinePanel = React.createClass
 
   render: ->
     UI = window.EpochUI
-    providers = @props.user.providers
+    providers = if @props.user == null then [] else @props.user.providers
     div className: 'panel timeline-panel',
       h1 null,
         'Selected Timelines'

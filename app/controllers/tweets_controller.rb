@@ -26,7 +26,8 @@ class TweetsController < ApplicationController
     if params[:timeline_name].nil? || params[:timeline_name].empty?
       return false, 'Please enter a timeline name'
     end
-    twitter_int = TwitterIntegration.new current_user.twitter_account
+    account = current_user.nil? ? nil : current_user.twitter_account
+    twitter_int = TwitterIntegration.new account
     user_id = params[:user_id]
     if user_id == 0 then user_id = params[:alternate_user_id] end
     # verify user provided
