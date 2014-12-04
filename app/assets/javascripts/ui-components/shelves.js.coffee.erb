@@ -97,6 +97,21 @@ NewRepoShelf = React.createClass
       div className: 'right',
         ''
 
+NewTweetShelf = React.createClass
+  displayName: 'NewTweetShelf'
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        p { onClick: @props.handleClick(@props.panelIds.timeline) },
+          'Back'
+        # img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+      div className: 'center',
+        p null,
+          'Import Twitter Timelines'
+      div className: 'right',
+        ''
+
 
 DefaultBottomShelf = React.createClass
   displayName: 'DefaultBottomShelf'
@@ -107,7 +122,7 @@ DefaultBottomShelf = React.createClass
         p { onClick: @props.handleClick(@props.panelIds.event), className: 'dropdown-link'},
           'Event Name'
       div className: 'center',
-        p { onClick: @props.handleClick(), className: 'dropdown-link'},
+        p null,
           '1999'
       div className: 'right',
         p { onClick: @props.handleClick(@props.panelIds.newEvent), className: 'dropdown-link' },
@@ -126,6 +141,7 @@ NewEventShelf = React.createClass
       div className: 'right',
         img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
 
+
 EventShelf = React.createClass
   displayName: 'EventShelf'
 
@@ -133,10 +149,11 @@ EventShelf = React.createClass
     selectedEvent = @props.selectedEvent
     div className: 'shelf',
         div className: 'left',
-            ''
+            p { onClick: @props.handleClick(), className: 'dropdown-link'},
+              selectedEvent.title
         div className: 'center',
             p null,
-              selectedEvent.title
+              '1999'
         div className: 'right',
             img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
 
@@ -146,8 +163,10 @@ EventShelf = React.createClass
 @.EpochUI.DefaultTopShelf = DefaultTopShelf
 @.EpochUI.UserShelf = UserShelf
 @.EpochUI.TimelineShelf = TimelineShelf
+
 @.EpochUI.NewTimelineShelf = NewTimelineShelf
 @.EpochUI.NewRepoShelf = NewRepoShelf
+@.EpochUI.NewTweetShelf = NewTweetShelf
 
 @.EpochUI.DefaultBottomShelf = DefaultBottomShelf
 @.EpochUI.NewEventShelf = NewEventShelf

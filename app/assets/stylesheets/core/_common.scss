@@ -9,6 +9,13 @@ html {
 body {
   color: $theme-black-main;
   background-color: $theme-off-white;
+
+  // Smaller font on small screens
+  font-size: 0.875em;
+
+  @media (min-width: $break-small) {
+    font-size: 1em;
+  }
 }
 
 a {
