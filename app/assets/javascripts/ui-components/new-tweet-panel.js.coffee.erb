@@ -3,19 +3,23 @@
 NewTweetPanel = React.createClass
   displayName: 'NewTweetPanel'
 
+  getInitialState: ->
+    tweetErrors: []
+
   onPostSuccess: (data) ->
       console.log data
       console.log @props.timelines
       timelines = @props.timelines
       timelines.push(data)
-      #
       @props.setAppState(timelines: timelines)
+      @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
-    @props.setAppState(tweet_errors: messages)
+    @setState(tweetErrors: messages)
+
 
   handleSubmit: (e) ->
     e.preventDefault()
@@ -43,13 +47,13 @@ NewTweetPanel = React.createClass
 
   renderErrors: ->
     div className: 'form-errors',
-      @props.tweet_errors.map (error) =>
+      @state.tweetErrors.map (error) =>
         p key: error + 'NewTweetPanel',
           error
 
   render: ->
     Forms = window.EpochForms
-    div className: 'new-tweet-panel',
+    div className: 'panel new-tweet-panel',
       h1 null,
         'Import from Twitter'
       @renderErrors()

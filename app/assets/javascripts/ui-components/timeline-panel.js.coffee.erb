@@ -117,54 +117,56 @@ TimelinePanel = React.createClass
 
   tryRenderTwitter: (providers, UI) ->
     if 'twitter' in providers
-      UI.NewTweetPanel
-        key: 'newTweetPanel',
-        user: @props.user
-        timelines: @props.timelines
-        userTimelines: @props.userTimelines
-        tweet_errors: @props.tweet_errors
-        setAppState: @props.setAppState
+      p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newTweet)},
+        'Import Twitter Timelines'
+      # UI.NewTweetPanel
+      #   key: 'newTweetPanel',
+      #   user: @props.user
+      #   timelines: @props.timelines
+      #   userTimelines: @props.userTimelines
+      #   tweet_errors: @props.tweet_errors
+      #   setAppState: @props.setAppState
     else
       div null,
-        h1 null,
-          'Sign in to Twitter to import tweets'
         a { href: '/auth/twitter', id: 'sign_in_twitter', className: 'button' },
-            'Sign in with Twitter'
+            'Sign in to Twitter to Import Timelines'
 
   tryRenderGithub: (providers, UI) ->
     if 'github' in providers
-      UI.NewRepoPanel
-        key: 'newRepoPanel',
-        user: @props.user
-        timelines: @props.timelines
-        userTimelines: @props.userTimelines
-        repo_errors: @props.repo_errors
-        repos: @props.repos
-        setAppState: @props.setAppState
+      p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newRepo)},
+        'Import Github Repositories as Timeline'
     else
       div null,
-        h1 null,
-            'Sign in to Github to import repositories'
         a { href: '/auth/github', id: 'sign_in_github', className: 'button' },
-            'Sign in with Github'
+            'Sign in with Github to Import Repositories'
+
+  renderCreateAndImport: ->
+    if @props.user
+      UI = window.EpochUI
+      providers = @props.user.providers
+      div null,
+        h1 null,
+          'Create and Import Timelines'
+        p {className: 'button',  onClick: @props.handleClick(@props.panelIds.newTimeline)},
+          'Create New Timeline'
+        @tryRenderGithub(providers, UI)
+        @tryRenderTwitter(providers, UI)
+    else
+      p {className: 'button',  onClick: @props.handleClick(@props.panelIds.user)},
+        'Login to Create and Import Timelines'
+
 
   render: ->
-    UI = window.EpochUI
-    providers = if @props.user == null then [] else @props.user.providers
+    # UI = window.EpochUI
+    # providers = if @props.user == null then [] else @props.user.providers
     div className: 'panel timeline-panel',
       h1 null,
         'Selected Timelines'
       @timelineList(),
       @userTimelinesSection(),
-      UI.NewTimelinePanel
-        key: 'newTimelinePanel',
-        user: @props.user
-        timelines: @props.timelines
-        userTimelines: @props.userTimelines
-        timeline_errors: @props.timeline_errors
-        setAppState: @props.setAppState
-      @tryRenderGithub(providers, UI)
-      @tryRenderTwitter(providers, UI)
+      @renderCreateAndImport()
+
+
 
 
 @.EpochUI ?= {}

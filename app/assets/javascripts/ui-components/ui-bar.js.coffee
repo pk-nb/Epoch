@@ -6,13 +6,16 @@ UIBarMixin =
   getDefaultProps: ->
     panelIds: {
       timeline: 'timeline',
+      newTimeline: 'newTimeline',
+      newRepo: 'newRepo',
+      newTweet: 'newTweet',
       user: 'user',
       event: 'event',
       newEvent: 'newEvent'
     }
 
   handleToggle: (panel=null) ->
-    if @props.active
+    if panel == null
       @props.setAppState(barExpanded: false, expandedPanel: null)
     else
       @props.setAppState(barExpanded: @props.id, expandedPanel: panel)
@@ -20,6 +23,7 @@ UIBarMixin =
 # Returns function (curry) that will be run on click
   handleClick: (panelId=null)->
     =>
+      console.log "Hello click " + panelId
       @handleToggle(panelId)
 
 
@@ -57,14 +61,37 @@ UIPrimaryBar = React.createClass
         user: @props.user
         timelines: @props.timelines
         userTimelines: @props.userTimelines
-        timeline_errors: @props.timeline_errors
-        tweet_errors: @props.tweet_errors
-        repo_errors: @props.repo_errors
+        repos: @props.repos
+        setAppState: @props.setAppState,
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.newTimeline
+      UI.NewTimelinePanel
+        key: 'newTimelinePanel',
+        timelines: @props.timelines
+        setAppState: @props.setAppState,
+        # Calling directly instead of sending callback, so don't need to curry
+        goBack: @handleClick(@props.panelIds.timeline)
+    else if @props.expandedPanel == @props.panelIds.newRepo
+      UI.NewRepoPanel
+        key: 'newRepoPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
         repos: @props.repos
         setAppState: @props.setAppState
+        goBack: @handleClick(@props.panelIds.timeline)
+    else if @props.expandedPanel == @props.panelIds.newTweet
+      UI.NewTweetPanel
+        key: 'newTweetPanel',
+        user: @props.user
+        timelines: @props.timelines
+        userTimelines: @props.userTimelines
+        setAppState: @props.setAppState
+        goBack: @handleClick(@props.panelIds.timeline)
     else
       # Default Panel set to display: none
-      div {key: 'nothing'}, null
+      div {key: 'nothing-UIPrimaryBar'}, null
 
   shelf: ->
     UI = window.EpochUI
@@ -80,6 +107,21 @@ UIPrimaryBar = React.createClass
         handleClick: @handleClick,
         panelIds: @props.panelIds,
         timelines: @props.timelines
+    else if @props.expandedPanel == @props.panelIds.newTimeline
+      UI.NewTimelineShelf
+        key: 'newTimelineShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.newRepo
+      UI.NewRepoShelf
+        key: 'newRepoShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+    else if @props.expandedPanel == @props.panelIds.newTweet
+      UI.NewTweetShelf
+        key: 'newTweetShelf',
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
     else
       UI.DefaultTopShelf
         key: 'defaultTopShelf',
@@ -147,7 +189,7 @@ UISecondaryBar = React.createClass
         panelIds: @props.panelIds
     else
       # Default Panel set to display: none
-      div {key: 'nothing'}, null
+      div {key: 'nothing-UIBottomBar'}, null
 
 
 @.EpochUI ?= {}
