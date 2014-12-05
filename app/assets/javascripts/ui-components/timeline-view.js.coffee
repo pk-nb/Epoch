@@ -69,6 +69,7 @@ class CanvasTimelineView
 
     @canvasId = canvasId
     @timelines = timelines
+    console.log @timelines
     jqCanvas = $(canvasId)
     @canvas = jqCanvas[0] # Get native object out
     @hammer = new Hammer(@canvas)
@@ -89,7 +90,6 @@ class CanvasTimelineView
 
     # TODO redraw during animation
     $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
-      console.log 'transition end yay!'
       # Mysteriously getting called 5 times
       @redraw()
 
@@ -102,7 +102,15 @@ class CanvasTimelineView
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
 
-
+    #console.log @timelines
+    
+    #i = 20
+    #for event in @timelines[0].events
+      #@context.fillText(event.content, @focus, i)
+      #i += 20
+    @context.font = '30pt "MB Empire"'
+    @context.fillText(@minDate(), @focus, 100)
+    @context.fillText(@maxDate(), @focus, 200)
     # Test drawing
     @context.fillStyle = "rgb(200,0,0)"
     @context.fillRect(@focus, 10, 55, 50)
@@ -110,14 +118,26 @@ class CanvasTimelineView
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
     @context.fillRect(@focus + 30, 30, 55, 50)
 
+  minDate: ->
+    events = @timelines[0].events
+    min = @timelines[0].events[events.length - 1].start_date
+    for timeline in @timelines
+      events = timeline.events
+      min = timeline.events[events.length - 1].start_date if timeline.events[events.length - 1].start_date < min
+    min
+   
+  maxDate: ->
+    max = @timelines[0].events[0].end_date
+    for timeline in @timelines
+      max = timeline.events[0].end_date if timeline.events[0].end_date > max
+    max
 
   updateTimelines: (timelines) ->
     @timelines = timelines
+    #console.log @timelines
     @redraw()
 
   onPan: (event) ->
-    console.log "Panning all the gold!"
-    console.log event.deltaX
     @focus = @tempFocus + (event.deltaX * @scrollSpeed)
     @redraw()
 
@@ -140,6 +160,7 @@ TimelineView = React.createClass
     # @getDOMNode().innerHTML = ''
     # snapTimelineView = new SnapTimelineView('timeline-view')
     canvasTimelineView = new CanvasTimelineView('#timeline-view')
+    canvasTimelineView.updateTimelines(@props.timelines)
 
     @forceUpdate()
 
@@ -159,7 +180,7 @@ TimelineView = React.createClass
     # if prevProps.timelines.length != @props.timelines.length
     # console.log @props.timelines
     # snapTimelineView.redraw(@props.timelines)
-    canvasTimelineView.redraw()
+    canvasTimelineView.updateTimelines(@props.timelines)
 
   #getInitialState: ->
     # Grab the saved paper matrix, if any
