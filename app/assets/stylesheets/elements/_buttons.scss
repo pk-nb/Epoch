@@ -37,6 +37,19 @@ button,
   font-weight: bold;
   font-size: 1em;
 
+  // background-color: #ddd;
+  &:hover {
+    background-color: $theme-gray;
+
+    .circle {
+      background-color: $theme-white;
+    }
+  }
+
+  transition: background-color $opacity-animation-speed ease-in-out,
+              border-color $opacity-animation-speed ease-in-out,
+              color $opacity-animation-speed ease-in-out;
+
   color: $theme-black-main;
 
   @include display(flex);
@@ -54,6 +67,26 @@ button,
     margin-right: 6px;
     background-color: #aaa;
     border-radius: 100%;
+    transition: background-color $opacity-animation-speed ease-in-out;
+  }
+
+  @for $i from 1 through length($timelineColors) {
+    &.timeline#{$i - 1} .circle {
+      background-color: nth($timelineColors, $i);
+
+
+    }
+
+    &.timeline#{$i - 1}:hover {
+      background-color: nth($timelineColors, $i);
+      border-color: nth($timelineColors, $i);
+      color: $theme-white;
+      // cursor: pointer;
+
+      .circle {
+        background-color: $theme-white;
+      }
+    }
   }
 
   .title {
