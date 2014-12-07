@@ -76,7 +76,8 @@ class CanvasTimelineView
 
     if @timelines.length > 0
       if @timelines[0].events.length > 0
-        @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
+        # @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
+        @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
 
 
   drawFocusLine: ->
@@ -87,7 +88,7 @@ class CanvasTimelineView
     @context.lineTo(@focusX, @canvas.height)
     @context.strokeStyle = "#d8d8d8"
     @context.stroke()
-  
+
   drawAxis: ->
     max = @maxDate()
     year = max.getUTCFullYear()
@@ -95,7 +96,7 @@ class CanvasTimelineView
     @drawTick(@dateToX(new Date(year - 1, 0)))
     @drawTick(@dateToX(new Date(year + 1, 0)))
     #console.log max, year
-  
+
   drawTick: (x, label = null) ->
     if label
       @context.font = '20pt "MB Empire"'
@@ -177,7 +178,7 @@ class CanvasTimelineView
 
       # Text Width and Height
       tW = @context.measureText(event.content).width
-      tH = 24 # Approximation to 20pt font size
+      tH = 22 # Approximation to 20pt font size
 
       # Draw Shape!
       @context.beginPath()
@@ -217,7 +218,67 @@ class CanvasTimelineView
       @context.fillText(event.content, textPoint.x, textPoint.y)
 
       # Return the bounds of the drawn object
-      { minX: cPoint.x , minY: cPoint.y, maxX: cPoint4.x, maxY: cPoint4.y }
+      { minX: x - @pointSize , minY: y - @pointSize, maxX: cPoint4.x, maxY: cPoint4.y }
+
+  drawEventWithRange: (event, y, color='#bbbbbb', showText=false, active=false) ->
+    startPointX = @dateToX(new Date(event.start_date))
+    endPointX = @dateToX(new Date(event.end_date))
+
+    @context.fillStyle = color
+    @context.strokeStyle = color
+    @context.lineWidth = 2;
+
+    # Draw Range
+    @context.beginPath()
+    @context.arc(startPointX, y, @pointSize, 0, 2 * Math.PI)
+    @context.fill();
+
+    @context.beginPath()
+    @context.arc(endPointX, y, @pointSize, 0, 2 * Math.PI)
+    @context.fill();
+
+    @context.beginPath()
+    @context.moveTo(startPointX, y)
+    @context.lineTo(endPointX, y)
+    @context.stroke()
+
+    # Start just below drawn point
+    if showText
+      tW = @context.measureText(event.content).width
+      tH = 22 # Approximation to 20pt font size
+      pad = 10; # Padding around text outline
+
+      cPoint =  { x: (startPointX + endPointX) / 2, y: y + @pointSize }
+      textMin = { x: cPoint.x - (tW / 2), y: cPoint.y + 2*pad }
+      textMax = { x: cPoint.x + (tW / 2),  y: cPoint.y + tH + 2*pad }
+      padMin  = { x: textMin.x - pad, y: textMin.y - pad }
+      padMax  = { x: textMax.x + pad, y: textMax.y + pad }
+
+      # Draw Shape!
+      @context.beginPath()
+      @context.moveTo(cPoint.x, cPoint.y)
+
+      @context.lineTo(cPoint.x - pad, padMin.y)
+      @context.lineTo(textMin.x, padMin.y)
+      @context.quadraticCurveTo(padMin.x, padMin.y, padMin.x, textMin.y)
+      @context.lineTo(padMin.x, textMax.y)
+      @context.quadraticCurveTo(padMin.x, padMax.y, textMin.x, padMax.y)
+      @context.lineTo(textMax.x, padMax.y)
+      @context.quadraticCurveTo(padMax.x, padMax.y, padMax.x, textMax.y)
+      @context.lineTo(padMax.x, textMin.y)
+      @context.quadraticCurveTo(padMax.x, padMin.y, textMax.x, padMin.y)
+      @context.lineTo(cPoint.x + pad, padMin.y)
+
+      @context.closePath()
+      @context.lineWidth = 4
+      @context.stroke()
+
+      # Draw fill and text based on active state
+      if active then @context.fillStyle = color else @context.fillStyle = '#ffffff'
+      @context.fill()
+
+      if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color;
+      @context.fillText(event.content, textMin.x, textMax.y)
 
 
 
