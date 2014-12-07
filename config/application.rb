@@ -27,7 +27,7 @@ module Epoch
     config.middleware.use Rack::Deflater
 
     # Precompile more files
-    config.assets.precompile += %w( app.js )
+    config.assets.precompile += %w( app.js ios-mobile-app-links.js facebook.js iNoBounce/inobounce.min.js )
 
     # Use react addons
     config.react.addons = true
