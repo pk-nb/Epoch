@@ -60,26 +60,31 @@ class SnapTimelineView
 
   # Click events here get sent back to the react class
 
-
-
-
+# Class handling the rendering of the content on the timeline view canvas
 class CanvasTimelineView
   constructor: (canvasId, timelines=[]) ->
-    colors: ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
+    @colors = ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
 
     @canvasId = canvasId
     @timelines = timelines
     jqCanvas = $(canvasId)
     @canvas = jqCanvas[0] # Get native object out
-    @hammer = new Hammer(@canvas)
-    @canvas.width = jqCanvas.width() * 2
-    @canvas.height = jqCanvas.height() * 2
     @context = @canvas.getContext('2d')
+    @hammer = new Hammer(@canvas)
+    
+    # Resize the canvas
+    @setup()
     @context.scale(2,2)
 
+    # Panning/Navigation config
     @scrollSpeed = 1.5
-    @focus = @canvas.width / 2
-    @tempFocus = @focus
+    @zoom = 4000000
+    @tempFocus = new Date()
+    @focusX = @canvas.width / 2
+    #@focus = @dateToX(@focusDate)
+    @focusDate = @tempFocus
+    
+    # Register callbacks
     window.onresize = @redraw
 
     @hammer.on 'pan', (event) =>
@@ -89,41 +94,92 @@ class CanvasTimelineView
 
     # TODO redraw during animation
     $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
-      console.log 'transition end yay!'
-      # Mysteriously getting called 5 times
       @redraw()
 
     $('.ui-bar').children().on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) ->
       e.stopPropagation()
 
-  redraw: =>
-    # Recalcuate
+  setup: ->
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
+    @focusX = @canvas.width / 2
 
+  redraw: =>
+    # Recalcuate
+    @setup()
+    @draw()
 
-    # Test drawing
+  draw: ->
+    @context.font = '20pt "MB Empire"'
+    
+    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
+    @context.fillStyle = @colors[1]
+    @context.fillRect(@dateToX(@liveXToDate(@focusX)) - 5, 30, 10, 10)
+    
+    @context.fillStyle = @colors[0]
+    for event in @timelines[0].events
+      x = @dateToX(new Date(event.start_date)) - 5
+      @context.fillRect(x, 10, 10, 10)
+    
+    # Max
     @context.fillStyle = "rgb(200,0,0)"
-    @context.fillRect(@focus, 10, 55, 50)
-
+    @context.fillRect(@dateToX(@maxDate()) - 10, 30, 20, 20)
+    
+    # Min
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
-    @context.fillRect(@focus + 30, 30, 55, 50)
-
-
+    @context.fillRect(@dateToX(@minDate()) - 10, 30, 20, 20)
+  
+  # Find the appropriate X coordinate for a given date
+  dateToX: (date) ->
+    (date - @focusDate) / @zoom + @focusX
+  
+  # Find the appropriate Date for a given X coordinate
+  xToDate: (x) ->
+    delta = (x - @focusX) * @zoom
+    new Date(delta + @tempFocus.getTime())
+  
+  liveXToDate: (x) ->
+    delta = (x - @focusX) * @zoom
+    new Date(delta + @focusDate.getTime())
+  
+  # Returns the earliest date across the timelines
+  minDate: ->
+    events = @timelines[0].events
+    min = new Date(@timelines[0].events[events.length - 1].start_date)
+    for timeline in @timelines
+      events = timeline.events
+      date = new Date(timeline.events[events.length - 1].start_date)
+      min = date if date < min
+    min
+   
+  # Returns the latest date across the timelines
+  maxDate: ->
+    max = new Date(@timelines[0].events[0].end_date)
+    for timeline in @timelines
+      date = new Date(timeline.events[0].end_date)
+      max = date if date > max
+    max
+  
+  # Calculates the halway point between the min and max dates
+  midRange: ->
+    min = @minDate()
+    max = @maxDate()
+    new Date(min.getTime() + ((max - min) / 2))
+  
   updateTimelines: (timelines) ->
     @timelines = timelines
+    @focusDate = @midRange()
+    @tempFocus = @focusDate
     @redraw()
-
+  
   onPan: (event) ->
-    console.log "Panning all the gold!"
-    console.log event.deltaX
-    @focus = @tempFocus + (event.deltaX * @scrollSpeed)
+    @focusDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     @redraw()
 
   afterPan: (event) ->
-    @tempFocus += event.deltaX
-    @focus = @tempFocus
+    @tempFocus = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    @focusDate = @tempFocus
 
 
 # Local/Global object for hanging on to
@@ -140,6 +196,7 @@ TimelineView = React.createClass
     # @getDOMNode().innerHTML = ''
     # snapTimelineView = new SnapTimelineView('timeline-view')
     canvasTimelineView = new CanvasTimelineView('#timeline-view')
+    canvasTimelineView.updateTimelines(@props.timelines)
 
     @forceUpdate()
 
@@ -159,7 +216,7 @@ TimelineView = React.createClass
     # if prevProps.timelines.length != @props.timelines.length
     # console.log @props.timelines
     # snapTimelineView.redraw(@props.timelines)
-    canvasTimelineView.redraw()
+    canvasTimelineView.updateTimelines(@props.timelines)
 
   #getInitialState: ->
     # Grab the saved paper matrix, if any
