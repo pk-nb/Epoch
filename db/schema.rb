@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141114191506) do
+ActiveRecord::Schema.define(version: 20141207160646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,14 @@ ActiveRecord::Schema.define(version: 20141114191506) do
     t.integer "child_id"
   end
 
+  create_table "twitter_friends", force: true do |t|
+    t.string   "name"
+    t.string   "login"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -90,5 +98,7 @@ ActiveRecord::Schema.define(version: 20141114191506) do
   add_foreign_key "events", "users", name: "event_user_foreign_key", dependent: :delete
 
   add_foreign_key "timelines", "users", name: "timeline_user_foreign_key", dependent: :delete
+
+  add_foreign_key "twitter_friends", "users", name: "twitter_friends_user_foreign_key", dependent: :delete
 
 end

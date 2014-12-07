@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :timelines
   has_many :events
   has_many :accounts
+  has_many :twitter_friends
 
   # Create/initialize a new user from an oauth provider
   # If an account already exists with the provided email address, a new account will be created for the new provider
