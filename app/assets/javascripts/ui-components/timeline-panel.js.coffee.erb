@@ -102,8 +102,8 @@ TimelinePanel = React.createClass
 
   timelineList: ->
     if @props.timelines.length > 0
-      @props.timelines.map (timeline) =>
-        div {key: timeline.title, className: 'timeline-item'},
+      @props.timelines.map (timeline, index) =>
+        div {key: timeline.title, className: "timeline-item timeline#{index % 10}"},
           div className: 'title',
             div className: 'circle',
               ''

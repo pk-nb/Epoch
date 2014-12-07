@@ -1,40 +1,58 @@
-{div, p, a, svg} = React.DOM
+{div, p, a, svg, text, canvas} = React.DOM
+cx = React.addons.classSet
 
 class SnapTimelineView
   constructor: (svgId)->
     # TODO Wipe existing svg here?
     @snap = Snap("##{svgId}")
 
+    # console.log(timelines)
     @hammer = new Hammer(document.getElementById(svgId))
     @hammer.get('pinch').set(enable: true)
     @circle = @snap.circle(250, 100, 50)
-    @text = @snap.text(200, 200, 'React, Hammer, and Snap.svg playing nice together')
-    @snap.zpd(pan: false, zoom: false)
-
-    @hammer.on 'tap', (event) =>
-      @circle.attr
-        fill: @circleColor()
-        stroke: '#000',
-        strokeWidth: 5
-
-    @hammer.on 'pinchmove', (event) =>
-      @snap.zoomTo(event.scale, 5)
-
-    @hammer.on 'pan', (event) =>
-      @snap.panTo event.center.x, event.center.y, 0
 
 
-  redraw: (props=null, state=null) ->
-    @circle.attr
-      fill: '#bada55',
-      stroke: '#000',
-      strokeWidth: 5
+    # events = []
 
-  circleColor: ->
-    Snap.rgb(@getRandomInt(255), @getRandomInt(255), @getRandomInt(255))
+    # for timeline in timelines
+    #   for event in timeline.events
+    #     @snap.text(200, start, event.content)
+    #     start += 20
 
-  getRandomInt: (max) ->
-    Math.floor(Math.random() * max)
+    # @text = @snap.text()
+  #   @text = @snap.text(200, 200, 'React, Hammer, and Snap.svg playing nice together')
+  #   @snap.zpd(pan: false, zoom: false)
+  #
+  #   @hammer.on 'tap', (event) =>
+  #     @circle.attr
+  #       fill: @circleColor()
+  #       stroke: '#000',
+  #       strokeWidth: 5
+  #
+  #   @hammer.on 'pinchmove', (event) =>
+  #     @snap.zoomTo(event.scale, 5)
+  #
+  #   @hammer.on 'pan', (event) =>
+  #     @snap.panTo event.center.x, event.center.y, 0
+  #
+  #
+  redraw: (timelines) ->
+    start = 200
+    for timeline in timelines
+      for event in timeline.events
+        # @snap.text(200, start, event.content)
+        @snap.circle(start, start, 10)
+        start += 10
+    # @circle.attr
+    #   fill: '#bada55',
+    #   stroke: '#000',
+    #   strokeWidth: 5
+  #
+  # circleColor: ->
+  #   Snap.rgb(@getRandomInt(255), @getRandomInt(255), @getRandomInt(255))
+  #
+  # getRandomInt: (max) ->
+  #   Math.floor(Math.random() * max)
 
 
   # TODO Set all default zoom / pan stuff to false
@@ -44,9 +62,71 @@ class SnapTimelineView
 
 
 
+
+class CanvasTimelineView
+  constructor: (canvasId, timelines=[]) ->
+    colors: ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
+
+    @canvasId = canvasId
+    @timelines = timelines
+    jqCanvas = $(canvasId)
+    @canvas = jqCanvas[0] # Get native object out
+    @hammer = new Hammer(@canvas)
+    @canvas.width = jqCanvas.width() * 2
+    @canvas.height = jqCanvas.height() * 2
+    @context = @canvas.getContext('2d')
+    @context.scale(2,2)
+
+    @scrollSpeed = 1.5
+    @focus = @canvas.width / 2
+    @tempFocus = @focus
+    window.onresize = @redraw
+
+    @hammer.on 'pan', (event) =>
+      @onPan(event)
+    @hammer.on 'panend', (event) =>
+      @afterPan(event)
+
+    # TODO redraw during animation
+    $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
+      console.log 'transition end yay!'
+      # Mysteriously getting called 5 times
+      @redraw()
+
+  redraw: =>
+    # Recalcuate
+    jqCanvas = $(@canvasId)
+    @canvas.width = jqCanvas.width() * 2
+    @canvas.height = jqCanvas.height() * 2
+
+
+    # Test drawing
+    @context.fillStyle = "rgb(200,0,0)"
+    @context.fillRect(@focus, 10, 55, 50)
+
+    @context.fillStyle = "rgba(0, 0, 200, 0.5)"
+    @context.fillRect(@focus + 30, 30, 55, 50)
+
+
+  updateTimelines: (timelines) ->
+    @timelines = timelines
+    @redraw()
+
+  onPan: (event) ->
+    console.log "Panning all the gold!"
+    console.log event.deltaX
+    @focus = @tempFocus + (event.deltaX * @scrollSpeed)
+    @redraw()
+
+  afterPan: (event) ->
+    @tempFocus += event.deltaX
+    @focus = @tempFocus
+
+
 # Local/Global object for hanging on to
 # Snap state, etc
 snapTimelineView = null # new snapTimelineView()
+canvasTimelineView = null
 
 
 TimelineView = React.createClass
@@ -54,7 +134,10 @@ TimelineView = React.createClass
 
   componentDidMount: ->
     # Bind snap.svg stuff here
-    snapTimelineView = new SnapTimelineView('timeline-view')
+    # @getDOMNode().innerHTML = ''
+    # snapTimelineView = new SnapTimelineView('timeline-view')
+    canvasTimelineView = new CanvasTimelineView('#timeline-view')
+
     @forceUpdate()
 
   componentWillUnmount: ->
@@ -68,14 +151,32 @@ TimelineView = React.createClass
   componentDidUpdate: (prevProps, prevState) ->
     # Manually do things with Snap here, and
     # draw new timelines, etc
-    snapTimelineView.redraw()
+
+    # Check if timelines changed?
+    # if prevProps.timelines.length != @props.timelines.length
+    # console.log @props.timelines
+    # snapTimelineView.redraw(@props.timelines)
+    canvasTimelineView.redraw()
 
   #getInitialState: ->
     # Grab the saved paper matrix, if any
 
+  textNodes: ->
+    if @props.timelines.length > 0
+      @props.timelines[0].events.map (event) ->
+        text {x: 200, y: 200, key: event.content + event.id},
+          event.content
+
   render: ->
-    svg className: 'timeline-view', id: 'timeline-view',
+
+    classes = {
+      'timeline-view': true
+    }
+    classes[@props.expandedPanel] = true
+
+    canvas className: cx(classes), id: 'timeline-view',
       ''
+      # @textNodes()
 
 
 @.EpochUI ?= {}
