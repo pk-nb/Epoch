@@ -45,7 +45,7 @@ NewEventPanel = React.createClass
   renderErrors: ->
     div className: 'form-errors',
       @props.event_errors.map (error) =>
-        p null,
+        p key: 'newEventForm' + error,
           error
 
   render: ->
@@ -57,11 +57,11 @@ NewEventPanel = React.createClass
       form ref: 'newEventForm', onSubmit: @handleSubmit,
         select {name: 'timeline_id'},
           @props.timelines.map (timeline) =>
-            option value: timeline.id,
+            option { value: timeline.id, key: 'newEventForm' + timeline.title},
               timeline.title
         div dangerouslySetInnerHTML: { __html: Forms.newEvent },
           null
-        button null,
+        button className: 'button',
           'Submit'
 
 @.EpochUI ?= {}
