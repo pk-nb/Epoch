@@ -78,11 +78,11 @@ class CanvasTimelineView
 
     # Panning/Navigation config
     @scrollSpeed = 1.5
-    @focus = @canvas.width / 2
-    @tempFocus = @focus
-    @focusDate = new Date()
     @zoom = 4000000
+    @tempFocus = new Date()
     @focusX = @canvas.width / 2
+    #@focus = @dateToX(@focusDate)
+    @focusDate = @tempFocus
     
     # Register callbacks
     window.onresize = @redraw
@@ -112,19 +112,16 @@ class CanvasTimelineView
 
   draw: ->
     @context.font = '20pt "MB Empire"'
-    @context.fillText(@minDate(), @focus, 100)
-    @context.fillText(@maxDate(), @focus, 200)
-    @context.fillText(@midRange(), @focus, 300)
-    @context.fillText(@dateToX(@maxDate()), @focus, 400)
-    @context.fillText(@xToDate(@focusX), @focus, 500)
     
-    @context.fillText(@xToDate(@focusX + 100), @focusX + 100, 600)
+    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
     @context.fillStyle = @colors[1]
-    @context.fillRect(@dateToX(@xToDate(@focusX + 100)) - 5, 30, 10, 10)
+    @context.fillRect(@dateToX(@liveXToDate(@focusX)) - 5, 30, 10, 10)
     
     @context.fillStyle = @colors[0]
     for event in @timelines[0].events
-      @context.fillRect(@dateToX(new Date(event.start_date)) - 5, 10, 10, 10)
+      x = @dateToX(new Date(event.start_date)) - 5
+      @context.fillRect(x, 10, 10, 10)
+    
     # Max
     @context.fillStyle = "rgb(200,0,0)"
     @context.fillRect(@dateToX(@maxDate()) - 10, 30, 20, 20)
@@ -135,10 +132,14 @@ class CanvasTimelineView
   
   # Find the appropriate X coordinate for a given date
   dateToX: (date) ->
-    (date - @focusDate) // @zoom + @focusX
+    (date - @focusDate) / @zoom + @focusX
   
   # Find the appropriate Date for a given X coordinate
   xToDate: (x) ->
+    delta = (x - @focusX) * @zoom
+    new Date(delta + @tempFocus.getTime())
+  
+  liveXToDate: (x) ->
     delta = (x - @focusX) * @zoom
     new Date(delta + @focusDate.getTime())
   
@@ -169,15 +170,16 @@ class CanvasTimelineView
   updateTimelines: (timelines) ->
     @timelines = timelines
     @focusDate = @midRange()
+    @tempFocus = @focusDate
     @redraw()
-
+  
   onPan: (event) ->
-    @focus = @tempFocus + (event.deltaX * @scrollSpeed)
+    @focusDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     @redraw()
 
   afterPan: (event) ->
-    @tempFocus += event.deltaX * @scrollSpeed
-    @focus = @tempFocus
+    @tempFocus = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    @focusDate = @tempFocus
 
 
 # Local/Global object for hanging on to
