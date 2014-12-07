@@ -7,12 +7,15 @@ NewTweetPanel = React.createClass
     tweetErrors: []
 
   onPostSuccess: (data) ->
-      console.log data
-      console.log @props.timelines
-      timelines = @props.timelines
-      timelines.push(data)
-      @props.setAppState(timelines: timelines)
-      @props.goBack()
+    console.log data
+    console.log @props.timelines
+    timelines = @props.timelines
+    timelines.push(data)
+    @props.setAppState(timelines: timelines)
+    userTimelines = @props.userTimelines
+    userTimelines.push(data)
+    @props.setAppState(userTimelines: userTimelines)
+    @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
