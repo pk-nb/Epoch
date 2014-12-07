@@ -63,7 +63,7 @@ class SnapTimelineView
 # Class handling the rendering of the content on the timeline view canvas
 class CanvasTimelineView
   constructor: (canvasId, timelines=[]) ->
-    colors: ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
+    @colors = ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
 
     @canvasId = canvasId
     @timelines = timelines
@@ -80,6 +80,9 @@ class CanvasTimelineView
     @scrollSpeed = 1.5
     @focus = @canvas.width / 2
     @tempFocus = @focus
+    @focusDate = new Date()
+    @zoom = 4000000
+    @focusX = @canvas.width / 2
     
     # Register callbacks
     window.onresize = @redraw
@@ -91,7 +94,6 @@ class CanvasTimelineView
 
     # TODO redraw during animation
     $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
-      # Mysteriously getting called 5 times
       @redraw()
 
     $('.ui-bar').children().on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) ->
@@ -101,6 +103,7 @@ class CanvasTimelineView
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
+    @focusX = @canvas.width / 2
 
   redraw: =>
     # Recalcuate
@@ -112,13 +115,33 @@ class CanvasTimelineView
     @context.fillText(@minDate(), @focus, 100)
     @context.fillText(@maxDate(), @focus, 200)
     @context.fillText(@midRange(), @focus, 300)
-    # Test drawing
+    @context.fillText(@dateToX(@maxDate()), @focus, 400)
+    @context.fillText(@xToDate(@focusX), @focus, 500)
+    
+    @context.fillText(@xToDate(@focusX + 100), @focusX + 100, 600)
+    @context.fillStyle = @colors[1]
+    @context.fillRect(@dateToX(@xToDate(@focusX + 100)) - 5, 30, 10, 10)
+    
+    @context.fillStyle = @colors[0]
+    for event in @timelines[0].events
+      @context.fillRect(@dateToX(new Date(event.start_date)) - 5, 10, 10, 10)
+    # Max
     @context.fillStyle = "rgb(200,0,0)"
-    @context.fillRect(@focus, 10, 55, 50)
-
+    @context.fillRect(@dateToX(@maxDate()) - 10, 30, 20, 20)
+    
+    # Min
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
-    @context.fillRect(@focus + 30, 30, 55, 50)
-
+    @context.fillRect(@dateToX(@minDate()) - 10, 30, 20, 20)
+  
+  # Find the appropriate X coordinate for a given date
+  dateToX: (date) ->
+    (date - @focusDate) // @zoom + @focusX
+  
+  # Find the appropriate Date for a given X coordinate
+  xToDate: (x) ->
+    delta = (x - @focusX) * @zoom
+    new Date(delta + @focusDate.getTime())
+  
   # Returns the earliest date across the timelines
   minDate: ->
     events = @timelines[0].events
@@ -145,6 +168,7 @@ class CanvasTimelineView
   
   updateTimelines: (timelines) ->
     @timelines = timelines
+    @focusDate = @midRange()
     @redraw()
 
   onPan: (event) ->
@@ -152,7 +176,7 @@ class CanvasTimelineView
     @redraw()
 
   afterPan: (event) ->
-    @tempFocus += event.deltaX
+    @tempFocus += event.deltaX * @scrollSpeed
     @focus = @tempFocus
 
 
