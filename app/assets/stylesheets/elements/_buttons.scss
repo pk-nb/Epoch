@@ -19,10 +19,13 @@ button,
     margin: 0;
   }
 
-  // TODO add hover effect
-  // &:hover {
-  //   background-color:
-  // }
+  transition: background-color $opacity-animation-speed ease-in-out,
+              border-color $opacity-animation-speed ease-in-out,
+              color $opacity-animation-speed ease-in-out;
+
+  &:hover {
+    background-color: $theme-gray;
+  }
 }
 
 .timeline-item {
@@ -98,6 +101,15 @@ button,
     @include display(flex);
     & > * {
       margin: auto;
+      cursor: pointer;
     }
+  }
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    color: $theme-magenta;
   }
 }

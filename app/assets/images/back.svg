@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.2 (9964) - http://www.bohemiancoding.com/sketch -->
+    <title>back</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Notes" sketch:type="MSArtboardGroup" transform="translate(-195.000000, -814.000000)" fill="#4A4A4A">
+            <path d="M197.569641,816.57538 C197.243715,816.803518 197.030688,817.180868 197.030688,817.60701 L197.030688,824.575686 C197.030688,825.271582 197.59225,825.835717 198.295853,825.835717 C198.994584,825.835717 199.561018,825.27057 199.561018,824.575686 L199.561018,818.561018 L205.575686,818.561018 C206.271582,818.561018 206.835717,817.999456 206.835717,817.295853 C206.835717,816.597122 206.27057,816.030688 205.575686,816.030688 L198.60701,816.030688 C198.176821,816.030688 197.796984,816.245288 197.569641,816.57538 Z" id="back" sketch:type="MSShapeGroup" transform="translate(201.933203, 820.933203) rotate(-45.000000) translate(-201.933203, -820.933203) "></path>
+        </g>
+    </g>
+</svg>

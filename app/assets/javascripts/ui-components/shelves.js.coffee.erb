@@ -73,7 +73,8 @@ NewTimelineShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        p { onClick: @props.handleClick(@props.panelIds.timeline) },
+        p { className: 'clickable', onClick: @props.handleClick(@props.panelIds.timeline) },
+          img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'back.svg' %>'},
           'Back'
         # img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
       div className: 'center',
@@ -88,7 +89,8 @@ NewRepoShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        p { onClick: @props.handleClick(@props.panelIds.timeline) },
+        p { className: 'clickable', onClick: @props.handleClick(@props.panelIds.timeline) },
+          img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'back.svg' %>'},
           'Back'
         # img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
       div className: 'center',
@@ -103,7 +105,8 @@ NewTweetShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        p { onClick: @props.handleClick(@props.panelIds.timeline) },
+        p { className: 'clickable', onClick: @props.handleClick(@props.panelIds.timeline) },
+          img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'back.svg' %>'},
           'Back'
         # img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
       div className: 'center',
@@ -156,7 +159,6 @@ EventShelf = React.createClass
               '1999'
         div className: 'right',
             img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
-
 
 
 @.EpochUI ?= {}

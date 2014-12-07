@@ -65,6 +65,8 @@ class SnapTimelineView
 
 class CanvasTimelineView
   constructor: (canvasId, timelines=[]) ->
+    colors: ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
+
     @canvasId = canvasId
     @timelines = timelines
     jqCanvas = $(canvasId)
