@@ -13,12 +13,27 @@ UserNameMixin =
         'Login'
 
 TimelineTitleMixin =
-  # TODO Truncate more than three titles if large set of timelines
+  # TODO Show more with on larger screen real estate (resize event, initial px grab)
+  # TODO refactor
   timelineTitle: ->
-    if @props.timelines.length > 0
-      @props.timelines.reduce (prev, timeline) =>
-        prev + timeline.title + ', '
-      , ''
+    maxTimelineCount = 2
+
+    if @props.timelines.length > maxTimelineCount
+      timelineCount = maxTimelineCount
+    else
+      timelineCount = @props.timelines.length
+
+    if timelineCount > 0
+      # Concat titles together
+      concatString = @props.timelines[0].title
+      for i in [1..timelineCount]
+        if i != timelineCount
+          concatString += ", #{@props.timelines[i].title}"
+
+      # Show +X more if necessary
+      if @props.timelines.length > timelineCount
+        concatString = "#{concatString}, +#{@props.timelines.length - timelineCount} More..."
+      concatString
     else
       'Select Timelines'
 

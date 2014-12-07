@@ -77,17 +77,19 @@ NewRepoPanel = React.createClass
           label htmlFor: 'name',
             'Timeline Name'
           input {type: 'text', className: 'narrow-input', name: 'name'}
-        @props.repos.map (repo) =>
-          div key: repo,
-            input { type: 'checkbox', name: 'repos[]', value: repo},
-              repo
-        div null,
-          label htmlFor: 'additional_repo',
-                'Other Repo'
-          input {ref: 'addRepo', type: 'text', className: 'narrow-input', name: 'additional_repo'}
-          button onClick: @handleAddRepoName(),
-           'Add To List'
-        button null,
+        div className: 'section repos',
+          @props.repos.map (repo) =>
+            div key: repo,
+              input { type: 'checkbox', name: 'repos[]', value: repo},
+                repo
+          div null,
+            label htmlFor: 'additional_repo',
+                  'Other Repo'
+            div className: 'two-column',
+              input {ref: 'addRepo', type: 'text', className: 'narrow-input', name: 'additional_repo'}
+              button {className: 'plus-button', onClick: @handleAddRepoName() },
+                img { className: 'plus-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
+        button className: 'button',
           'Submit'
 
 

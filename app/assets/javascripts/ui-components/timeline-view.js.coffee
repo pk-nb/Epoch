@@ -93,6 +93,9 @@ class CanvasTimelineView
       # Mysteriously getting called 5 times
       @redraw()
 
+    $('.ui-bar').children().on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) ->
+      e.stopPropagation()
+
   redraw: =>
     # Recalcuate
     jqCanvas = $(@canvasId)

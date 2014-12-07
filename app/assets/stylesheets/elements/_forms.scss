@@ -24,8 +24,21 @@ form {
   }
 
   button {
-    margin-bottom: 0.5em;
+    margin: 0.5em 0;
   }
 
+  .plus-button {
+    border: none;
+    background: none;
+    margin: auto 0;
+    // margin-left: em;
+  }
 
+  .two-column {
+    @include display(flex);
+  }
+
+  .section {
+    margin-top: 0.5em;
+  }
 }

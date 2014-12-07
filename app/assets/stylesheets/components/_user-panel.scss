@@ -12,8 +12,10 @@
     border-radius: 1em;
   }
 
-  p {
-    margin-top: 1em;
-    margin-bottom: 0;
+  .logged-in.button {
+    background-color: $theme-gray;
+    color: $theme-white;
+    cursor: default;
   }
+
 }

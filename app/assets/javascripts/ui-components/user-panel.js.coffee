@@ -38,8 +38,7 @@ UserPanel = React.createClass
 
   accountLink: (loginId, cssId, serviceName) ->
     if loginId in @props.user.providers
-      # TODO style this better
-      p null,
+      p className: 'button logged-in',
         "Logged in with #{serviceName}"
     else
       a { href: "/auth/#{loginId}", id: cssId, className: 'button' },
