@@ -20,6 +20,8 @@ class CanvasTimelineView
     # Constant point size for events / timelines
     @pointSize = 6
 
+
+
     # Panning/Navigation config
     @scrollSpeed = 1.5
     @zoom = @findZoomLevel() # 4000000
@@ -75,8 +77,7 @@ class CanvasTimelineView
 
     if @timelines.length > 0
       if @timelines[0].events.length > 0
-        @drawEvent(@timelines[0].events[0], 50, 50, @colors[0], true, false)
-
+        @drawEvent(@timelines[0].events[0], 200, 200, @colors[0], true, false)
 
 
   drawFocusLine: ->
@@ -141,7 +142,7 @@ class CanvasTimelineView
   # Consumes a event object and x coordinate and draws the
   # event to screen. Returns the calculated coordinates of
   # the touch area for click calcuation
-  drawEvent: (event, x, y, color='#bbbbbb', active=false) ->
+  drawEvent: (event, x, y, color='#bbbbbb', showText=false, active=false) ->
     console.log 'Drawing Event!'
 
     @context.fillStyle = color;
@@ -151,17 +152,58 @@ class CanvasTimelineView
     @context.arc(x, y, @pointSize, 0, 2 * Math.PI)
     @context.fill();
 
-
-    @context.fillStyle = '#ffffff';
     @context.strokeStyle = color;
+    @context.lineWidth = 4;
 
-    # event.content
-    @context.moveTo(x, y + @pointSize)
-    @context.beginPath()
+    # Start just below drawn point
+    if showText
+      cPoint = {x: x, y: y + @pointSize}
+      pad = 10; # Padding around text outline
 
+      # Text Width and Height
+      tW = @context.measureText(event.content).width
+      tH = 24 # Approximation to 20pt font size
 
-    console.log 'Measuring Text Width',  @context.measureText('Text').width
-    # console.log 'Measuring Text Height',  @context.measureText('Text').height
+      # Draw Shape!
+      @context.beginPath()
+      @context.moveTo(cPoint.x, cPoint.y)
+
+      point1  = {x: cPoint.x, y: cPoint.y + tH + 2*pad }
+      cPoint2 = {x: point1.x, y: point1.y + pad }
+      point2 =  {x: cPoint2.x + pad, y: cPoint2.y }
+      point3 =  {x: point2.x + tW, y: point2.y }
+      cPoint4 = {x: point3.x + pad, y: point2.y }
+      point4 =  {x: cPoint4.x, y: point1.y}
+      point5 =  {x: cPoint4.x, y: cPoint.y + 2*pad }
+      cPoint6 = {x: point5.x, y: cPoint.y + pad }
+      point6 =  {x: point3.x, y: cPoint6.y }
+      point7 =  {x: cPoint.x + pad, y: point6.y }
+
+      textPoint = { x: point2.x, y: point1.y }
+
+      @context.lineTo(point1.x, point1.y)
+      @context.quadraticCurveTo(cPoint2.x, cPoint2.y, point2.x, point2.y)
+      @context.lineTo(point3.x, point3.y)
+      @context.quadraticCurveTo(cPoint4.x, cPoint4.y, point4.x, point4.y)
+      @context.lineTo(point5.x, point5.y)
+      @context.quadraticCurveTo(cPoint6.x, cPoint6.y, point6.x, point6.y)
+      @context.lineTo(point7.x, point7.y)
+      @context.lineTo(cPoint.x, cPoint.y)
+
+      @context.closePath()
+
+      @context.stroke()
+
+      # Draw fill and text based on active state
+      if active then @context.fillStyle = color else @context.fillStyle = '#ffffff'
+      @context.fill()
+
+      if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color;
+      @context.fillText(event.content, textPoint.x, textPoint.y)
+
+      # Return the bounds of the drawn object
+      { minX: cPoint.x , minY: cPoint.y, maxX: cPoint4.x, maxY: cPoint4.y }
+
 
 
   updateTimelines: (timelines) ->
@@ -207,6 +249,8 @@ TimelineView = React.createClass
     # Bind snap.svg stuff here
     # @getDOMNode().innerHTML = ''
     # snapTimelineView = new SnapTimelineView('timeline-view')
+    # $('').load =>
+
     canvasTimelineView = new CanvasTimelineView('#timeline-view')
     canvasTimelineView.updateTimelines(@props.timelines)
 
