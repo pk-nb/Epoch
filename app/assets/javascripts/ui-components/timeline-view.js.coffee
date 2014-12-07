@@ -154,10 +154,9 @@ class CanvasTimelineView
   findZoomLevel: ->
     if @timelines.length > 0
       x = @canvas.width * 0.9
-      console.log @canvas.width, x
-      date = @maxDate()
-      result = date.getTime() / x
-      console.log result
+      date = @maxDate().getTime()
+      console.log(date)
+      result = date / x
       result / 25
     else
       4000000
@@ -174,7 +173,8 @@ class CanvasTimelineView
    
   # Returns the latest date across the timelines
   maxDate: ->
-    max = new Date(@timelines[0].events[0].end_date)
+    max = new Date(@timelines[0].events[0].end_date || @timelines[0].events[0].start_date)
+    debugger
     for timeline in @timelines
       date = new Date(timeline.events[0].end_date)
       max = date if date > max
