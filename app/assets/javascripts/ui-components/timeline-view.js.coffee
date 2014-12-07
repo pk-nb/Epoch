@@ -78,7 +78,7 @@ class CanvasTimelineView
 
     # Panning/Navigation config
     @scrollSpeed = 1.5
-    @zoom = 4000000
+    @zoom = @findZoomLevel() # 4000000
     @tempFocus = new Date()
     @focusX = @canvas.width / 2
     #@focus = @dateToX(@focusDate)
@@ -92,7 +92,6 @@ class CanvasTimelineView
     @hammer.on 'panend', (event) =>
       @afterPan(event)
 
-    # TODO redraw during animation
     $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
       @redraw()
 
@@ -108,28 +107,37 @@ class CanvasTimelineView
   redraw: =>
     # Recalcuate
     @setup()
+    @zoom = @findZoomLevel()
     @draw()
 
   draw: ->
-    @context.font = '20pt "MB Empire"'
-    
-    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
-    @context.fillStyle = @colors[1]
-    @context.fillRect(@dateToX(@liveXToDate(@focusX)) - 5, 30, 10, 10)
-    
-    @context.fillStyle = @colors[0]
-    for event in @timelines[0].events
-      x = @dateToX(new Date(event.start_date)) - 5
-      @context.fillRect(x, 10, 10, 10)
+    @drawFocusLine()
+     
+    i = 0
+    for timeline in @timelines
+      @context.fillStyle = @colors[i % 10]
+      for event in timeline.events
+        x = @dateToX(new Date(event.start_date)) - 5
+        @context.fillRect(x, 80, 10, 10)
+      i++
     
     # Max
     @context.fillStyle = "rgb(200,0,0)"
-    @context.fillRect(@dateToX(@maxDate()) - 10, 30, 20, 20)
+    @context.fillRect(@dateToX(@maxDate()) - 10, 100, 20, 20)
     
     # Min
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
-    @context.fillRect(@dateToX(@minDate()) - 10, 30, 20, 20)
+    @context.fillRect(@dateToX(@minDate()) - 10, 100, 20, 20)
   
+  drawFocusLine: ->
+    @context.font = '20pt "MB Empire"'
+    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
+    @context.beginPath()
+    @context.moveTo(@focusX, 40)
+    @context.lineTo(@focusX, @canvas.height)
+    @context.strokeStyle = "#d8d8d8"
+    @context.stroke()
+    
   # Find the appropriate X coordinate for a given date
   dateToX: (date) ->
     (date - @focusDate) / @zoom + @focusX
@@ -142,6 +150,17 @@ class CanvasTimelineView
   liveXToDate: (x) ->
     delta = (x - @focusX) * @zoom
     new Date(delta + @focusDate.getTime())
+  
+  findZoomLevel: ->
+    if @timelines.length > 0
+      x = @canvas.width * 0.9
+      console.log @canvas.width, x
+      date = @maxDate()
+      result = date.getTime() / x
+      console.log result
+      result / 25
+    else
+      4000000
   
   # Returns the earliest date across the timelines
   minDate: ->
@@ -171,14 +190,29 @@ class CanvasTimelineView
     @timelines = timelines
     @focusDate = @midRange()
     @tempFocus = @focusDate
+    @zoom = @findZoomLevel()
     @redraw()
   
   onPan: (event) ->
-    @focusDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    if newDate > @minDate()
+      if newDate < @maxDate()
+        @focusDate = newDate
+      else
+        @focusDate = @maxDate()
+    else
+      @focusDate = @minDate()
     @redraw()
 
   afterPan: (event) ->
-    @tempFocus = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    if newDate > @minDate()
+      if newDate < @maxDate()
+        @tempFocus = newDate
+      else
+        @tempFocus = @maxDate()
+    else
+      @tempFocus = @minDate()
     @focusDate = @tempFocus
 
 
