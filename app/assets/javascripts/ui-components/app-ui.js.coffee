@@ -41,7 +41,6 @@ EpochApp = React.createClass
 
   render: ->
     UI = window.EpochUI
-
     div className: 'app',
       UI.UIPrimaryBar
         id: 'top'

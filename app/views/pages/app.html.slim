@@ -6,6 +6,10 @@
 - repo_form = j render partial: 'repository/ajax_form'
 - tweet_form = j render partial: 'tweets/ajax_form'
 
+
+/ Preload font in attempt to beat canvas / js execution
+div[style="font-family: 'MB Empire';"]
+
 = react_component 'EpochApp', {user: current_user.as_json, timelines: @timelines,
  userTimelines: @user_timelines, repos: @repositories.repos}, {prerender: true}
 
