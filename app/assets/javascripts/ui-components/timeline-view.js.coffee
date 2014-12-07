@@ -111,28 +111,33 @@ class CanvasTimelineView
     @draw()
 
   draw: ->
-    @context.font = '20pt "MB Empire"'
-    
-    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
-    @context.fillStyle = @colors[1]
-    @context.fillRect(@dateToX(@liveXToDate(@focusX)) - 5, 30, 10, 10)
-    
+    @drawFocusLine()
+     
     i = 0
     for timeline in @timelines
       @context.fillStyle = @colors[i % 10]
       for event in timeline.events
         x = @dateToX(new Date(event.start_date)) - 5
-        @context.fillRect(x, 10, 10, 10)
+        @context.fillRect(x, 80, 10, 10)
       i++
     
     # Max
     @context.fillStyle = "rgb(200,0,0)"
-    @context.fillRect(@dateToX(@maxDate()) - 10, 30, 20, 20)
+    @context.fillRect(@dateToX(@maxDate()) - 10, 100, 20, 20)
     
     # Min
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
-    @context.fillRect(@dateToX(@minDate()) - 10, 30, 20, 20)
+    @context.fillRect(@dateToX(@minDate()) - 10, 100, 20, 20)
   
+  drawFocusLine: ->
+    @context.font = '20pt "MB Empire"'
+    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
+    @context.beginPath()
+    @context.moveTo(@focusX, 40)
+    @context.lineTo(@focusX, @canvas.height)
+    @context.strokeStyle = "#d8d8d8"
+    @context.stroke()
+    
   # Find the appropriate X coordinate for a given date
   dateToX: (date) ->
     (date - @focusDate) / @zoom + @focusX
