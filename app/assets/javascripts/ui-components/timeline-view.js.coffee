@@ -1,65 +1,6 @@
 {div, p, a, svg, text, canvas} = React.DOM
 cx = React.addons.classSet
 
-class SnapTimelineView
-  constructor: (svgId)->
-    # TODO Wipe existing svg here?
-    @snap = Snap("##{svgId}")
-
-    # console.log(timelines)
-    @hammer = new Hammer(document.getElementById(svgId))
-    @hammer.get('pinch').set(enable: true)
-    @circle = @snap.circle(250, 100, 50)
-
-
-    # events = []
-
-    # for timeline in timelines
-    #   for event in timeline.events
-    #     @snap.text(200, start, event.content)
-    #     start += 20
-
-    # @text = @snap.text()
-  #   @text = @snap.text(200, 200, 'React, Hammer, and Snap.svg playing nice together')
-  #   @snap.zpd(pan: false, zoom: false)
-  #
-  #   @hammer.on 'tap', (event) =>
-  #     @circle.attr
-  #       fill: @circleColor()
-  #       stroke: '#000',
-  #       strokeWidth: 5
-  #
-  #   @hammer.on 'pinchmove', (event) =>
-  #     @snap.zoomTo(event.scale, 5)
-  #
-  #   @hammer.on 'pan', (event) =>
-  #     @snap.panTo event.center.x, event.center.y, 0
-  #
-  #
-  redraw: (timelines) ->
-    start = 200
-    for timeline in timelines
-      for event in timeline.events
-        # @snap.text(200, start, event.content)
-        @snap.circle(start, start, 10)
-        start += 10
-    # @circle.attr
-    #   fill: '#bada55',
-    #   stroke: '#000',
-    #   strokeWidth: 5
-  #
-  # circleColor: ->
-  #   Snap.rgb(@getRandomInt(255), @getRandomInt(255), @getRandomInt(255))
-  #
-  # getRandomInt: (max) ->
-  #   Math.floor(Math.random() * max)
-
-
-  # TODO Set all default zoom / pan stuff to false
-  # Bind all zoom pan stuff to hammer.js events
-
-  # Click events here get sent back to the react class
-
 # Class handling the rendering of the content on the timeline view canvas
 class CanvasTimelineView
   constructor: (canvasId, timelines=[]) ->
@@ -71,10 +12,15 @@ class CanvasTimelineView
     @canvas = jqCanvas[0] # Get native object out
     @context = @canvas.getContext('2d')
     @hammer = new Hammer(@canvas)
-    
+
     # Resize the canvas
     @setup()
     @context.scale(2,2)
+
+    # Constant point size for events / timelines
+    @pointSize = 6
+
+
 
     # Panning/Navigation config
     @scrollSpeed = 1.5
@@ -83,7 +29,7 @@ class CanvasTimelineView
     @focusX = @canvas.width / 2
     #@focus = @dateToX(@focusDate)
     @focusDate = @tempFocus
-    
+
     # Register callbacks
     window.onresize = @redraw
 
@@ -112,7 +58,7 @@ class CanvasTimelineView
 
   draw: ->
     @drawFocusLine()
-     
+
     i = 0
     for timeline in @timelines
       @context.fillStyle = @colors[i % 10]
@@ -120,15 +66,20 @@ class CanvasTimelineView
         x = @dateToX(new Date(event.start_date)) - 5
         @context.fillRect(x, 80, 10, 10)
       i++
-    
+
     # Max
     @context.fillStyle = "rgb(200,0,0)"
     @context.fillRect(@dateToX(@maxDate()) - 10, 100, 20, 20)
-    
+
     # Min
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
     @context.fillRect(@dateToX(@minDate()) - 10, 100, 20, 20)
-  
+
+    if @timelines.length > 0
+      if @timelines[0].events.length > 0
+        @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
+
+
   drawFocusLine: ->
     @context.font = '20pt "MB Empire"'
     @context.fillText(@liveXToDate(@focusX), @focusX, 600)
@@ -137,20 +88,21 @@ class CanvasTimelineView
     @context.lineTo(@focusX, @canvas.height)
     @context.strokeStyle = "#d8d8d8"
     @context.stroke()
-    
+
+
   # Find the appropriate X coordinate for a given date
   dateToX: (date) ->
     (date - @focusDate) / @zoom + @focusX
-  
+
   # Find the appropriate Date for a given X coordinate
   xToDate: (x) ->
     delta = (x - @focusX) * @zoom
     new Date(delta + @tempFocus.getTime())
-  
+
   liveXToDate: (x) ->
     delta = (x - @focusX) * @zoom
     new Date(delta + @focusDate.getTime())
-  
+
   findZoomLevel: ->
     if @timelines.length > 0
       x = @canvas.width * 0.9
@@ -161,7 +113,7 @@ class CanvasTimelineView
       result / 25
     else
       4000000
-  
+
   # Returns the earliest date across the timelines
   minDate: ->
     events = @timelines[0].events
@@ -171,7 +123,7 @@ class CanvasTimelineView
       date = new Date(timeline.events[events.length - 1].start_date)
       min = date if date < min
     min
-   
+
   # Returns the latest date across the timelines
   maxDate: ->
     max = new Date(@timelines[0].events[0].end_date)
@@ -179,20 +131,88 @@ class CanvasTimelineView
       date = new Date(timeline.events[0].end_date)
       max = date if date > max
     max
-  
+
   # Calculates the halway point between the min and max dates
   midRange: ->
     min = @minDate()
     max = @maxDate()
     new Date(min.getTime() + ((max - min) / 2))
-  
+
+
+  # Consumes a event object and x coordinate and draws the
+  # event to screen. Returns the calculated coordinates of
+  # the touch area for click calcuation
+  drawEvent: (event, x, y, color='#bbbbbb', showText=false, active=false) ->
+    console.log 'Drawing Event!'
+
+    @context.fillStyle = color;
+
+    # Draw circle point at x,y
+    @context.beginPath()
+    @context.arc(x, y, @pointSize, 0, 2 * Math.PI)
+    @context.fill();
+
+    @context.strokeStyle = color;
+    @context.lineWidth = 4;
+
+    # Start just below drawn point
+    if showText
+      cPoint = {x: x, y: y + @pointSize}
+      pad = 10; # Padding around text outline
+
+      # Text Width and Height
+      tW = @context.measureText(event.content).width
+      tH = 24 # Approximation to 20pt font size
+
+      # Draw Shape!
+      @context.beginPath()
+      @context.moveTo(cPoint.x, cPoint.y)
+
+      point1  = {x: cPoint.x, y: cPoint.y + tH + 2*pad }
+      cPoint2 = {x: point1.x, y: point1.y + pad }
+      point2 =  {x: cPoint2.x + pad, y: cPoint2.y }
+      point3 =  {x: point2.x + tW, y: point2.y }
+      cPoint4 = {x: point3.x + pad, y: point2.y }
+      point4 =  {x: cPoint4.x, y: point1.y}
+      point5 =  {x: cPoint4.x, y: cPoint.y + 2*pad }
+      cPoint6 = {x: point5.x, y: cPoint.y + pad }
+      point6 =  {x: point3.x, y: cPoint6.y }
+      point7 =  {x: cPoint.x + pad, y: point6.y }
+
+      textPoint = { x: point2.x, y: point1.y }
+
+      @context.lineTo(point1.x, point1.y)
+      @context.quadraticCurveTo(cPoint2.x, cPoint2.y, point2.x, point2.y)
+      @context.lineTo(point3.x, point3.y)
+      @context.quadraticCurveTo(cPoint4.x, cPoint4.y, point4.x, point4.y)
+      @context.lineTo(point5.x, point5.y)
+      @context.quadraticCurveTo(cPoint6.x, cPoint6.y, point6.x, point6.y)
+      @context.lineTo(point7.x, point7.y)
+      @context.lineTo(cPoint.x, cPoint.y)
+
+      @context.closePath()
+
+      @context.stroke()
+
+      # Draw fill and text based on active state
+      if active then @context.fillStyle = color else @context.fillStyle = '#ffffff'
+      @context.fill()
+
+      if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color;
+      @context.fillText(event.content, textPoint.x, textPoint.y)
+
+      # Return the bounds of the drawn object
+      { minX: cPoint.x , minY: cPoint.y, maxX: cPoint4.x, maxY: cPoint4.y }
+
+
+
   updateTimelines: (timelines) ->
     @timelines = timelines
     @focusDate = @midRange()
     @tempFocus = @focusDate
     @zoom = @findZoomLevel()
     @redraw()
-  
+
   onPan: (event) ->
     newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     if newDate > @minDate()
@@ -229,6 +249,8 @@ TimelineView = React.createClass
     # Bind snap.svg stuff here
     # @getDOMNode().innerHTML = ''
     # snapTimelineView = new SnapTimelineView('timeline-view')
+    # $('').load =>
+
     canvasTimelineView = new CanvasTimelineView('#timeline-view')
     canvasTimelineView.updateTimelines(@props.timelines)
 

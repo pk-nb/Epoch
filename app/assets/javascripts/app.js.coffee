@@ -17,7 +17,5 @@
 #= require react
 #= require react_ujs
 #= require hammerjs
-#= require Snap.svg/dist/snap.svg-min.js
-#= require snap.svg.zpd/snap.svg.zpd.js
 #= require components
 #= require binding
