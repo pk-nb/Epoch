@@ -69,6 +69,7 @@ UIPrimaryBar = React.createClass
       UI.NewTimelinePanel
         key: 'newTimelinePanel',
         timelines: @props.timelines
+        userTimelines: @props.userTimelines
         setAppState: @props.setAppState,
         # Calling directly instead of sending callback, so don't need to curry
         goBack: @handleClick(@props.panelIds.timeline)

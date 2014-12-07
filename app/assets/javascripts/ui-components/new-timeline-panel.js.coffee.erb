@@ -12,12 +12,15 @@ NewTimelinePanel = React.createClass
     timelineErrors: []
 
   onPostSuccess: (data) ->
-      console.log data
-      console.log @props.timelines
-      timelines = @props.timelines
-      timelines.push(data)
-      @props.setAppState(timelines: timelines)
-      @props.goBack() # Animate back to timeline panel
+    console.log data
+    console.log @props.timelines
+    timelines = @props.timelines
+    timelines.push(data)
+    @props.setAppState(timelines: timelines)
+    userTimelines = @props.userTimelines
+    userTimelines.push(data)
+    @props.setAppState(userTimelines: userTimelines)
+    @props.goBack() # Animate back to timeline panel
 
 
   onPostError: (messages) ->
