@@ -1,12 +1,25 @@
 class TwitterIntegration
   def friends_list
     result = []
-    unless @twitter_account.nil?
-      result.push([@twitter_account.name, @twitter_account.login])
+    if @twitter_account.nil?
+      return result
+    end
+    user = @twitter_account.user
+    cached_friends = user.twitter_friends
+    # IJH 12/7/14: Handle the case in which the user has no friends on twitter
+    if cached_friends.empty? || cached_friends.first.created_at < 10.minutes.ago
+      cached_friends.destroy_all
       @client.friends(@twitter_account.uid.to_i, {count: 200}).each do |user|
         result.push([user.name, user.screen_name])
       end
+      # cache newly retrieved friends
+      result.each do |friend|
+        user.twitter_friends.create({name: friend[0], login: friend[1]})
+      end
+    else
+      result = cached_friends.map {|friend| [friend.name, friend.login]}
     end
+    result.push([@twitter_account.name, @twitter_account.login])
     result
   end
 
