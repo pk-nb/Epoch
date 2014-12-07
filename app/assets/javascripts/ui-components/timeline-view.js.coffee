@@ -60,27 +60,28 @@ class SnapTimelineView
 
   # Click events here get sent back to the react class
 
-
-
-
+# Class handling the rendering of the content on the timeline view canvas
 class CanvasTimelineView
   constructor: (canvasId, timelines=[]) ->
     colors: ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
 
     @canvasId = canvasId
     @timelines = timelines
-    console.log @timelines
     jqCanvas = $(canvasId)
     @canvas = jqCanvas[0] # Get native object out
-    @hammer = new Hammer(@canvas)
-    @canvas.width = jqCanvas.width() * 2
-    @canvas.height = jqCanvas.height() * 2
     @context = @canvas.getContext('2d')
+    @hammer = new Hammer(@canvas)
+    
+    # Resize the canvas
+    @setup()
     @context.scale(2,2)
 
+    # Panning/Navigation config
     @scrollSpeed = 1.5
     @focus = @canvas.width / 2
     @tempFocus = @focus
+    
+    # Register callbacks
     window.onresize = @redraw
 
     @hammer.on 'pan', (event) =>
@@ -96,21 +97,21 @@ class CanvasTimelineView
     $('.ui-bar').children().on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) ->
       e.stopPropagation()
 
-  redraw: =>
-    # Recalcuate
+  setup: ->
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
     @canvas.height = jqCanvas.height() * 2
 
-    #console.log @timelines
-    
-    #i = 20
-    #for event in @timelines[0].events
-      #@context.fillText(event.content, @focus, i)
-      #i += 20
-    @context.font = '30pt "MB Empire"'
+  redraw: =>
+    # Recalcuate
+    @setup()
+    @draw()
+
+  draw: ->
+    @context.font = '20pt "MB Empire"'
     @context.fillText(@minDate(), @focus, 100)
     @context.fillText(@maxDate(), @focus, 200)
+    @context.fillText(@midRange(), @focus, 300)
     # Test drawing
     @context.fillStyle = "rgb(200,0,0)"
     @context.fillRect(@focus, 10, 55, 50)
@@ -118,23 +119,32 @@ class CanvasTimelineView
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
     @context.fillRect(@focus + 30, 30, 55, 50)
 
+  # Returns the earliest date across the timelines
   minDate: ->
     events = @timelines[0].events
-    min = @timelines[0].events[events.length - 1].start_date
+    min = new Date(@timelines[0].events[events.length - 1].start_date)
     for timeline in @timelines
       events = timeline.events
-      min = timeline.events[events.length - 1].start_date if timeline.events[events.length - 1].start_date < min
+      date = new Date(timeline.events[events.length - 1].start_date)
+      min = date if date < min
     min
    
+  # Returns the latest date across the timelines
   maxDate: ->
-    max = @timelines[0].events[0].end_date
+    max = new Date(@timelines[0].events[0].end_date)
     for timeline in @timelines
-      max = timeline.events[0].end_date if timeline.events[0].end_date > max
+      date = new Date(timeline.events[0].end_date)
+      max = date if date > max
     max
-
+  
+  # Calculates the halway point between the min and max dates
+  midRange: ->
+    min = @minDate()
+    max = @maxDate()
+    new Date(min.getTime() + ((max - min) / 2))
+  
   updateTimelines: (timelines) ->
     @timelines = timelines
-    #console.log @timelines
     @redraw()
 
   onPan: (event) ->
