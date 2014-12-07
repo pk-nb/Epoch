@@ -77,7 +77,7 @@ class CanvasTimelineView
 
     if @timelines.length > 0
       if @timelines[0].events.length > 0
-        @drawEvent(@timelines[0].events[0], 200, 200, @colors[0], true, false)
+        @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
 
 
   drawFocusLine: ->
