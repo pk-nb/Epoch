@@ -92,7 +92,6 @@ class CanvasTimelineView
     @hammer.on 'panend', (event) =>
       @afterPan(event)
 
-    # TODO redraw during animation
     $('.ui-bar').on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) =>
       @redraw()
 
@@ -174,11 +173,25 @@ class CanvasTimelineView
     @redraw()
   
   onPan: (event) ->
-    @focusDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    if newDate > @minDate()
+      if newDate < @maxDate()
+        @focusDate = newDate
+      else
+        @focusDate = @maxDate()
+    else
+      @focusDate = @minDate()
     @redraw()
 
   afterPan: (event) ->
-    @tempFocus = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
+    if newDate > @minDate()
+      if newDate < @maxDate()
+        @tempFocus = newDate
+      else
+        @tempFocus = @maxDate()
+    else
+      @tempFocus = @minDate()
     @focusDate = @tempFocus
 
 
