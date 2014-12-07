@@ -3,6 +3,7 @@ class Event < ActiveRecord::Base
   has_and_belongs_to_many :timelines
   has_one :repo_event
 
+  default_scope { order("start_date DESC") }
 
   attr_accessor :start_date_pretty, :end_date_pretty, :timeline_id
   # Chicken or Egg bauk bauk bauk
