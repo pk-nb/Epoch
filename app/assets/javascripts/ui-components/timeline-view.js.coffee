@@ -84,6 +84,8 @@ class CanvasTimelineView
     #     # @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
     #     @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
     @layoutManager()
+    @debugDrawTimelineCoordinates()
+
 
 
 
@@ -322,12 +324,15 @@ class CanvasTimelineView
   layoutManager: ->
     # startPoint = {x: 20, y: 20} # TODO fix with zoom stuff
 
-    @timelineCoordinates = {}
+    # @timelineCoordinates = {}
     linesX = []
     offset = @initialOffset
 
 
     for timeline, tIndex in @timelines
+      # Wipe old coordinates
+      @timelines[tIndex].coordinates = null
+
       for event, eIndex in timeline.events by -1
 
         isRangeEvent = @shouldDrawEventWithRange(event)
@@ -364,13 +369,37 @@ class CanvasTimelineView
     @timelines[tIndex].events[eIndex].coordinates = coordinates
 
     if @timelines[tIndex].coordinates
-      # TODO update timeline level cooordinates
+      # Update timeline level cooordinates
+      oldC = @timelines[tIndex].coordinates
+      oldC.minX = @min(oldC.minX, coordinates.minX)
+      oldC.minY = @min(oldC.minY, coordinates.minY)
+      oldC.maxX = @max(oldC.maxX, coordinates.maxX)
+      oldC.maxY = @max(oldC.maxY, coordinates.maxY)
+
+      @timelines[tIndex.coordinates] = oldC
     else
       @timelines[tIndex].coordinates = coordinates
 
-
     coordinates.maxX
 
+
+
+  min: (value1, value2) ->
+    if value1 < value2 then value1 else value2
+
+  max: (value1, value2) ->
+    if value1 > value2 then value1 else value2
+
+  within: (textValue, min, max) ->
+    min <= textValue and textValue <= max
+
+
+  debugDrawTimelineCoordinates: ->
+    @context.fillStyle = 'rgba(0,0,0,0.3)'
+    for timeline, index in @timelines
+      # @context.fillStyle = @colors[index % 10]
+      c = timeline.coordinates
+      @context.fillRect(c.minX, c.minY, c.maxX - c.minX, c.maxY - c.minY)
 
 
 
