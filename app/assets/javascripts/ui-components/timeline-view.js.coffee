@@ -473,9 +473,25 @@ class CanvasTimelineView
 
   updateSelectedEvent: (selectedEvent) ->
     @selectedEvent = selectedEvent
+    # TODO animate instead of jump
+    if @selectedEvent?
+      event = @timelines[selectedEvent.tIndex].events[selectedEvent.eIndex]
+      if @shouldDrawEventWithRange(event)
+        start = (new Date(event.start_date)).getTime()
+        end = (new Date(event.end_date)).getTime()
+
+        @focusDate = new Date ( (start + end) / 2 )
+      else
+        @focusDate = new Date(event.start_date)
+
+    @tempFocus = @focusDate
     @redraw()
 
+
   onPan: (event) ->
+    # Unselected Timeline
+    @setAppState(selectedEvent: null)
+
     newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     if newDate > @minDate()
       if newDate < @maxDate()
