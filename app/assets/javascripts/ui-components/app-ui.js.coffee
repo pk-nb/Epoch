@@ -35,8 +35,9 @@ EpochApp = React.createClass
 
 # Change app state by sending this function as a prop on children
   setAppState: (data) ->
-    if data.selectedEvent
-      console.log "From setAppState", data
+    # Deselect event if timelines are updated to avoid reference errors
+    if data.timelines?
+      @setState(selectedEvent: null)
     @setState data
 
   render: ->
