@@ -330,7 +330,6 @@ class CanvasTimelineView
     linesX = []
     offset = @initialOffset
 
-
     for timeline, tIndex in @timelines
       # Wipe old coordinates
       @timelines[tIndex].coordinates = null
@@ -350,9 +349,6 @@ class CanvasTimelineView
 
         if not didFitInExisitingLines
           linesX.push(@drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex))
-
-      # Add Offset
-      # offset += @rowHeight * linesX.length
 
 
 
@@ -378,16 +374,40 @@ class CanvasTimelineView
       oldC.maxX = @max(oldC.maxX, coordinates.maxX)
       oldC.maxY = @max(oldC.maxY, coordinates.maxY)
 
-      @timelines[tIndex.coordinates] = oldC
+      @timelines[tIndex].coordinates = oldC
     else
       @timelines[tIndex].coordinates = coordinates
 
     coordinates.maxX
 
 
-  tapHandler: (event) ->
+  tapHandler: (event) =>
     console.log 'Tapped in canvas'
-    console.log event.center.x, event.center.y
+    # console.log event.center.x, event.center.y
+    # Translate point
+    # console.log 'Translate point', @translateTapPoint(event.center)
+    translatedPoint = @translateTapPoint(event.center)
+
+    for timeline, index in @timelines
+
+      # if index is 0
+      #   console.log "Tap coordinates", event.center.x * 2, event.center.y * 2
+      #   c = timeline.coordinates
+      #   console.log c.minX, c.maxX, c.minY, c.maxY
+
+      # console.log index, @pointInCoordinates(event.center, timeline.coordinates)
+      if @pointInCoordinates(translatedPoint, timeline.coordinates)
+        console.log "found click in timeline #{index}"
+
+  translateTapPoint: (point) ->
+    # Hammer returns window coordinates, so we have to subtract off the
+    # offset of canvas position
+    # jqCanvas = $(@canvasId)
+    {top, left} = $(@canvasId).offset()
+    console.log top, left
+
+    # Subtract offset and multiply by 2 (accounting for 2x context drawing)
+    { x: (point.x - left) * 2, y: (point.y - top) * 2 }
 
 
   min: (value1, value2) ->
@@ -396,8 +416,11 @@ class CanvasTimelineView
   max: (value1, value2) ->
     if value1 > value2 then value1 else value2
 
-  within: (textValue, min, max) ->
-    min <= textValue and textValue <= max
+  within: (testValue, min, max) ->
+    min <= testValue and testValue <= max
+
+  pointInCoordinates: (point, coordinates) ->
+    @within(point.x, coordinates.minX, coordinates.maxX) and @within(point.y, coordinates.minY, coordinates.maxY)
 
 
   debugDrawTimelineCoordinates: ->
@@ -405,6 +428,8 @@ class CanvasTimelineView
     for timeline, index in @timelines
       # @context.fillStyle = @colors[index % 10]
       c = timeline.coordinates
+      # if index is 0
+      #   console.log c.minX, c.maxX, c.minY, c.maxY
       @context.fillRect(c.minX, c.minY, c.maxX - c.minX, c.maxY - c.minY)
 
 
