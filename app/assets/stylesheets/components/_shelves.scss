@@ -2,6 +2,13 @@
   height: $header-height;
   width: 100%;
   position: relative;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .shelf {
@@ -15,7 +22,20 @@
 
   p {
     margin: 0;
-    display: inline-block;
+    // display: inline-block;
+
+    // TODO fix dropdown-link from disappearing with overflow: hidden
+    // position: static;
+
+    &.truncate {
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+    }
+
+    &.selected {
+      font-weight: bold;
+    }
   }
 }
 
@@ -23,10 +43,18 @@
 .right {
   @include flex(1);
   margin: auto;
+  // @include display(flex);
 }
 
 .left {
   padding-left: $edge-spacing;
+
+  p {
+    padding-right: 10%;
+
+  }
+
+
 }
 
 .right {

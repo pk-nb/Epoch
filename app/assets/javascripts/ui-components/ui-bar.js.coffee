@@ -11,7 +11,8 @@ UIBarMixin =
       newTweet: 'newTweet',
       user: 'user',
       event: 'event',
-      newEvent: 'newEvent'
+      newEvent: 'newEvent',
+      selectedEvent: 'selectedEvent'
     }
 
   handleToggle: (panel=null) ->
@@ -154,6 +155,12 @@ UISecondaryBar = React.createClass
         ReactCSSTransitionGroup {transitionName: 'dropdown-bottom'},
           @dropdownContent()
 
+  eventForSelectedEvent: ->
+    if @props.selectedEvent
+      @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
+    # else
+    #   null
+
   shelf: ->
     UI = window.EpochUI
     if @props.expandedPanel == @props.panelIds.newEvent
@@ -161,17 +168,25 @@ UISecondaryBar = React.createClass
         key: 'newEventShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
-    else if @props.expandedPanel == @props.panelIds.event
+    else if @props.expandedPanel == @props.panelIds.event and @props.selectedEvent?
+
       UI.EventShelf
         key: 'eventShelf'
         handleClick: @handleClick,
         panelIds: @props.panelIds
-        selectedEvent: @props.selectedEvent
+        selectedEvent: @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
+    else if @props.selectedEvent
+      UI.SelectedEventShelf
+        key: 'selectedEventShelf'
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+        selectedEvent: @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
     else
       UI.DefaultBottomShelf
         key: 'defaultBottomShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
+        currentDate: @props.currentDate
 
   dropdownContent: ->
     UI = window.EpochUI
@@ -188,6 +203,7 @@ UISecondaryBar = React.createClass
         key: 'eventPanel'
         handleClick: @handleClick,
         panelIds: @props.panelIds
+        selectedEvent: @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
     else
       # Default Panel set to display: none
       div {key: 'nothing-UIBottomBar'}, null

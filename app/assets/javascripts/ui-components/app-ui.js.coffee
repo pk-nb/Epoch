@@ -6,19 +6,17 @@ EpochApp = React.createClass
 
   getInitialState: ->
     barExpanded: false,
-    expandedPanel: null
+    expandedPanel: null,
+    selectedEvent: null,
+    currentDate: null
 
 # Default props that should be set on server render
   getDefaultProps: ->
     user: {name: 'Login', picture: null},
     timelines: [],
     userTimelines: [],
-    event_errors: [],
-    timeline_errors: [],
-    repo_errors: [],
-    tweet_errors: [],
-    repos: [],
-    selectedEvent: {title: 'test'} # todo init to or something
+    event_errors: [], # TODO refactor this so state is only in component
+    repos: []
 
   componentDidUpdate: (prevProps, prevState) ->
     if @state.timelines
@@ -37,6 +35,17 @@ EpochApp = React.createClass
 
 # Change app state by sending this function as a prop on children
   setAppState: (data) ->
+    # Deselect event if timelines are updated to avoid reference errors
+
+    if data.timelines?
+      @setState(selectedEvent: null)
+
+    # Collapse panel if there will be no open event panel
+    # TODO This really shouldn't be here, probably give a empty event
+    # object to event panel if there is no selected event
+    if data.selectedEvent == null and @state.barExpanded == 'bottom'
+      @setState(barExpanded: false, expandedPanel: null)
+
     @setState data
 
   render: ->
@@ -51,14 +60,12 @@ EpochApp = React.createClass
         user: @props.user
         timelines: @state.timelines || @props.timelines
         userTimelines: @state.userTimelines || @props.userTimelines
-        timeline_errors: @state.timeline_errors || @props.timeline_errors
-        tweet_errors: @state.tweet_errors || @props.tweet_errors
-        repo_errors: @state.repo_errors || @props.repo_errors
         repos: @state.repos || @props.repos
       UI.TimelineView
         timelines: @state.timelines || @props.timelines
-        selectedEvent: @state.selectedEvent || @props.selectedEvent
+        selectedEvent: @state.selectedEvent
         expandedPanel: @state.expandedPanel
+        setAppState: @setAppState
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom'
@@ -67,7 +74,8 @@ EpochApp = React.createClass
         expandedPanel: @state.expandedPanel
         timelines: @state.timelines || @props.timelines
         event_errors: @state.event_errors || @props.event_errors
-        selectedEvent: @state.selectedEvent || @props.selectedEvent
+        selectedEvent: @state.selectedEvent
+        currentDate: @state.currentDate
 
 
 @.EpochApp ?= {}

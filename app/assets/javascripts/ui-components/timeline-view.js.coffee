@@ -3,7 +3,7 @@ cx = React.addons.classSet
 
 # Class handling the rendering of the content on the timeline view canvas
 class CanvasTimelineView
-  constructor: (canvasId, timelines=[]) ->
+  constructor: (canvasId, setAppState, timelines=[]) ->
     @colors = ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
 
     @canvasId = canvasId
@@ -26,6 +26,8 @@ class CanvasTimelineView
     @rowHeight = 80
     @initialOffset = 20
 
+    @selectedEvent = null
+
 
     # Panning/Navigation config
     @scrollSpeed = 1.5
@@ -38,6 +40,8 @@ class CanvasTimelineView
     # Register callbacks
     window.onresize = @redraw
 
+    @hammer.on 'tap', @tapHandler
+
     @hammer.on 'pan', (event) =>
       @onPan(event)
     @hammer.on 'panend', (event) =>
@@ -48,6 +52,13 @@ class CanvasTimelineView
 
     $('.ui-bar').children().on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) ->
       e.stopPropagation()
+
+    @setAppState = setAppState # function to
+
+  setFocusDate: (date) ->
+    @focusDate = date
+    # Trigger update of date panel in UIBottomBar
+    @setAppState(currentDate: date)
 
   setup: ->
     jqCanvas = $(@canvasId)
@@ -84,6 +95,9 @@ class CanvasTimelineView
     #     # @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
     #     @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
     @layoutManager()
+    # @debugDrawTimelineCoordinates()
+    # @debugDrawEventCoordinates()
+
 
 
 
@@ -186,7 +200,7 @@ class CanvasTimelineView
       pad = 10 # Padding around text outline
 
       # Text Width and Height
-      tW = @context.measureText(event.content).width
+      tW = @context.measureText(event.title).width
       tH = 22 # Approximation to 20pt font size
 
       # Draw Shape!
@@ -224,7 +238,7 @@ class CanvasTimelineView
       @context.fill()
 
       if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color
-      @context.fillText(event.content, textPoint.x, textPoint.y)
+      @context.fillText(event.title, textPoint.x, textPoint.y)
 
       # Return the bounds of the drawn object
       { minX: x - @pointSize , minY: y - @pointSize, maxX: cPoint4.x, maxY: cPoint4.y }
@@ -255,7 +269,7 @@ class CanvasTimelineView
 
     # Start just below drawn point
     if showText
-      tW = @context.measureText(event.content).width
+      tW = @context.measureText(event.title).width
       tH = 22 # Approximation to 20pt font size
       pad = 10; # Padding around text outline
 
@@ -289,7 +303,7 @@ class CanvasTimelineView
       @context.fill()
 
       if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color;
-      @context.fillText(event.content, textMin.x, textMax.y)
+      @context.fillText(event.title, textMin.x, textMax.y)
 
       # Return bounds of object
       minX = startPointX - @pointSize
@@ -322,12 +336,14 @@ class CanvasTimelineView
   layoutManager: ->
     # startPoint = {x: 20, y: 20} # TODO fix with zoom stuff
 
-    @timelineCoordinates = {}
+    # @timelineCoordinates = {}
     linesX = []
     offset = @initialOffset
 
-
     for timeline, tIndex in @timelines
+      # Wipe old coordinates
+      @timelines[tIndex].coordinates = null
+
       for event, eIndex in timeline.events by -1
 
         isRangeEvent = @shouldDrawEventWithRange(event)
@@ -344,9 +360,6 @@ class CanvasTimelineView
         if not didFitInExisitingLines
           linesX.push(@drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex))
 
-      # Add Offset
-      # offset += @rowHeight * linesX.length
-
 
 
 
@@ -355,23 +368,89 @@ class CanvasTimelineView
   drawEventAndUpdateCoordinates: (event, isRange=false, y, tIndex, eIndex) ->
 
     # TODO use @showText, and @activeEventIndex or something
+
+    isSelected = @selectedEvent? and @selectedEvent.tIndex == tIndex and @selectedEvent.eIndex == eIndex
+
     if isRange
-      coordinates = @drawEventWithRange(event, y, @colors[tIndex % 10], @showText, false)
+      coordinates = @drawEventWithRange(event, y, @colors[tIndex % 10], @showText, isSelected)
     else
-      coordinates = @drawEvent(event, y, @colors[tIndex % 10], @showText, false)
+      coordinates = @drawEvent(event, y, @colors[tIndex % 10], @showText, isSelected)
 
     # update coordinates
     @timelines[tIndex].events[eIndex].coordinates = coordinates
 
     if @timelines[tIndex].coordinates
-      # TODO update timeline level cooordinates
+      # Update timeline level cooordinates
+      oldC = @timelines[tIndex].coordinates
+      newC = {}
+      newC.minX = @min(oldC.minX, coordinates.minX)
+      newC.minY = @min(oldC.minY, coordinates.minY)
+      newC.maxX = @max(oldC.maxX, coordinates.maxX)
+      newC.maxY = @max(oldC.maxY, coordinates.maxY)
+
+      @timelines[tIndex].coordinates = newC
     else
       @timelines[tIndex].coordinates = coordinates
-
 
     coordinates.maxX
 
 
+  tapHandler: (event) =>
+    translatedPoint = @translateTapPoint(event.center)
+
+    for timeline, tIndex in @timelines
+      # console.log index, @pointInCoordinates(event.center, timeline.coordinates)
+      if @pointInCoordinates(translatedPoint, timeline.coordinates)
+        # console.log "found click in timeline #{index}"
+        for event, eIndex in timeline.events
+          if @pointInCoordinates(translatedPoint, event.coordinates)
+            # Found the event, updateValue and return
+            console.log "found click on event #{eIndex} in timeline #{tIndex}"
+            @setAppState(selectedEvent: { tIndex: tIndex, eIndex: eIndex })
+            return
+
+    # update with null
+    @setAppState(selectedEvent: null)
+
+  translateTapPoint: (point) ->
+    # Hammer returns window coordinates, so we have to subtract off the
+    # offset of canvas position
+    # jqCanvas = $(@canvasId)
+    {top, left} = $(@canvasId).offset()
+    console.log top, left
+
+    # Subtract offset and multiply by 2 (accounting for 2x context drawing)
+    { x: (point.x - left) * 2, y: (point.y - top) * 2 }
+
+
+  min: (value1, value2) ->
+    if value1 < value2 then value1 else value2
+
+  max: (value1, value2) ->
+    if value1 > value2 then value1 else value2
+
+  within: (testValue, min, max) ->
+    min <= testValue and testValue <= max
+
+  pointInCoordinates: (point, coordinates) ->
+    @within(point.x, coordinates.minX, coordinates.maxX) and @within(point.y, coordinates.minY, coordinates.maxY)
+
+
+  debugDrawTimelineCoordinates: ->
+    @context.fillStyle = 'rgba(0,0,0,0.3)'
+    for timeline, index in @timelines
+      # @context.fillStyle = @colors[index % 10]
+      c = timeline.coordinates
+      # if index is 0
+      #   console.log c.minX, c.maxX, c.minY, c.maxY
+      @context.fillRect(c.minX, c.minY, c.maxX - c.minX, c.maxY - c.minY)
+
+  debugDrawEventCoordinates: ->
+    @context.fillStyle = 'rgba(0,0,0,0.3)'
+    for timeline, index in @timelines
+      for event, index in timeline.events
+        c = event.coordinates
+        @context.fillRect(c.minX, c.minY, c.maxX - c.minX, c.maxY - c.minY)
 
 
   calcEventStartX: (event) ->
@@ -381,7 +460,7 @@ class CanvasTimelineView
     startPointX = @dateToX(new Date(event.start_date))
     endPointX = @dateToX(new Date(event.end_date))
     padding = 10
-    tW = @context.measureText(event.content).width
+    tW = @context.measureText(event.title).width
 
     textMin = ((startPointX + endPointX) / 2) - (tW / 2) - padding
     startDateMin = startPointX - @pointSize
@@ -392,20 +471,40 @@ class CanvasTimelineView
 
   updateTimelines: (timelines) ->
     @timelines = timelines
-    @focusDate = @midRange()
+    @setFocusDate @midRange()
     @tempFocus = @focusDate
     @zoom = @findZoomLevel()
     @redraw()
 
-  onPan: (event) ->
+  updateSelectedEvent: (selectedEvent) ->
+    @selectedEvent = selectedEvent
+    # TODO animate instead of jump
+    if @selectedEvent?
+      event = @timelines[selectedEvent.tIndex].events[selectedEvent.eIndex]
+      if @shouldDrawEventWithRange(event)
+        start = (new Date(event.start_date)).getTime()
+        end = (new Date(event.end_date)).getTime()
+
+        @setFocusDate new Date ((start + end) / 2)
+      else
+        @setFocusDate new Date(event.start_date)
+
+    @tempFocus = @focusDate
+    @redraw()
+
+
+  onPan: (event) =>
+    # Unselected Timeline
+    @setAppState(selectedEvent: null)
+
     newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     if newDate > @minDate()
       if newDate < @maxDate()
-        @focusDate = newDate
+        @setFocusDate newDate
       else
-        @focusDate = @maxDate()
+        @setFocusDate @maxDate()
     else
-      @focusDate = @minDate()
+      @setFocusDate @minDate()
     @redraw()
 
   afterPan: (event) ->
@@ -417,7 +516,7 @@ class CanvasTimelineView
         @tempFocus = @maxDate()
     else
       @tempFocus = @minDate()
-    @focusDate = @tempFocus
+    @setFocusDate @tempFocus
 
 
 # Local/Global object for hanging on to
@@ -435,10 +534,11 @@ TimelineView = React.createClass
     # snapTimelineView = new SnapTimelineView('timeline-view')
     # $('').load =>
 
-    canvasTimelineView = new CanvasTimelineView('#timeline-view')
+    canvasTimelineView = new CanvasTimelineView('#timeline-view', @props.setAppState)
     canvasTimelineView.updateTimelines(@props.timelines)
+    # canvasTimelineView.redraw()
 
-    @forceUpdate()
+    # @forceUpdate()
 
   componentWillUnmount: ->
     # Clean up SVG snap, binding, etc here
@@ -452,11 +552,11 @@ TimelineView = React.createClass
     # Manually do things with Snap here, and
     # draw new timelines, etc
 
-    # Check if timelines changed?
-    # if prevProps.timelines.length != @props.timelines.length
-    # console.log @props.timelines
-    # snapTimelineView.redraw(@props.timelines)
-    canvasTimelineView.updateTimelines(@props.timelines)
+    if prevProps.timelines != @props.timelines
+      canvasTimelineView.updateTimelines(@props.timelines)
+
+    if prevProps.selectedEvent != @props.selectedEvent
+      canvasTimelineView.updateSelectedEvent(@props.selectedEvent)
 
   #getInitialState: ->
     # Grab the saved paper matrix, if any
@@ -464,8 +564,8 @@ TimelineView = React.createClass
   textNodes: ->
     if @props.timelines.length > 0
       @props.timelines[0].events.map (event) ->
-        text {x: 200, y: 200, key: event.content + event.id},
-          event.content
+        text {x: 200, y: 200, key: event.title + event.id},
+          event.title
 
   render: ->
 
