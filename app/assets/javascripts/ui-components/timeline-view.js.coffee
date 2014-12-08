@@ -3,7 +3,7 @@ cx = React.addons.classSet
 
 # Class handling the rendering of the content on the timeline view canvas
 class CanvasTimelineView
-  constructor: (canvasId, timelines=[]) ->
+  constructor: (canvasId, setAppState, timelines=[]) ->
     @colors = ['#F75AA0', '#F4244C', '#FF7C5F', '#FFBA4B', '#B8E986', '#49C076', '#5ED8D5', '#44B9E6', '#5773BB', '#9C67B5']
 
     @canvasId = canvasId
@@ -51,6 +51,8 @@ class CanvasTimelineView
     $('.ui-bar').children().on 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', (e) ->
       e.stopPropagation()
 
+    @setAppState = setAppState # function to
+
   setup: ->
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
@@ -86,7 +88,8 @@ class CanvasTimelineView
     #     # @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
     #     @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
     @layoutManager()
-    @debugDrawTimelineCoordinates()
+    # @debugDrawTimelineCoordinates()
+    @debugDrawEventCoordinates()
 
 
 
@@ -369,12 +372,13 @@ class CanvasTimelineView
     if @timelines[tIndex].coordinates
       # Update timeline level cooordinates
       oldC = @timelines[tIndex].coordinates
-      oldC.minX = @min(oldC.minX, coordinates.minX)
-      oldC.minY = @min(oldC.minY, coordinates.minY)
-      oldC.maxX = @max(oldC.maxX, coordinates.maxX)
-      oldC.maxY = @max(oldC.maxY, coordinates.maxY)
+      newC = {}
+      newC.minX = @min(oldC.minX, coordinates.minX)
+      newC.minY = @min(oldC.minY, coordinates.minY)
+      newC.maxX = @max(oldC.maxX, coordinates.maxX)
+      newC.maxY = @max(oldC.maxY, coordinates.maxY)
 
-      @timelines[tIndex].coordinates = oldC
+      @timelines[tIndex].coordinates = newC
     else
       @timelines[tIndex].coordinates = coordinates
 
@@ -382,22 +386,21 @@ class CanvasTimelineView
 
 
   tapHandler: (event) =>
-    console.log 'Tapped in canvas'
-    # console.log event.center.x, event.center.y
-    # Translate point
-    # console.log 'Translate point', @translateTapPoint(event.center)
     translatedPoint = @translateTapPoint(event.center)
 
-    for timeline, index in @timelines
-
-      # if index is 0
-      #   console.log "Tap coordinates", event.center.x * 2, event.center.y * 2
-      #   c = timeline.coordinates
-      #   console.log c.minX, c.maxX, c.minY, c.maxY
-
+    for timeline, tIndex in @timelines
       # console.log index, @pointInCoordinates(event.center, timeline.coordinates)
       if @pointInCoordinates(translatedPoint, timeline.coordinates)
-        console.log "found click in timeline #{index}"
+        # console.log "found click in timeline #{index}"
+        for event, eIndex in timeline.events
+          if @pointInCoordinates(translatedPoint, event.coordinates)
+            # Found the event, updateValue and return
+            console.log "found click on event #{eIndex} in timeline #{tIndex}"
+            @setAppState(selectedEvent: { tIndex: tIndex, eIndex: eIndex })
+            return
+
+    # update with null
+    @setAppState(selectedEvent: null)
 
   translateTapPoint: (point) ->
     # Hammer returns window coordinates, so we have to subtract off the
@@ -432,6 +435,12 @@ class CanvasTimelineView
       #   console.log c.minX, c.maxX, c.minY, c.maxY
       @context.fillRect(c.minX, c.minY, c.maxX - c.minX, c.maxY - c.minY)
 
+  debugDrawEventCoordinates: ->
+    @context.fillStyle = 'rgba(0,0,0,0.3)'
+    for timeline, index in @timelines
+      for event, index in timeline.events
+        c = event.coordinates
+        @context.fillRect(c.minX, c.minY, c.maxX - c.minX, c.maxY - c.minY)
 
 
   calcEventStartX: (event) ->
@@ -495,7 +504,7 @@ TimelineView = React.createClass
     # snapTimelineView = new SnapTimelineView('timeline-view')
     # $('').load =>
 
-    canvasTimelineView = new CanvasTimelineView('#timeline-view')
+    canvasTimelineView = new CanvasTimelineView('#timeline-view', @props.setAppState)
     canvasTimelineView.updateTimelines(@props.timelines)
 
     @forceUpdate()

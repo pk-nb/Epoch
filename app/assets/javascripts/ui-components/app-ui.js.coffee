@@ -59,6 +59,7 @@ EpochApp = React.createClass
         timelines: @state.timelines || @props.timelines
         selectedEvent: @state.selectedEvent || @props.selectedEvent
         expandedPanel: @state.expandedPanel
+        setAppState: @setAppState
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom'
