@@ -134,6 +134,14 @@ NewTweetShelf = React.createClass
 DefaultBottomShelf = React.createClass
   displayName: 'DefaultBottomShelf'
 
+  currentDateText: ->
+    # TODO use date format appropriate to zoom level
+    if @props.currentDate?
+      cD = @props.currentDate
+      "#{cD.getMonth() + 1}/#{cD.getDate()}/#{cD.getFullYear()}"
+    else
+      'Select a Timeline'
+
   render: ->
     div className: 'shelf',
       div className: 'left',
@@ -141,19 +149,31 @@ DefaultBottomShelf = React.createClass
           img {className: 'shelf-icon icon-margin-right', src: '<%= asset_path 'plus-icon.svg' %>'},
           span className: 'dropdown-link',
             'Add Event'
-
-        # p { onClick: @props.handleClick(@props.panelIds.event), className: 'dropdown-link'},
-        #   'Event Name'
       div className: 'center',
+        # Current Date
         p null,
-          '1999'
+          @currentDateText()
       div className: 'right',
         ''
 
+EventDateMixin =
+  # TODO improve date format & refactor this
+  # TODO use date format appropriate to zoom level
+  dateStringForEvent: (event) ->
+    if event.start_date != event.end_date
+      sD = new Date(event.start_date)
+      eD = new Date(event.end_date)
+      "#{sD.getMonth() + 1}/#{sD.getDate()}/#{sD.getFullYear()} #{sD.getHours()}:#{if sD.getMinutes() < 10 then '0' else ''}#{sD.getMinutes()}" +
+      " – " +
+      "#{eD.getMonth() + 1}/#{eD.getDate()}/#{eD.getFullYear()} #{eD.getHours()}:#{if eD.getMinutes() < 10 then '0' else ''}#{eD.getMinutes()}"
+    else
+      cD = new Date(event.start_date)
+      "#{cD.getMonth() + 1}/#{cD.getDate()}/#{cD.getFullYear()} #{cD.getHours()}:#{if cD.getMinutes() < 10 then '0' else ''}#{cD.getMinutes()}"
 
 
 SelectedEventShelf = React.createClass
   displayName: 'SelectedEventShelf'
+  mixins: [EventDateMixin]
 
   render: ->
     div className: 'shelf',
@@ -164,7 +184,7 @@ SelectedEventShelf = React.createClass
               @props.selectedEvent.title
       div className: 'center',
         p null,
-          '1999'
+          @dateStringForEvent(@props.selectedEvent)
       div className: 'right',
         ''
         # p { onClick: @props.handleClick(@props.panelIds.newEvent), className: 'dropdown-link' },
@@ -187,6 +207,7 @@ NewEventShelf = React.createClass
 
 EventShelf = React.createClass
   displayName: 'EventShelf'
+  mixins: [EventDateMixin]
 
   render: ->
     selectedEvent = @props.selectedEvent
@@ -197,7 +218,7 @@ EventShelf = React.createClass
           #   selectedEvent.title
       div className: 'center',
         p null,
-          '1999'
+          @dateStringForEvent(@props.selectedEvent)
       div className: 'right',
         ''
 

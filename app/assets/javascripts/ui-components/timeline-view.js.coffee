@@ -55,6 +55,11 @@ class CanvasTimelineView
 
     @setAppState = setAppState # function to
 
+  setFocusDate: (date) ->
+    @focusDate = date
+    # Trigger update of date panel in UIBottomBar
+    @setAppState(currentDate: date)
+
   setup: ->
     jqCanvas = $(@canvasId)
     @canvas.width = jqCanvas.width() * 2
@@ -466,7 +471,7 @@ class CanvasTimelineView
 
   updateTimelines: (timelines) ->
     @timelines = timelines
-    @focusDate = @midRange()
+    @setFocusDate @midRange()
     @tempFocus = @focusDate
     @zoom = @findZoomLevel()
     @redraw()
@@ -480,26 +485,26 @@ class CanvasTimelineView
         start = (new Date(event.start_date)).getTime()
         end = (new Date(event.end_date)).getTime()
 
-        @focusDate = new Date ( (start + end) / 2 )
+        @setFocusDate new Date ((start + end) / 2)
       else
-        @focusDate = new Date(event.start_date)
+        @setFocusDate new Date(event.start_date)
 
     @tempFocus = @focusDate
     @redraw()
 
 
-  onPan: (event) ->
+  onPan: (event) =>
     # Unselected Timeline
     @setAppState(selectedEvent: null)
 
     newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     if newDate > @minDate()
       if newDate < @maxDate()
-        @focusDate = newDate
+        @setFocusDate newDate
       else
-        @focusDate = @maxDate()
+        @setFocusDate @maxDate()
     else
-      @focusDate = @minDate()
+      @setFocusDate @minDate()
     @redraw()
 
   afterPan: (event) ->
@@ -511,7 +516,7 @@ class CanvasTimelineView
         @tempFocus = @maxDate()
     else
       @tempFocus = @minDate()
-    @focusDate = @tempFocus
+    @setFocusDate @tempFocus
 
 
 # Local/Global object for hanging on to

@@ -7,7 +7,8 @@ EpochApp = React.createClass
   getInitialState: ->
     barExpanded: false,
     expandedPanel: null,
-    selectedEvent: null
+    selectedEvent: null,
+    currentDate: null
 
 # Default props that should be set on server render
   getDefaultProps: ->
@@ -65,6 +66,7 @@ EpochApp = React.createClass
         timelines: @state.timelines || @props.timelines
         event_errors: @state.event_errors || @props.event_errors
         selectedEvent: @state.selectedEvent
+        currentDate: @state.currentDate
 
 
 @.EpochApp ?= {}

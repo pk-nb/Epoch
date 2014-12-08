@@ -167,7 +167,7 @@ UISecondaryBar = React.createClass
         key: 'eventShelf'
         handleClick: @handleClick,
         panelIds: @props.panelIds
-        selectedEvent: @props.selectedEvent
+        selectedEvent: @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
     else if @props.selectedEvent?
       UI.SelectedEventShelf
         key: 'selectedEventShelf'
@@ -179,7 +179,7 @@ UISecondaryBar = React.createClass
         key: 'defaultBottomShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
-        # TODO pass down current date prop
+        currentDate: @props.currentDate
 
   dropdownContent: ->
     UI = window.EpochUI
