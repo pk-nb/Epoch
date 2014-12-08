@@ -38,6 +38,8 @@ class CanvasTimelineView
     # Register callbacks
     window.onresize = @redraw
 
+    @hammer.on 'tap', @tapHandler
+
     @hammer.on 'pan', (event) =>
       @onPan(event)
     @hammer.on 'panend', (event) =>
@@ -382,6 +384,10 @@ class CanvasTimelineView
 
     coordinates.maxX
 
+
+  tapHandler: (event) ->
+    console.log 'Tapped in canvas'
+    console.log event.center.x, event.center.y
 
 
   min: (value1, value2) ->
