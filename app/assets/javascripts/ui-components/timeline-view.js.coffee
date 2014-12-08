@@ -160,8 +160,10 @@ class CanvasTimelineView
   # Consumes a event object and x coordinate and draws the
   # event to screen. Returns the calculated coordinates of
   # the touch area for click calcuation
-  drawEvent: (event, x, y, color='#bbbbbb', showText=false, active=false) ->
+  drawEvent: (event, y, color='#bbbbbb', showText=false, active=false) ->
     @context.fillStyle = color
+
+    x = @dateToX(new Date(event.start_date))
 
     # Draw circle point at x,y
     @context.beginPath()
@@ -219,6 +221,8 @@ class CanvasTimelineView
 
       # Return the bounds of the drawn object
       { minX: x - @pointSize , minY: y - @pointSize, maxX: cPoint4.x, maxY: cPoint4.y }
+    else
+      { minX: x - @pointSize, minY: y - @pointSize, maxX: x + @pointSize, maxY: y + @pointSize }
 
   drawEventWithRange: (event, y, color='#bbbbbb', showText=false, active=false) ->
     startPointX = @dateToX(new Date(event.start_date))
@@ -280,6 +284,33 @@ class CanvasTimelineView
       if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color;
       @context.fillText(event.content, textMin.x, textMax.y)
 
+      # Return bounds of object
+      minX = startPointX - @pointSize
+      if minX < padMin.x
+        # Return bounds of line for X
+        { minX: minX, minY: y - @pointSize, maxX: endPointX + @pointSize, maxY: padMax.y}
+      else
+        # Return bounds of text for X
+        { minX: padMin.x, minY: y - @pointSize, maxX: padMax.x, maxY: padMax.y}
+    else
+      {
+        minX: startPointX - @pointSize,
+        minY: y - @pointSize,
+        maxX: endPointX + @pointSize,
+        maxY: y + @pointSize
+      }
+
+
+  # Boolean to test how event should be drawn
+  shouldDrawEventWithRange: (event) ->
+    event.start_date != event.end_date and not datePointsOverlap(event)
+
+  # Returns true if event dates overlap
+  datePointsOverlap: (event) ->
+    startPointX = @dateToX(new Date(event.start_date))
+    endPointX = @dateToX(new Date(event.end_date))
+
+    Math.abs(endPointX - startPointX) < (@pointSize + 2)
 
 
   updateTimelines: (timelines) ->
