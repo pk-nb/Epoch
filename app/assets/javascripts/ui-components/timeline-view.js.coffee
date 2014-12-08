@@ -58,7 +58,7 @@ class CanvasTimelineView
 
   draw: ->
     @drawFocusLine()
-    @drawTicks()
+    @drawAxis()
 
     for timeline, timelineIndex in @timelines
       @context.fillStyle = @colors[timelineIndex % 10]
@@ -88,8 +88,27 @@ class CanvasTimelineView
     @context.strokeStyle = "#d8d8d8"
     @context.stroke()
   
-  drawTicks: ->
-    console.log "stuff"
+  drawAxis: ->
+    max = @maxDate()
+    year = max.getUTCFullYear()
+    @drawTick(@dateToX(new Date(year, 0)), "2014")
+    @drawTick(@dateToX(new Date(year - 1, 0)))
+    @drawTick(@dateToX(new Date(year + 1, 0)))
+    #console.log max, year
+  
+  drawTick: (x, label = null) ->
+    if label
+      @context.font = '20pt "MB Empire"'
+      @context.fillText(@liveXToDate(x), @focusX, 600)
+    @context.beginPath()
+    @context.moveTo(x, 45)
+    if label
+      @context.lineTo(x, 70)
+    else
+      @context.lineTo(x, 60)
+    @context.lineWidth = 2
+    @context.strokeStyle = "rgba(0, 0, 0, 256)"
+    @context.stroke()
 
   # Find the appropriate X coordinate for a given date
   dateToX: (date) ->
@@ -109,7 +128,6 @@ class CanvasTimelineView
     if @timelines.length > 0
       x = @canvas.width * 0.9
       date = @maxDate().getTime() - @minDate().getTime()
-      console.log(date)
       result = date // x
     else
       4000000
@@ -138,13 +156,10 @@ class CanvasTimelineView
     max = @maxDate()
     new Date(min.getTime() + ((max - min) / 2))
 
-
   # Consumes a event object and x coordinate and draws the
   # event to screen. Returns the calculated coordinates of
   # the touch area for click calcuation
   drawEvent: (event, x, y, color='#bbbbbb', showText=false, active=false) ->
-    console.log 'Drawing Event!'
-
     @context.fillStyle = color
 
     # Draw circle point at x,y
