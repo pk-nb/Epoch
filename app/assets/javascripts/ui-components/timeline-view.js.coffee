@@ -26,6 +26,8 @@ class CanvasTimelineView
     @rowHeight = 80
     @initialOffset = 20
 
+    @selectedEvent = null
+
 
     # Panning/Navigation config
     @scrollSpeed = 1.5
@@ -89,7 +91,7 @@ class CanvasTimelineView
     #     @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
     @layoutManager()
     # @debugDrawTimelineCoordinates()
-    @debugDrawEventCoordinates()
+    # @debugDrawEventCoordinates()
 
 
 
@@ -361,10 +363,13 @@ class CanvasTimelineView
   drawEventAndUpdateCoordinates: (event, isRange=false, y, tIndex, eIndex) ->
 
     # TODO use @showText, and @activeEventIndex or something
+
+    isSelected = @selectedEvent? and @selectedEvent.tIndex == tIndex and @selectedEvent.eIndex == eIndex
+
     if isRange
-      coordinates = @drawEventWithRange(event, y, @colors[tIndex % 10], @showText, false)
+      coordinates = @drawEventWithRange(event, y, @colors[tIndex % 10], @showText, isSelected)
     else
-      coordinates = @drawEvent(event, y, @colors[tIndex % 10], @showText, false)
+      coordinates = @drawEvent(event, y, @colors[tIndex % 10], @showText, isSelected)
 
     # update coordinates
     @timelines[tIndex].events[eIndex].coordinates = coordinates
@@ -466,6 +471,10 @@ class CanvasTimelineView
     @zoom = @findZoomLevel()
     @redraw()
 
+  updateSelectedEvent: (selectedEvent) ->
+    @selectedEvent = selectedEvent
+    @redraw()
+
   onPan: (event) ->
     newDate = @xToDate(@focusX - event.deltaX * @scrollSpeed)
     if newDate > @minDate()
@@ -506,8 +515,9 @@ TimelineView = React.createClass
 
     canvasTimelineView = new CanvasTimelineView('#timeline-view', @props.setAppState)
     canvasTimelineView.updateTimelines(@props.timelines)
+    # canvasTimelineView.redraw()
 
-    @forceUpdate()
+    # @forceUpdate()
 
   componentWillUnmount: ->
     # Clean up SVG snap, binding, etc here
@@ -521,11 +531,11 @@ TimelineView = React.createClass
     # Manually do things with Snap here, and
     # draw new timelines, etc
 
-    # Check if timelines changed?
-    # if prevProps.timelines.length != @props.timelines.length
-    # console.log @props.timelines
-    # snapTimelineView.redraw(@props.timelines)
-    canvasTimelineView.updateTimelines(@props.timelines)
+    if prevProps.timelines != @props.timelines
+      canvasTimelineView.updateTimelines(@props.timelines)
+
+    if prevProps.selectedEvent != @props.selectedEvent
+      canvasTimelineView.updateSelectedEvent(@props.selectedEvent)
 
   #getInitialState: ->
     # Grab the saved paper matrix, if any

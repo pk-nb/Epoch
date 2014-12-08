@@ -6,7 +6,8 @@ EpochApp = React.createClass
 
   getInitialState: ->
     barExpanded: false,
-    expandedPanel: null
+    expandedPanel: null,
+    selectedEvent: null
 
 # Default props that should be set on server render
   getDefaultProps: ->
@@ -37,6 +38,8 @@ EpochApp = React.createClass
 
 # Change app state by sending this function as a prop on children
   setAppState: (data) ->
+    if data.selectedEvent
+      console.log "From setAppState", data
     @setState data
 
   render: ->
@@ -57,7 +60,7 @@ EpochApp = React.createClass
         repos: @state.repos || @props.repos
       UI.TimelineView
         timelines: @state.timelines || @props.timelines
-        selectedEvent: @state.selectedEvent || @props.selectedEvent
+        selectedEvent: @state.selectedEvent
         expandedPanel: @state.expandedPanel
         setAppState: @setAppState
       UI.UISecondaryBar
@@ -68,7 +71,7 @@ EpochApp = React.createClass
         expandedPanel: @state.expandedPanel
         timelines: @state.timelines || @props.timelines
         event_errors: @state.event_errors || @props.event_errors
-        selectedEvent: @state.selectedEvent || @props.selectedEvent
+        selectedEvent: @state.selectedEvent
 
 
 @.EpochApp ?= {}
