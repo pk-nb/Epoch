@@ -137,14 +137,39 @@ DefaultBottomShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        p { onClick: @props.handleClick(@props.panelIds.event), className: 'dropdown-link'},
-          'Event Name'
+        p { onClick: @props.handleClick(@props.panelIds.newEvent),  },
+          img {className: 'shelf-icon icon-margin-right', src: '<%= asset_path 'plus-icon.svg' %>'},
+          span className: 'dropdown-link',
+            'Add Event'
+
+        # p { onClick: @props.handleClick(@props.panelIds.event), className: 'dropdown-link'},
+        #   'Event Name'
       div className: 'center',
         p null,
           '1999'
       div className: 'right',
-        p { onClick: @props.handleClick(@props.panelIds.newEvent), className: 'dropdown-link' },
-          img {className: 'shelf-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
+        ''
+
+
+
+SelectedEventShelf = React.createClass
+  displayName: 'SelectedEventShelf'
+
+  render: ->
+    div className: 'shelf',
+      div className: 'left',
+        div className: '',
+          p { onClick: @props.handleClick(@props.panelIds.event), className: 'selected truncate'},
+            span className: 'dropdown-link',
+              @props.selectedEvent.title
+      div className: 'center',
+        p null,
+          '1999'
+      div className: 'right',
+        ''
+        # p { onClick: @props.handleClick(@props.panelIds.newEvent), className: 'dropdown-link' },
+        #   img {className: 'shelf-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
+
 
 NewEventShelf = React.createClass
   displayName: 'NewEventShelf'
@@ -152,12 +177,12 @@ NewEventShelf = React.createClass
   render: ->
     div className: 'shelf',
       div className: 'left',
-        ''
+        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
       div className: 'center',
         p null,
           'New Event'
       div className: 'right',
-        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+        ''
 
 
 EventShelf = React.createClass
@@ -166,14 +191,16 @@ EventShelf = React.createClass
   render: ->
     selectedEvent = @props.selectedEvent
     div className: 'shelf',
-        div className: 'left',
-            p { onClick: @props.handleClick(), className: 'dropdown-link'},
-              selectedEvent.title
-        div className: 'center',
-            p null,
-              '1999'
-        div className: 'right',
-            img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+      div className: 'left',
+        img {onClick: @props.handleClick(), className: 'shelf-icon', src: '<%= asset_path 'x-icon.svg' %>'}
+          # p { onClick: @props.handleClick(), className: 'dropdown-link'},
+          #   selectedEvent.title
+      div className: 'center',
+        p null,
+          '1999'
+      div className: 'right',
+        ''
+
 
 
 @.EpochUI ?= {}
@@ -186,5 +213,6 @@ EventShelf = React.createClass
 @.EpochUI.NewTweetShelf = NewTweetShelf
 
 @.EpochUI.DefaultBottomShelf = DefaultBottomShelf
+@.EpochUI.SelectedEventShelf = SelectedEventShelf
 @.EpochUI.NewEventShelf = NewEventShelf
 @.EpochUI.EventShelf = EventShelf

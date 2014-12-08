@@ -195,7 +195,7 @@ class CanvasTimelineView
       pad = 10 # Padding around text outline
 
       # Text Width and Height
-      tW = @context.measureText(event.content).width
+      tW = @context.measureText(event.title).width
       tH = 22 # Approximation to 20pt font size
 
       # Draw Shape!
@@ -233,7 +233,7 @@ class CanvasTimelineView
       @context.fill()
 
       if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color
-      @context.fillText(event.content, textPoint.x, textPoint.y)
+      @context.fillText(event.title, textPoint.x, textPoint.y)
 
       # Return the bounds of the drawn object
       { minX: x - @pointSize , minY: y - @pointSize, maxX: cPoint4.x, maxY: cPoint4.y }
@@ -264,7 +264,7 @@ class CanvasTimelineView
 
     # Start just below drawn point
     if showText
-      tW = @context.measureText(event.content).width
+      tW = @context.measureText(event.title).width
       tH = 22 # Approximation to 20pt font size
       pad = 10; # Padding around text outline
 
@@ -298,7 +298,7 @@ class CanvasTimelineView
       @context.fill()
 
       if active then @context.fillStyle = '#ffffff' else @context.fillStyle = color;
-      @context.fillText(event.content, textMin.x, textMax.y)
+      @context.fillText(event.title, textMin.x, textMax.y)
 
       # Return bounds of object
       minX = startPointX - @pointSize
@@ -455,7 +455,7 @@ class CanvasTimelineView
     startPointX = @dateToX(new Date(event.start_date))
     endPointX = @dateToX(new Date(event.end_date))
     padding = 10
-    tW = @context.measureText(event.content).width
+    tW = @context.measureText(event.title).width
 
     textMin = ((startPointX + endPointX) / 2) - (tW / 2) - padding
     startDateMin = startPointX - @pointSize
@@ -559,8 +559,8 @@ TimelineView = React.createClass
   textNodes: ->
     if @props.timelines.length > 0
       @props.timelines[0].events.map (event) ->
-        text {x: 200, y: 200, key: event.content + event.id},
-          event.content
+        text {x: 200, y: 200, key: event.title + event.id},
+          event.title
 
   render: ->
 

@@ -11,7 +11,8 @@ UIBarMixin =
       newTweet: 'newTweet',
       user: 'user',
       event: 'event',
-      newEvent: 'newEvent'
+      newEvent: 'newEvent',
+      selectedEvent: 'selectedEvent'
     }
 
   handleToggle: (panel=null) ->
@@ -167,11 +168,18 @@ UISecondaryBar = React.createClass
         handleClick: @handleClick,
         panelIds: @props.panelIds
         selectedEvent: @props.selectedEvent
+    else if @props.selectedEvent?
+      UI.SelectedEventShelf
+        key: 'selectedEventShelf'
+        handleClick: @handleClick,
+        panelIds: @props.panelIds
+        selectedEvent: @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
     else
       UI.DefaultBottomShelf
         key: 'defaultBottomShelf',
         handleClick: @handleClick,
         panelIds: @props.panelIds
+        # TODO pass down current date prop
 
   dropdownContent: ->
     UI = window.EpochUI

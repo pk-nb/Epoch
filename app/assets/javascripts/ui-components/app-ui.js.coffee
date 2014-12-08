@@ -14,12 +14,8 @@ EpochApp = React.createClass
     user: {name: 'Login', picture: null},
     timelines: [],
     userTimelines: [],
-    event_errors: [],
-    timeline_errors: [],
-    repo_errors: [],
-    tweet_errors: [],
-    repos: [],
-    selectedEvent: {title: 'test'} # todo init to or something
+    event_errors: [], # TODO refactor this so state is only in component
+    repos: []
 
   componentDidUpdate: (prevProps, prevState) ->
     if @state.timelines
@@ -54,9 +50,6 @@ EpochApp = React.createClass
         user: @props.user
         timelines: @state.timelines || @props.timelines
         userTimelines: @state.userTimelines || @props.userTimelines
-        timeline_errors: @state.timeline_errors || @props.timeline_errors
-        tweet_errors: @state.tweet_errors || @props.tweet_errors
-        repo_errors: @state.repo_errors || @props.repo_errors
         repos: @state.repos || @props.repos
       UI.TimelineView
         timelines: @state.timelines || @props.timelines
