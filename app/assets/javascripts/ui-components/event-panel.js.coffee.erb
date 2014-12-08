@@ -4,8 +4,14 @@ EventPanel = React.createClass
   displayName: 'EventPanel'
 
   render: ->
+    console.log @props.selectedEvent
+
     div className: 'panel',
-      'Hello!'
+      h1 null,
+        @props.selectedEvent.title
+      p null,
+        @props.selectedEvent.content
+
 
 @.EpochUI ?= {}
 @.EpochUI.EventPanel = EventPanel

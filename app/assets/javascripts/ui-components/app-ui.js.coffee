@@ -36,8 +36,16 @@ EpochApp = React.createClass
 # Change app state by sending this function as a prop on children
   setAppState: (data) ->
     # Deselect event if timelines are updated to avoid reference errors
+
     if data.timelines?
       @setState(selectedEvent: null)
+
+    # Collapse panel if there will be no open event panel
+    # TODO This really shouldn't be here, probably give a empty event
+    # object to event panel if there is no selected event
+    if data.selectedEvent == null and @state.barExpanded == 'bottom'
+      @setState(barExpanded: false, expandedPanel: null)
+
     @setState data
 
   render: ->
