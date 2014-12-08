@@ -20,6 +20,11 @@ class CanvasTimelineView
     # Constant point size for events / timelines
     @pointSize = 6
 
+    # Layout manager
+    @timelineCoordinates = {}
+    @showText = true
+    @rowHeight = 80
+    @initialOffset = 20
 
 
     # Panning/Navigation config
@@ -60,11 +65,11 @@ class CanvasTimelineView
     @drawFocusLine()
     @drawAxis()
 
-    for timeline, timelineIndex in @timelines
-      @context.fillStyle = @colors[timelineIndex % 10]
-      for event in timeline.events
-        x = @dateToX(new Date(event.start_date)) - 5
-        @context.fillRect(x, 80, 10, 10)
+    # for timeline, timelineIndex in @timelines
+    #   @context.fillStyle = @colors[timelineIndex % 10]
+    #   for event in timeline.events
+    #     x = @dateToX(new Date(event.start_date)) - 5
+    #     @context.fillRect(x, 80, 10, 10)
 
     # Max
     @context.fillStyle = "rgb(200,0,0)"
@@ -74,10 +79,12 @@ class CanvasTimelineView
     @context.fillStyle = "rgba(0, 0, 200, 0.5)"
     @context.fillRect(@dateToX(@minDate()) - 10, 100, 20, 20)
 
-    if @timelines.length > 0
-      if @timelines[0].events.length > 0
-        # @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
-        @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
+    # if @timelines.length > 0
+    #   if @timelines[0].events.length > 0
+    #     # @drawEvent(@timelines[0].events[0], @dateToX(new Date(@timelines[0].events[0].start_date)), 200, @colors[0], true, false)
+    #     @drawEventWithRange(@timelines[0].events[1], 200, @colors[0], true, false)
+    @layoutManager()
+
 
 
   drawFocusLine: ->
@@ -230,16 +237,16 @@ class CanvasTimelineView
 
     @context.fillStyle = color
     @context.strokeStyle = color
-    @context.lineWidth = 2;
+    @context.lineWidth = 2
 
     # Draw Range
     @context.beginPath()
     @context.arc(startPointX, y, @pointSize, 0, 2 * Math.PI)
-    @context.fill();
+    @context.fill()
 
     @context.beginPath()
     @context.arc(endPointX, y, @pointSize, 0, 2 * Math.PI)
-    @context.fill();
+    @context.fill()
 
     @context.beginPath()
     @context.moveTo(startPointX, y)
@@ -288,10 +295,10 @@ class CanvasTimelineView
       minX = startPointX - @pointSize
       if minX < padMin.x
         # Return bounds of line for X
-        { minX: minX, minY: y - @pointSize, maxX: endPointX + @pointSize, maxY: padMax.y}
+        { minX: minX, minY: y - @pointSize, maxX: endPointX + @pointSize, maxY: padMax.y }
       else
         # Return bounds of text for X
-        { minX: padMin.x, minY: y - @pointSize, maxX: padMax.x, maxY: padMax.y}
+        { minX: padMin.x, minY: y - @pointSize, maxX: padMax.x, maxY: padMax.y }
     else
       {
         minX: startPointX - @pointSize,
@@ -303,7 +310,7 @@ class CanvasTimelineView
 
   # Boolean to test how event should be drawn
   shouldDrawEventWithRange: (event) ->
-    event.start_date != event.end_date and not datePointsOverlap(event)
+    (event.start_date != event.end_date) and not @datePointsOverlap(event)
 
   # Returns true if event dates overlap
   datePointsOverlap: (event) ->
@@ -311,6 +318,75 @@ class CanvasTimelineView
     endPointX = @dateToX(new Date(event.end_date))
 
     Math.abs(endPointX - startPointX) < (@pointSize + 2)
+
+  layoutManager: ->
+    # startPoint = {x: 20, y: 20} # TODO fix with zoom stuff
+
+    @timelineCoordinates = {}
+    linesX = []
+    offset = @initialOffset
+
+
+    for timeline, tIndex in @timelines
+      for event, eIndex in timeline.events by -1
+
+        isRangeEvent = @shouldDrawEventWithRange(event)
+        eventX = if isRangeEvent then @calcEventWithRangeStartX(event) else @calcEventStartX(event)
+
+        didFitInExisitingLines = false
+
+        for lineX, index in linesX
+          if lineX < eventX
+            lineX = @drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex)
+            didFitInExisitingLines = true
+            break
+
+        if not didFitInExisitingLines
+          linesX.push(@drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex))
+          # draw at rowHeight * linesX.length
+          # store coordinates
+          # append lastX value
+
+
+
+
+  # Draw Event, update coordinates, and return maxX of returned coordinates
+  drawEventAndUpdateCoordinates: (event, isRange=false, y, tIndex, eIndex) ->
+
+    # TODO use @showText, and @activeEventIndex or something
+    if isRange
+      coordinates = @drawEventWithRange(event, y, @colors[tIndex % 10], @showText, false)
+    else
+      coordinates = @drawEvent(event, y, @colors[tIndex % 10], @showText, false)
+
+    # update coordinates
+    @timelines[tIndex].events[eIndex].coordinates = coordinates
+
+    if @timelines[tIndex].coordinates
+      # TODO update timeline level cooordinates
+    else
+      @timelines[tIndex].coordinates = coordinates
+
+
+    coordinates.maxX
+
+
+
+
+  calcEventStartX: (event) ->
+    @dateToX(new Date(event.start_date))
+
+  calcEventWithRangeStartX: (event) ->
+    startPointX = @dateToX(new Date(event.start_date))
+    endPointX = @dateToX(new Date(event.end_date))
+    padding = 10
+    tW = @context.measureText(event.content).width
+
+    textMin = ((startPointX + endPointX) / 2) - (tW / 2) - padding
+    startDateMin = startPointX - @pointSize
+
+    # Return smallest X value
+    if textMin < startDateMin then textMin else startDateMin
 
 
   updateTimelines: (timelines) ->
