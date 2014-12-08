@@ -107,7 +107,7 @@ class CanvasTimelineView
   drawTick: (x, label = null) ->
     if label
       @context.font = '20pt "MB Empire"'
-      @context.fillText(@liveXToDate(x), @focusX, 600)
+      # @context.fillText(@liveXToDate(x), @focusX, 600)
     @context.beginPath()
     @context.moveTo(x, 45)
     if label
@@ -337,15 +337,16 @@ class CanvasTimelineView
 
         for lineX, index in linesX
           if lineX < eventX
-            lineX = @drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex)
+            linesX[index] = @drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex)
             didFitInExisitingLines = true
             break
 
         if not didFitInExisitingLines
           linesX.push(@drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex))
-          # draw at rowHeight * linesX.length
-          # store coordinates
-          # append lastX value
+
+      # Add Offset
+      # offset += @rowHeight * linesX.length
+
 
 
 
