@@ -24,6 +24,7 @@ class CanvasTimelineView
     @timelineCoordinates = {}
     @showText = true
     @rowHeight = 80
+    @rowHeightWithoutText = 14
     @initialOffset = 20
 
     @selectedEvent = null
@@ -339,6 +340,7 @@ class CanvasTimelineView
     # @timelineCoordinates = {}
     linesX = []
     offset = @initialOffset
+    rowHeight = if @showText then @rowHeight else @rowHeightWithoutText
 
     for timeline, tIndex in @timelines
       # Wipe old coordinates
@@ -353,12 +355,12 @@ class CanvasTimelineView
 
         for lineX, index in linesX
           if lineX < eventX
-            linesX[index] = @drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex)
+            linesX[index] = @drawEventAndUpdateCoordinates(event, isRangeEvent, (rowHeight * index) + offset, tIndex, eIndex)
             didFitInExisitingLines = true
             break
 
         if not didFitInExisitingLines
-          linesX.push(@drawEventAndUpdateCoordinates(event, isRangeEvent, (@rowHeight * index) + offset, tIndex, eIndex))
+          linesX.push(@drawEventAndUpdateCoordinates(event, isRangeEvent, (rowHeight * index) + offset, tIndex, eIndex))
 
 
 
@@ -476,6 +478,7 @@ class CanvasTimelineView
     @zoom = @findZoomLevel()
     @redraw()
 
+
   updateSelectedEvent: (selectedEvent) ->
     @selectedEvent = selectedEvent
     # TODO animate instead of jump
@@ -490,6 +493,11 @@ class CanvasTimelineView
         @setFocusDate new Date(event.start_date)
 
     @tempFocus = @focusDate
+    @redraw()
+
+
+  updateDrawExpandedText: (shouldDrawExpandedText) ->
+    @showText = shouldDrawExpandedText
     @redraw()
 
 
@@ -552,11 +560,18 @@ TimelineView = React.createClass
     # Manually do things with Snap here, and
     # draw new timelines, etc
 
+    # if prevProps.drawExpandedText != @props.drawExpandedText
+
+
     if prevProps.timelines != @props.timelines
       canvasTimelineView.updateTimelines(@props.timelines)
 
     if prevProps.selectedEvent != @props.selectedEvent
       canvasTimelineView.updateSelectedEvent(@props.selectedEvent)
+
+    # console.log "Hello from componentDidUpdate timeline view", @props.drawExpandedText
+    if prevProps.drawExpandedText != @props.drawExpandedText
+      canvasTimelineView.updateDrawExpandedText(@props.drawExpandedText)
 
   #getInitialState: ->
     # Grab the saved paper matrix, if any
