@@ -76,14 +76,14 @@ class RepositoryController < ApplicationController
                                            start_date: repo[:min_date], end_date: repo[:max_date], user_id: current_user.id)
       # create events for commits
       repo.commits.each do |c|
-        event = timeline.events.create(user_id: current_user.id, title: 'Commit', content: c.commit.message, start_date: c.commit.author.date, end_date: c.commit.author.date, event_type: 'Repo')
+        event = timeline.events.create(user_id: current_user.id, title: "Commit: #{c.commit.message[0..25]}", content: c.commit.message, start_date: c.commit.author.date, end_date: c.commit.author.date, event_type: 'Repo')
         event.repo_event = RepoEvent.create(event_id: event.id, repository: repo.full_name, author: c.commit.author.name,
                                             activity_type: 'Commit', html_url: c.html_url)
       end
       # create events for issues & pull requests
       repo.issues.each do |i|
         activity_type = i.pull_request.nil? ? 'Issue' : 'Pull Request'
-        event = timeline.events.create(user_id: current_user.id, title: "#{activity_type} (#{i.state})", content: "#{i.title}: #{i.body}", start_date: i.created_at, end_date: i.closed_at, event_type: 'Repo')
+        event = timeline.events.create(user_id: current_user.id, title: "#{activity_type} (#{i.state}): #{i.title[0..18]}", content: "#{i.title}: #{i.body}", start_date: i.created_at, end_date: i.closed_at, event_type: 'Repo')
         event.repo_event = RepoEvent.create(event_id: event.id, repository: repo.full_name, author: i.user.login,
                                             activity_type: activity_type, html_url: i.html_url)
       end
