@@ -55,7 +55,7 @@ class TweetsController < ApplicationController
           "A Timeline of Tweets by #{user_id}", start_date: extreme_dates[:min], end_date: extreme_dates[:max])
       tweets.each do |tweet|
         # todo IJH: use <br> tags instead of newlines? Remove altogether? Create separate model?
-        timeline.events.create(user_id: current_user.id, title: 'Tweet', content: "#{tweet.full_text}\nFavorited #{tweet.favorite_count} times\nRetweeted #{tweet.retweet_count} times",
+        timeline.events.create(user_id: current_user.id, title: "#{tweet.full_text[0..30]}", content: "#{tweet.full_text}\nFavorited #{tweet.favorite_count} times\nRetweeted #{tweet.retweet_count} times",
                                start_date: tweet.created_at, end_date: tweet.created_at, event_type: 'Tweet')
       end
     else
