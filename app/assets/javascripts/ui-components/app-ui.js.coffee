@@ -20,7 +20,7 @@ EpochApp = React.createClass
 
   componentDidUpdate: (prevProps, prevState) ->
     if @state.timelines
-      console.log @state.timelines
+      # console.log @state.timelines
       @updateURLParams()
 
   updateURLParams: ->
@@ -56,7 +56,7 @@ EpochApp = React.createClass
         active: @state.barExpanded is 'top'
         otherActive: @state.barExpanded is 'bottom'
         expandedPanel: @state.expandedPanel
-        setAppState: @setAppState,
+        setAppState: @setAppState
         user: @props.user
         timelines: @state.timelines || @props.timelines
         userTimelines: @state.userTimelines || @props.userTimelines
@@ -66,6 +66,7 @@ EpochApp = React.createClass
         selectedEvent: @state.selectedEvent
         expandedPanel: @state.expandedPanel
         setAppState: @setAppState
+        drawExpandedText: !@state.barExpanded
       UI.UISecondaryBar
         id: 'bottom',
         active: @state.barExpanded is 'bottom'
