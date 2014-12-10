@@ -113,3 +113,10 @@
     color: $theme-magenta;
   }
 }
+
+.disabled.button,
+.logged-in.button {
+  background-color: $theme-gray;
+  color: $theme-white;
+  cursor: default;
+}

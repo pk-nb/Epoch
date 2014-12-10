@@ -2,36 +2,60 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  z-index: 299;
   @include display(flex);
+
 }
 
 .loading-container {
   width: 200px;
   height: 200px;
   margin: auto;
-  padding-top: 50px;
+  padding-top: 55px;
   text-align: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 1em;
 }
 
 .loading-text {
+  margin-top: 1em;
   -webkit-animation: pulse 3.0s infinite ease-in-out;
   animation: pulse 3.0s infinite ease-in-out;
 }
 
+.with-spinner {
+  @include display(flex);
+  // TODO use bourbon over these styles
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+
+  .spinner {
+    margin: auto 0;
+  }
+  .text {
+    margin: auto 0;
+    padding-left: 0.5em;
+  }
+}
+
 // http://tobiasahlin.com/spinkit/
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
+  // margin-right: 1em;
 
   position: relative;
   margin: 0 auto;
+  display: inline-block;
 }
 
 .double-bounce1, .double-bounce2 {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: #333;
+  background-color: #fff;
   opacity: 0.6;
   position: absolute;
   top: 0;

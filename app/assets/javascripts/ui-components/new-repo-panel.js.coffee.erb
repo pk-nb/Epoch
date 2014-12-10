@@ -5,6 +5,7 @@ NewRepoPanel = React.createClass
 
   getInitialState: ->
     repoErrors: []
+    spinnerOn: false
 
   onPostSuccess: (data) ->
     timelines = @props.timelines
@@ -16,16 +17,19 @@ NewRepoPanel = React.createClass
     #todo IJH 12/4/2014 add all child timelines to userTimelines prop
     @props.setAppState(timelines: timelines)
     @props.setAppState(userTimelines: userTimelines)
+    @setState(spinnerOn: false)
     @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
+    @setState(spinnerOn: false)
     @setState(repoErrors: messages)
 
   handleSubmit: (e) ->
     e.preventDefault()
+    @setState(spinnerOn: true)
     $.ajax {
       type: 'POST',
       url: Routes.repository_index_path(),
@@ -63,6 +67,21 @@ NewRepoPanel = React.createClass
         p key: error + 'NewRepoPanel',
           error
 
+  submitButton: ->
+    if @state.spinnerOn
+      p className: 'button disabled with-spinner',
+        span className: 'spinner',
+          span className: 'double-bounce1',
+            ''
+          span className: 'double-bounce2',
+            ''
+        span className: 'text',
+          'Submitting...'
+
+    else
+      button className: 'button',
+        'Submit'
+
   render: ->
     Forms = window.EpochForms
     div className: 'panel new-repo-panel',
@@ -89,8 +108,7 @@ NewRepoPanel = React.createClass
               input {ref: 'addRepo', type: 'text', className: 'narrow-input', name: 'additional_repo'}
               button {className: 'plus-button', onClick: @handleAddRepoName() },
                 img { className: 'plus-icon', src: '<%= asset_path 'plus-icon.svg' %>'}
-        button className: 'button',
-          'Submit'
+        @submitButton()
 
 
 @.EpochUI ?= {}

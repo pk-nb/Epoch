@@ -3,6 +3,9 @@
 NewEventPanel = React.createClass
   displayName: 'NewEventPanel'
 
+  getInitialState: ->
+    spinnerOn: false
+
   onPostSuccess: (event) ->
     # todo IJH 11/23/14, I'm not entirely sure what our desired behavior is at this point in time...need to consult Nathanael.
     console.log event
@@ -11,17 +14,20 @@ NewEventPanel = React.createClass
       if val.id in event.timeline_ids
         val.events.push(event)
     @props.setAppState(timelines: timelines)
+    @setState(spinnerOn: false)
     @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
+    @setState(spinnerOn: false)
     @props.setAppState(event_errors: messages)
 
   handleSubmit: (e) ->
     console.log 'Submit new event form'
     e.preventDefault()
+    @setState(spinnerOn: true)
     $.ajax {
       type: 'POST',
       url: Routes.events_path(),
@@ -49,6 +55,20 @@ NewEventPanel = React.createClass
         p key: 'newEventForm' + error,
           error
 
+  submitButton: ->
+    if @state.spinnerOn
+      p className: 'button disabled with-spinner',
+        span className: 'spinner',
+          span className: 'double-bounce1',
+            ''
+          span className: 'double-bounce2',
+            ''
+        span className: 'text',
+          'Submitting...'
+    else
+      button className: 'button',
+        'Submit'
+
   render: ->
     Forms = window.EpochForms
     div className: 'panel',
@@ -62,8 +82,7 @@ NewEventPanel = React.createClass
               timeline.title
         div dangerouslySetInnerHTML: { __html: Forms.newEvent },
           null
-        button className: 'button',
-          'Submit'
+        @submitButton()
 
 @.EpochUI ?= {}
 @.EpochUI.NewEventPanel = NewEventPanel
