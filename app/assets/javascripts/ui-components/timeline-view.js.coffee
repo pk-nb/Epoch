@@ -104,7 +104,7 @@ class CanvasTimelineView
 
   drawFocusLine: ->
     @context.font = '20pt "MB Empire"'
-    @context.fillText(@liveXToDate(@focusX), @focusX, 600)
+    # @context.fillText(@liveXToDate(@focusX), @focusX, 600)
     @context.beginPath()
     @context.moveTo(@focusX, 40)
     @context.lineTo(@focusX, @canvas.height)
