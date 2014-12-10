@@ -7,7 +7,7 @@ class TwitterIntegration
     user = @twitter_account.user
     cached_friends = user.twitter_friends
     # IJH 12/7/14: Handle the case in which the user has no friends on twitter
-    if cached_friends.empty? || cached_friends.first.created_at < 10.minutes.ago
+    if cached_friends.empty? || cached_friends.first.created_at < 10.seconds.ago
       cached_friends.destroy_all
       @client.friends(@twitter_account.uid.to_i, {count: 200}).each do |user|
         result.push([user.name, user.screen_name])
@@ -19,7 +19,8 @@ class TwitterIntegration
     else
       result = cached_friends.map {|friend| [friend.name, friend.login]}
     end
-    result.push([@twitter_account.name, @twitter_account.login])
+    result = result.sort_by{|el| el[0]}
+    result.insert(0, [@twitter_account.name, @twitter_account.login])
     result
   end
 
