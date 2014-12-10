@@ -142,13 +142,23 @@ DefaultBottomShelf = React.createClass
     else
       'Select a Timeline'
 
+  addEventText: ->
+    if @props.user
+      p { onClick: @props.handleClick(@props.panelIds.newEvent),  },
+        img {className: 'shelf-icon icon-margin-right', src: '<%= asset_path 'plus-icon.svg' %>'},
+        span className: 'dropdown-link',
+          'Event'
+    else
+      ''
+
   render: ->
     div className: 'shelf',
       div className: 'left',
-        p { onClick: @props.handleClick(@props.panelIds.newEvent),  },
-          img {className: 'shelf-icon icon-margin-right', src: '<%= asset_path 'plus-icon.svg' %>'},
-          span className: 'dropdown-link',
-            'Add Event'
+        @addEventText()
+        # p { onClick: @props.handleClick(@props.panelIds.newEvent),  },
+        #   img {className: 'shelf-icon icon-margin-right', src: '<%= asset_path 'plus-icon.svg' %>'},
+        #   span className: 'dropdown-link',
+        #     'Event'
       div className: 'center',
         # Current Date
         p null,

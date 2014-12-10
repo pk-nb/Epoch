@@ -73,6 +73,7 @@ EpochApp = React.createClass
         otherActive: @state.barExpanded is 'top'
         setAppState: @setAppState
         expandedPanel: @state.expandedPanel
+        user: @props.user
         timelines: @state.timelines || @props.timelines
         event_errors: @state.event_errors || @props.event_errors
         selectedEvent: @state.selectedEvent

@@ -183,8 +183,9 @@ UISecondaryBar = React.createClass
         selectedEvent: @props.timelines[@props.selectedEvent.tIndex].events[@props.selectedEvent.eIndex]
     else
       UI.DefaultBottomShelf
-        key: 'defaultBottomShelf',
-        handleClick: @handleClick,
+        key: 'defaultBottomShelf'
+        handleClick: @handleClick
+        user: @props.user
         panelIds: @props.panelIds
         currentDate: @props.currentDate
 
