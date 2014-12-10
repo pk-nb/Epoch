@@ -188,6 +188,7 @@ UISecondaryBar = React.createClass
         user: @props.user
         panelIds: @props.panelIds
         currentDate: @props.currentDate
+        timelines: @props.timelines
 
   dropdownContent: ->
     UI = window.EpochUI
