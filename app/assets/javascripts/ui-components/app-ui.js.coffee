@@ -20,7 +20,7 @@ EpochApp = React.createClass
 
   componentDidUpdate: (prevProps, prevState) ->
     if @state.timelines
-      # console.log @state.timelines
+      console.log @state.timelines
       @updateURLParams()
 
   updateURLParams: ->

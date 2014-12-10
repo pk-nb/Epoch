@@ -199,6 +199,7 @@ UISecondaryBar = React.createClass
         setAppState: @props.setAppState,
         events: @props.events
         event_errors: @props.event_errors
+        goBack: @handleClick()
     else if @props.expandedPanel == @props.panelIds.event
       UI.EventPanel
         key: 'eventPanel'

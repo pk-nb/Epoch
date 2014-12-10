@@ -11,6 +11,7 @@ NewEventPanel = React.createClass
       if val.id in event.timeline_ids
         val.events.push(event)
     @props.setAppState(timelines: timelines)
+    @props.goBack()
 
   onPostError: (messages) ->
     # Render error by setting state
