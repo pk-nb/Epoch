@@ -10,6 +10,7 @@ NewTimelinePanel = React.createClass
 
   getInitialState: ->
     timelineErrors: []
+    spinnerOn: false
 
   onPostSuccess: (data) ->
     console.log data
@@ -20,6 +21,7 @@ NewTimelinePanel = React.createClass
     userTimelines = @props.userTimelines
     userTimelines.push(data)
     @props.setAppState(userTimelines: userTimelines)
+    @setState(spinnerOn: false)
     @props.goBack() # Animate back to timeline panel
 
 
@@ -27,12 +29,15 @@ NewTimelinePanel = React.createClass
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
+    @setState(spinnerOn: false)
     @setState(timelineErrors: messages)
 
 
   handleSubmit: (e) ->
     console.log 'Submit form'
     e.preventDefault()
+    @setState(spinnerOn: true)
+
     $.ajax {
       type: 'POST',
       url: Routes.timelines_path(),
@@ -58,6 +63,22 @@ NewTimelinePanel = React.createClass
         p key: error + 'NewTimelinePanel',
           error
 
+
+  submitButton: ->
+    if @state.spinnerOn
+      p className: 'button disabled with-spinner',
+        span className: 'spinner',
+          span className: 'double-bounce1',
+            ''
+          span className: 'double-bounce2',
+            ''
+        span className: 'text',
+          'Submitting...'
+
+    else
+      button className: 'button',
+        'Submit'
+
   render: ->
     Forms = window.EpochForms
     div className: 'panel timeline-panel',
@@ -67,8 +88,8 @@ NewTimelinePanel = React.createClass
       form ref: 'newTimelineForm', onSubmit: @handleSubmit,
         div dangerouslySetInnerHTML: { __html: Forms.newTimeline },
           null
-        button className: 'button',
-          'Submit'
+        @submitButton()
+
 
 
 @.EpochUI ?= {}

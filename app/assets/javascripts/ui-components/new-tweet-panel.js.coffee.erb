@@ -5,6 +5,7 @@ NewTweetPanel = React.createClass
 
   getInitialState: ->
     tweetErrors: []
+    spinnerOn: false
 
   onPostSuccess: (data) ->
     console.log data
@@ -14,6 +15,7 @@ NewTweetPanel = React.createClass
     @props.setAppState(timelines: timelines)
     userTimelines = @props.userTimelines
     userTimelines.push(data)
+    @setState(spinnerOn: false)
     @props.setAppState(userTimelines: userTimelines)
     @props.goBack()
 
@@ -21,11 +23,13 @@ NewTweetPanel = React.createClass
     # Render error by setting state
     console.log 'Ajax failure'
     console.log(messages)
+    @setState(spinnerOn: false)
     @setState(tweetErrors: messages)
 
 
   handleSubmit: (e) ->
     e.preventDefault()
+    @setState(spinnerOn: true)
     form_data = $(@refs.newTweetForm.getDOMNode()).serialize()
     # if the user hasn't chosen an option from the selector, use the text field value
     $.ajax {
@@ -54,6 +58,21 @@ NewTweetPanel = React.createClass
         p key: error + 'NewTweetPanel',
           error
 
+  submitButton: ->
+    if @state.spinnerOn
+      p className: 'button disabled with-spinner',
+        span className: 'spinner',
+          span className: 'double-bounce1',
+            ''
+          span className: 'double-bounce2',
+            ''
+        span className: 'text',
+          'Submitting...'
+
+    else
+      button className: 'button',
+        'Submit'
+
   render: ->
     Forms = window.EpochForms
     div className: 'panel new-tweet-panel',
@@ -63,8 +82,7 @@ NewTweetPanel = React.createClass
       form ref: 'newTweetForm', onSubmit: @handleSubmit,
         div dangerouslySetInnerHTML: { __html: Forms.newTweet },
          null
-        button className: 'button',
-         'Submit'
+        @submitButton()
 
 
 @.EpochUI ?= {}
