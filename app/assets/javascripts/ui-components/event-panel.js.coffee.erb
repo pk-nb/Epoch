@@ -1,16 +1,31 @@
-{div, form, button, p, h1, hr, select, option} = React.DOM
+{div, p, h1, hr, a} = React.DOM
 
 EventPanel = React.createClass
   displayName: 'EventPanel'
 
-  render: ->
-    console.log @props.selectedEvent
+  tryRenderRepo: (event) ->
+    if event.event_type == 'Repo'
+      repo = event.repo_event
+      div null,
+        p null,
+          "Repository: #{repo.repository}"
+        p null,
+          "Author: #{repo.author}"
+        a href: repo.html_url,
+          'View on Github'
 
+  render: ->
+    event = @props.selectedEvent
     div className: 'panel',
       h1 null,
-        @props.selectedEvent.title
+        event.title
       p null,
-        @props.selectedEvent.content
+        event.content
+      p null,
+        "Start date: #{event.start_date_pretty}"
+      p null,
+        "End date: #{event.end_date_pretty}"
+      @tryRenderRepo(event)
 
 
 @.EpochUI ?= {}
