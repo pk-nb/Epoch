@@ -159,7 +159,7 @@ class CanvasTimelineView
         min = new Date()
       else
         min = new Date(@timelines[0].events[events.length - 1].start_date)
-      
+
       for timeline in @timelines
         events = timeline.events
         unless events.length == 0
@@ -569,10 +569,15 @@ TimelineView = React.createClass
     # Manually do things with Snap here, and
     # draw new timelines, etc
 
-    # if prevProps.drawExpandedText != @props.drawExpandedText
+    needToUpdateDueToEvents = false
+    if prevProps.timelines.length != @props.timelines.length
+      needToUpdateDueToEvents = true
+    else
+      for timeline, index in @props.timelines
+        if timeline.events.length != prevProps.timelines[index].events.length
+          needToUpdateDueToEvents = true
 
-
-    if prevProps.timelines != @props.timelines
+    if needToUpdateDueToEvents or prevProps.timelines != @props.timelines
       canvasTimelineView.updateTimelines(@props.timelines)
 
     if prevProps.selectedEvent != @props.selectedEvent
