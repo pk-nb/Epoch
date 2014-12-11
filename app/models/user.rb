@@ -8,7 +8,11 @@ class User < ActiveRecord::Base
   # Create/initialize a new user from an oauth provider
   # If an account already exists with the provided email address, a new account will be created for the new provider
   def self.retrieve_or_create_from_omniauth(auth)
-    user = Account.user_from_email(auth) || User.create
+    user = Account.user_from_email(auth)
+    if user.nil?
+      user = User.create
+      Timeline.create_initial_timeline(user)
+    end
     user.update_with_remote_data(auth)
     user
   end

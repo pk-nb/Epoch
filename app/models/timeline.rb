@@ -43,10 +43,15 @@ class Timeline < ActiveRecord::Base
     super(options)
   end
 
-
   def self.list_by_ids(ids)
     ids.map do |id|
       Timeline.find(id)
     end
+  end
+
+  def self.create_initial_timeline(user)
+    starter_timeline = user.timelines.create(title: 'Your first timeline!', content: 'A brief introduction to Epoch',
+                                             start_date: Date.today, end_date: Date.today)
+    Event.create_initial_events(starter_timeline, user.id)
   end
 end
