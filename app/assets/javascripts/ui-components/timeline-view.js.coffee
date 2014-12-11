@@ -77,12 +77,6 @@ class CanvasTimelineView
     @drawFocusLine()
     @drawAxis()
 
-    # for timeline, timelineIndex in @timelines
-    #   @context.fillStyle = @colors[timelineIndex % 10]
-    #   for event in timeline.events
-    #     x = @dateToX(new Date(event.start_date)) - 5
-    #     @context.fillRect(x, 80, 10, 10)
-
     # Max
     @context.fillStyle = "rgb(200,0,0)"
     @context.fillRect(@dateToX(@maxDate()) - 10, 100, 20, 20)
@@ -157,21 +151,36 @@ class CanvasTimelineView
 
   # Returns the earliest date across the timelines
   minDate: ->
-    events = @timelines[0].events
-    min = new Date(@timelines[0].events[events.length - 1].start_date)
-    for timeline in @timelines
-      events = timeline.events
-      date = new Date(timeline.events[events.length - 1].start_date)
-      min = date if date < min
-    min
+    if @timelines.length == 0
+      new Date()
+    else
+      events = @timelines[0].events
+      if events.length == 0
+        min = new Date()
+      else
+        min = new Date(@timelines[0].events[events.length - 1].start_date)
+      
+      for timeline in @timelines
+        events = timeline.events
+        unless events.length == 0
+          date = new Date(timeline.events[events.length - 1].start_date)
+          min = date if date < min
+      min
 
   # Returns the latest date across the timelines
   maxDate: ->
-    max = new Date(@timelines[0].events[0].end_date || @timelines[0].events[0].start_date)
-    for timeline in @timelines
-      date = new Date(timeline.events[0].end_date)
-      max = date if date > max
-    max
+    if @timelines.length == 0
+      new Date()
+    else
+      if @timelines[0].events.length == 0
+        max = new Date()
+      else
+        max = new Date(@timelines[0].events[0].end_date || @timelines[0].events[0].start_date)
+      for timeline in @timelines
+        unless timeline.events.length == 0
+          date = new Date(timeline.events[0].end_date)
+          max = date if date > max
+      max
 
   # Calculates the halway point between the min and max dates
   midRange: ->
@@ -407,7 +416,7 @@ class CanvasTimelineView
         for event, eIndex in timeline.events
           if @pointInCoordinates(translatedPoint, event.coordinates)
             # Found the event, updateValue and return
-            console.log "found click on event #{eIndex} in timeline #{tIndex}"
+            #console.log "found click on event #{eIndex} in timeline #{tIndex}"
             @setAppState(selectedEvent: { tIndex: tIndex, eIndex: eIndex })
             return
 
@@ -419,7 +428,7 @@ class CanvasTimelineView
     # offset of canvas position
     # jqCanvas = $(@canvasId)
     {top, left} = $(@canvasId).offset()
-    console.log top, left
+    #console.log top, left
 
     # Subtract offset and multiply by 2 (accounting for 2x context drawing)
     { x: (point.x - left) * 2, y: (point.y - top) * 2 }
